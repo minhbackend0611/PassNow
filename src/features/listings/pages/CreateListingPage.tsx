@@ -5,7 +5,7 @@ import * as z from 'zod';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../../store/useAuthStore';
 import { createListing } from '../../../services/listingService';
-import { ItemCondition } from '../../../types';
+import type { ItemCondition } from '../../../types';
 
 const createListingSchema = z.object({
   title: z.string().min(1, { message: 'Title is required' }).max(100),
