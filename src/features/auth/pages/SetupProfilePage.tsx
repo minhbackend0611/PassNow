@@ -95,25 +95,28 @@ export default function SetupProfilePage() {
       fetch(`https://provinces.open-api.vn/api/p/${selectedProvinceCode}?depth=2`)
         .then(res => res.json())
         .then(data => {
-          const list = data.districts || [];
-          setDistricts(list);
-          
-          const currentProv = watch('province');
-          const currentDist = watch('district');
-          
-          if (currentProv === authUser?.province && authUser?.district) {
-            if (list.some((d: District) => d.name === authUser.district)) {
-              setValue('district', authUser.district);
-            }
-          } else if (currentDist && list.some((d: District) => d.name === currentDist)) {
-            setValue('district', currentDist);
-          }
+          setDistricts(data.districts || []);
         })
         .catch(err => console.error("Failed to fetch districts", err));
     } else {
       setDistricts([]);
     }
-  }, [selectedProvinceCode, authUser, setValue, watch]);
+  }, [selectedProvinceCode]);
+
+  useEffect(() => {
+    if (districts.length > 0) {
+      const currentProv = watch('province');
+      const currentDist = watch('district');
+      
+      if (currentProv === authUser?.province && authUser?.district) {
+        if (districts.some((d) => d.name === authUser.district)) {
+          setValue('district', authUser.district);
+        }
+      } else if (currentDist && districts.some((d) => d.name === currentDist)) {
+        setValue('district', currentDist);
+      }
+    }
+  }, [districts, authUser, setValue, watch]);
 
   // Sync province code with province name selection
   const handleProvinceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

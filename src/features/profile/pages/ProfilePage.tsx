@@ -104,25 +104,28 @@ export default function ProfilePage() {
       fetch(`https://provinces.open-api.vn/api/p/${selectedProvinceCode}?depth=2`)
         .then(res => res.json())
         .then(data => {
-          const list = data.districts || [];
-          setDistricts(list);
-          
-          const currentProv = watch('province');
-          const currentDist = watch('district');
-          
-          if (currentProv === authUser?.province && authUser?.district) {
-            if (list.some((d: District) => d.name === authUser.district)) {
-              setValue('district', authUser.district, { shouldDirty: false });
-            }
-          } else if (currentDist && list.some((d: District) => d.name === currentDist)) {
-            setValue('district', currentDist);
-          }
+          setDistricts(data.districts || []);
         })
         .catch(err => console.error("Failed to fetch districts", err));
     } else {
       setDistricts([]);
     }
-  }, [selectedProvinceCode, authUser, setValue, watch]);
+  }, [selectedProvinceCode]);
+
+  useEffect(() => {
+    if (districts.length > 0) {
+      const currentProv = watch('province');
+      const currentDist = watch('district');
+      
+      if (currentProv === authUser?.province && authUser?.district) {
+        if (districts.some((d) => d.name === authUser.district)) {
+          setValue('district', authUser.district, { shouldDirty: false });
+        }
+      } else if (currentDist && districts.some((d) => d.name === currentDist)) {
+        setValue('district', currentDist);
+      }
+    }
+  }, [districts, authUser, setValue, watch]);
 
   const handleProvinceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const pName = e.target.value;
