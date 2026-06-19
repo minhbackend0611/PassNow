@@ -30,6 +30,7 @@ This file contains the highest-priority cross-tool rules for all AI coding agent
    - Run full test suite.
    - Run git hook checks (pre-commit, linter).
    - Create a walkthrough summary showcasing changes, test results, and UI screenshots/recordings if available.
+   - Perform incremental git commits for code changes and push code to the remote repository once changes are validated.
 
 ---
 
