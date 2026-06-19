@@ -9,6 +9,7 @@ interface UserProfile {
   displayName: string | null;
   school: string | null;
   district: string | null;
+  photoURL?: string | null;
   isProfileComplete: boolean;
 }
 
