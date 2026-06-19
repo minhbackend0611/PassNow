@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs, query, where, orderBy, QueryConstraint } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, query, where, orderBy, QueryConstraint, addDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import type { Listing, ListingFilter, User } from '../types';
 
@@ -80,6 +80,22 @@ export const getListingById = async (id: string): Promise<{ listing: Listing, se
     }
   } catch (error) {
     console.error("Error fetching listing detail:", error);
+    return null;
+  }
+};
+
+export const createListing = async (
+  listingData: Omit<Listing, 'id' | 'createdAt' | 'status'>
+): Promise<string | null> => {
+  try {
+    const docRef = await addDoc(collection(db, LISTINGS_COLLECTION), {
+      ...listingData,
+      status: 'available',
+      createdAt: Date.now()
+    });
+    return docRef.id;
+  } catch (error) {
+    console.error("Error creating listing:", error);
     return null;
   }
 };

@@ -40,7 +40,7 @@ export default function TopNavBar() {
 
         {user ? (
           <div className="flex items-center gap-stack-sm">
-            <button className="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant flex-shrink-0" onClick={handleSignOut} title="Sign Out">
+            <Link to="/profile" className="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant flex-shrink-0 block hover:ring-2 hover:ring-primary transition-all" title="Profile">
               {user.photoURL ? (
                 <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" />
               ) : (
@@ -48,6 +48,13 @@ export default function TopNavBar() {
                   {user.displayName?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()}
                 </span>
               )}
+            </Link>
+            <button 
+              onClick={handleSignOut} 
+              className="text-on-surface-variant hover:text-error transition-colors p-2 rounded-full hover:bg-surface-container-high flex items-center justify-center" 
+              title="Log Out"
+            >
+              <span className="material-symbols-outlined text-[24px]">logout</span>
             </button>
           </div>
         ) : (

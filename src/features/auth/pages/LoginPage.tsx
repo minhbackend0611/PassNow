@@ -6,9 +6,8 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../../lib/firebase';
 import { useAuthStore } from '../../../store/useAuthStore';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
-import { Label } from '../../../components/ui/label';
+import AuthLayout from '../components/AuthLayout';
+import { OverlayLoader } from '../../../components/ui/Loading';
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'Invalid email address' }),
@@ -42,7 +41,7 @@ export default function LoginPage() {
     setError(null);
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password);
-      navigate('/');
+      // Let useEffect handle the redirect after AuthListener updates user
     } catch (err: unknown) {
       console.error(err);
       if (err instanceof Error) {
@@ -50,75 +49,78 @@ export default function LoginPage() {
       } else {
         setError('Failed to login');
       }
-    } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen bg-surface">
-      {/* Left side banner (hidden on mobile) */}
-      <div className="hidden lg:flex lg:w-1/2 bg-primary items-center justify-center p-12">
-        <div className="text-on-primary max-w-md">
-          <h1 className="font-headline-xl mb-4">PassNow</h1>
-          <p className="font-body-lg">The easiest way to pass down textbooks and essentials to the next generation of students.</p>
+    <AuthLayout>
+      <div className="fade-in relative rounded-inherit">
+        {isLoading && <OverlayLoader message="Logging in..." />}
+        <div className="mb-stack-lg">
+          <h2 className="text-headline-lg font-headline-lg text-on-surface mb-1">Welcome back</h2>
+          <p className="text-body-sm font-body-sm text-on-surface-variant">Please enter your details to log in.</p>
         </div>
-      </div>
-
-      {/* Right side form */}
-      <div className="flex w-full lg:w-1/2 items-center justify-center p-8">
-        <div className="w-full max-w-md space-y-8 glass-panel p-8 rounded-2xl">
-          <div className="text-center">
-            <h2 className="font-headline-lg text-primary mb-2">Welcome Back</h2>
-            <p className="text-on-surface-variant font-body-sm">Enter your credentials to access your account</p>
+        
+        {error && (
+          <div className="bg-error-container text-on-error-container p-3 rounded-md text-sm mb-4">
+            {error}
           </div>
+        )}
 
-          {error && (
-            <div className="bg-error-container text-on-error-container p-3 rounded-md text-sm">
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
+        <form className="space-y-stack-md" onSubmit={handleSubmit(onSubmit)}>
+          <div>
+            <label className="block text-label-md font-label-md text-on-surface mb-stack-xs" htmlFor="login-email">Email</label>
+            <div className="relative">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-opacity-50">mail</span>
+              <input 
+                id="login-email" 
+                className={`w-full pl-10 pr-4 py-2 bg-surface-container-lowest border ${errors.email ? 'border-error focus:border-error' : 'border-outline-variant focus:border-on-surface'} rounded-lg focus:outline-none focus:ring-0 text-body-md font-body-md transition-colors`} 
+                placeholder="student@university.edu" 
                 type="email"
-                placeholder="student@school.edu"
                 {...register('email')}
               />
-              {errors.email && <p className="text-error text-sm">{errors.email.message}</p>}
             </div>
+            {errors.email && <p className="text-error text-sm mt-1">{errors.email.message}</p>}
+          </div>
 
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-                <a href="#" className="text-sm font-medium text-primary hover:underline">
-                  Forgot password?
-                </a>
-              </div>
-              <Input
-                id="password"
+          <div>
+            <div className="flex justify-between items-center mb-stack-xs">
+              <label className="block text-label-md font-label-md text-on-surface" htmlFor="login-password">Password</label>
+              <a className="text-label-sm font-label-sm text-primary hover:text-on-primary-fixed-variant transition-colors" href="#">Forgot Password?</a>
+            </div>
+            <div className="relative">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-opacity-50">lock</span>
+              <input 
+                id="login-password" 
+                className={`w-full pl-10 pr-4 py-2 bg-surface-container-lowest border ${errors.password ? 'border-error focus:border-error' : 'border-outline-variant focus:border-on-surface'} rounded-lg focus:outline-none focus:ring-0 text-body-md font-body-md transition-colors`} 
+                placeholder="••••••••" 
                 type="password"
                 {...register('password')}
               />
-              {errors.password && <p className="text-error text-sm">{errors.password.message}</p>}
             </div>
-
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? 'Signing in...' : 'Sign In'}
-            </Button>
-          </form>
-
-          <div className="text-center text-sm">
-            <span className="text-on-surface-variant">Don't have an account? </span>
-            <Link to="/register" className="font-medium text-primary hover:underline">
-              Create an account
-            </Link>
+            {errors.password && <p className="text-error text-sm mt-1">{errors.password.message}</p>}
           </div>
+
+          <button 
+            className="w-full py-2.5 px-4 bg-primary text-on-primary text-label-md font-label-md rounded-lg hover:bg-on-primary-fixed-variant active:bg-primary-fixed-dim focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed" 
+            type="submit"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Logging in...' : 'Login'}
+            {!isLoading && <span className="material-symbols-outlined text-[18px]">arrow_forward</span>}
+          </button>
+        </form>
+
+        <div className="mt-stack-lg text-center">
+          <p className="text-body-sm font-body-sm text-on-surface-variant">
+            Don't have an account?{' '}
+            <Link to="/register" className="text-primary font-medium hover:underline focus:outline-none">
+              Sign Up
+            </Link>
+          </p>
         </div>
       </div>
-    </div>
+    </AuthLayout>
   );
 }

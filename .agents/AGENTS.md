@@ -28,3 +28,4 @@ These guidelines govern all AI agent behaviors, coding patterns, and security co
 - Resolve any linter or spelling errors immediately when pre-commit hook alerts occur.
 - Write failing tests first for any bug fix request to reproduce the issue.
 - Perform incremental git commits for changes and push code to the remote repository once changes are validated.
+- **MANDATORY AUTOMATION TESTS**: For every new feature or module implemented, you MUST write corresponding automation tests using the project's testing framework (Vitest/RTL) to ensure functionality works correctly before completion.

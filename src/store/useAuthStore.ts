@@ -8,9 +8,11 @@ interface UserProfile {
   email: string | null;
   displayName: string | null;
   school: string | null;
+  province: string | null;
   district: string | null;
   photoURL?: string | null;
   isProfileComplete: boolean;
+  emailVerified: boolean;
 }
 
 interface AuthState {
@@ -45,8 +47,10 @@ export const useAuthStore = create<AuthState>((set) => ({
                 email: firebaseUser.email,
                 displayName: userData.displayName || firebaseUser.displayName,
                 school: userData.school || null,
+                province: userData.province || null,
                 district: userData.district || null,
-                isProfileComplete: !!(userData.school && userData.district),
+                isProfileComplete: !!(userData.school && userData.province && userData.district),
+                emailVerified: firebaseUser.emailVerified,
               },
               isLoading: false,
             });
@@ -58,8 +62,10 @@ export const useAuthStore = create<AuthState>((set) => ({
                 email: firebaseUser.email,
                 displayName: firebaseUser.displayName,
                 school: null,
+                province: null,
                 district: null,
                 isProfileComplete: false,
+                emailVerified: firebaseUser.emailVerified,
               },
               isLoading: false,
             });
@@ -73,8 +79,10 @@ export const useAuthStore = create<AuthState>((set) => ({
               email: firebaseUser.email,
               displayName: firebaseUser.displayName,
               school: null,
+              province: null,
               district: null,
               isProfileComplete: false,
+              emailVerified: firebaseUser.emailVerified,
             },
             isLoading: false,
           });

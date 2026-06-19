@@ -8,7 +8,7 @@ vi.mock('../lib/firebase', () => ({
 }));
 
 vi.mock('firebase/auth', () => ({
-  onAuthStateChanged: vi.fn((auth, callback) => {
+  onAuthStateChanged: vi.fn(() => {
     // Return a dummy unsubscribe function
     return () => {};
   })
@@ -41,7 +41,9 @@ describe('useAuthStore', () => {
       displayName: 'Test User',
       school: 'Test Uni',
       district: 'Test District',
-      isProfileComplete: true
+      isProfileComplete: true,
+      emailVerified: true,
+      province: 'Hanoi',
     };
 
     useAuthStore.getState().setUser(testUser);

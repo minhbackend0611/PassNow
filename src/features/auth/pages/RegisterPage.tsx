@@ -2,13 +2,12 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../../../lib/firebase';
 import { useAuthStore } from '../../../store/useAuthStore';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
-import { Label } from '../../../components/ui/label';
+import AuthLayout from '../components/AuthLayout';
+import { OverlayLoader } from '../../../components/ui/Loading';
 
 const registerSchema = z.object({
   email: z.string().email({ message: 'Invalid email address' }),
@@ -28,6 +27,7 @@ export default function RegisterPage() {
   const { user } = useAuthStore();
 
   useEffect(() => {
+    // Only redirect if user is logged in
     if (user) {
       navigate('/');
     }
@@ -45,90 +45,100 @@ export default function RegisterPage() {
     setIsLoading(true);
     setError(null);
     try {
-      await createUserWithEmailAndPassword(auth, data.email, data.password);
-      // After successful registration, redirect to setup profile
-      navigate('/setup-profile');
+      const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
+      await sendEmailVerification(userCredential.user);
+      // Wait for AuthListener to trigger and redirect
     } catch (err: unknown) {
       console.error(err);
       if (err instanceof Error) {
-        setError(err.message || 'Failed to register');
+        setError(err.message || 'Failed to create an account');
       } else {
-        setError('Failed to register');
+        setError('Failed to create an account');
       }
-    } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen bg-surface">
-      {/* Left side banner (hidden on mobile) */}
-      <div className="hidden lg:flex lg:w-1/2 bg-secondary-container items-center justify-center p-12">
-        <div className="text-on-secondary-container max-w-md">
-          <h1 className="font-headline-xl mb-4">Join PassNow</h1>
-          <p className="font-body-lg">Connect with your campus community and give your old textbooks a new life.</p>
+    <AuthLayout>
+      <div className="fade-in relative rounded-inherit">
+        {isLoading && <OverlayLoader message="Registering..." />}
+        <div className="mb-stack-lg">
+          <h2 className="text-headline-lg font-headline-lg text-on-surface mb-1">Create an account</h2>
+          <p className="text-body-sm font-body-sm text-on-surface-variant">Join the campus circular economy.</p>
         </div>
-      </div>
-
-      {/* Right side form */}
-      <div className="flex w-full lg:w-1/2 items-center justify-center p-8">
-        <div className="w-full max-w-md space-y-8 glass-panel p-8 rounded-2xl">
-          <div className="text-center">
-            <h2 className="font-headline-lg text-primary mb-2">Create an Account</h2>
-            <p className="text-on-surface-variant font-body-sm">Sign up to start buying and selling</p>
+        
+        {error && (
+          <div className="bg-error-container text-on-error-container p-3 rounded-md text-sm mb-4">
+            {error}
           </div>
+        )}
 
-          {error && (
-            <div className="bg-error-container text-on-error-container p-3 rounded-md text-sm">
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
+        <form className="space-y-stack-md" onSubmit={handleSubmit(onSubmit)}>
+          <div>
+            <label className="block text-label-md font-label-md text-on-surface mb-stack-xs" htmlFor="reg-email">University Email</label>
+            <div className="relative">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-opacity-50">school</span>
+              <input 
+                id="reg-email" 
+                className={`w-full pl-10 pr-4 py-2 bg-surface-container-lowest border ${errors.email ? 'border-error focus:border-error' : 'border-outline-variant focus:border-on-surface'} rounded-lg focus:outline-none focus:ring-0 text-body-md font-body-md transition-colors`} 
+                placeholder="student@university.edu" 
                 type="email"
-                placeholder="student@school.edu"
                 {...register('email')}
               />
-              {errors.email && <p className="text-error text-sm">{errors.email.message}</p>}
             </div>
+            {errors.email && <p className="text-error text-sm mt-1">{errors.email.message}</p>}
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
+          <div>
+            <label className="block text-label-md font-label-md text-on-surface mb-stack-xs" htmlFor="reg-password">Password</label>
+            <div className="relative">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-opacity-50">lock</span>
+              <input 
+                id="reg-password" 
+                className={`w-full pl-10 pr-4 py-2 bg-surface-container-lowest border ${errors.password ? 'border-error focus:border-error' : 'border-outline-variant focus:border-on-surface'} rounded-lg focus:outline-none focus:ring-0 text-body-md font-body-md transition-colors`} 
+                placeholder="Create a strong password" 
                 type="password"
                 {...register('password')}
               />
-              {errors.password && <p className="text-error text-sm">{errors.password.message}</p>}
             </div>
+            {errors.password && <p className="text-error text-sm mt-1">{errors.password.message}</p>}
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <Input
-                id="confirmPassword"
+          <div>
+            <label className="block text-label-md font-label-md text-on-surface mb-stack-xs" htmlFor="reg-confirm-password">Confirm Password</label>
+            <div className="relative">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-opacity-50">lock_reset</span>
+              <input 
+                id="reg-confirm-password" 
+                className={`w-full pl-10 pr-4 py-2 bg-surface-container-lowest border ${errors.confirmPassword ? 'border-error focus:border-error' : 'border-outline-variant focus:border-on-surface'} rounded-lg focus:outline-none focus:ring-0 text-body-md font-body-md transition-colors`} 
+                placeholder="Repeat password" 
                 type="password"
                 {...register('confirmPassword')}
               />
-              {errors.confirmPassword && <p className="text-error text-sm">{errors.confirmPassword.message}</p>}
             </div>
-
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? 'Creating account...' : 'Sign Up'}
-            </Button>
-          </form>
-
-          <div className="text-center text-sm">
-            <span className="text-on-surface-variant">Already have an account? </span>
-            <Link to="/login" className="font-medium text-primary hover:underline">
-              Sign in
-            </Link>
+            {errors.confirmPassword && <p className="text-error text-sm mt-1">{errors.confirmPassword.message}</p>}
           </div>
+
+          <button 
+            className="w-full py-2.5 px-4 bg-primary text-on-primary text-label-md font-label-md rounded-lg hover:bg-on-primary-fixed-variant active:bg-primary-fixed-dim focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all shadow-sm flex items-center justify-center gap-2 mt-stack-md disabled:opacity-70 disabled:cursor-not-allowed" 
+            type="submit"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Registering...' : 'Register'}
+            {!isLoading && <span className="material-symbols-outlined text-[18px]">person_add</span>}
+          </button>
+        </form>
+
+        <div className="mt-stack-lg text-center">
+          <p className="text-body-sm font-body-sm text-on-surface-variant">
+            Already have an account?{' '}
+            <Link to="/login" className="text-primary font-medium hover:underline focus:outline-none">
+              Log In
+            </Link>
+          </p>
         </div>
       </div>
-    </div>
+    </AuthLayout>
   );
 }

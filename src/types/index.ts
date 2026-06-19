@@ -3,6 +3,7 @@ export interface User {
   email: string | null;
   displayName: string | null;
   school: string | null;
+  province: string | null;
   district: string | null;
   photoURL?: string | null;
   isProfileComplete: boolean;
