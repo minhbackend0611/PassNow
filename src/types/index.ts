@@ -8,6 +8,8 @@ export interface User {
   photoURL?: string | null;
   isProfileComplete: boolean;
   createdAt?: string;
+  rating?: number;
+  totalReviews?: number;
 }
 
 export type ItemCondition = 'New' | 'Like New' | 'Used' | 'Fair';
@@ -25,8 +27,9 @@ export interface Listing {
   category: string;
   status: 'available' | 'sold';
   isFree: boolean;
-  createdAt: string;
+  createdAt: string | number;
   updatedAt: string;
+  views?: number;
 }
 
 export interface ListingFilter {
@@ -36,4 +39,7 @@ export interface ListingFilter {
   isFree?: boolean;
   condition?: ItemCondition;
   searchQuery?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  sellerId?: string;
 }

@@ -25,6 +25,9 @@ export const getListings = async (filter?: ListingFilter): Promise<Listing[]> =>
     if (filter.condition) {
       constraints.push(where('condition', '==', filter.condition));
     }
+    if (filter.sellerId) {
+      constraints.push(where('sellerId', '==', filter.sellerId));
+    }
     // Note: status 'available' is implicitly filtered for feed
     constraints.push(where('status', '==', 'available'));
     
@@ -44,16 +47,25 @@ export const getListings = async (filter?: ListingFilter): Promise<Listing[]> =>
       listings.push({ id: doc.id, ...doc.data() } as Listing);
     });
     
+    let filteredListings = listings;
+
+    if (filter?.minPrice !== undefined) {
+      filteredListings = filteredListings.filter(l => l.price >= filter.minPrice!);
+    }
+    if (filter?.maxPrice !== undefined) {
+      filteredListings = filteredListings.filter(l => l.price <= filter.maxPrice!);
+    }
+    
     // Client-side search filtering since Firestore doesn't support full-text search out of the box
     if (filter?.searchQuery) {
       const lowerQuery = filter.searchQuery.toLowerCase();
-      return listings.filter(l => 
+      filteredListings = filteredListings.filter(l => 
         l.title.toLowerCase().includes(lowerQuery) || 
         l.description.toLowerCase().includes(lowerQuery)
       );
     }
     
-    return listings;
+    return filteredListings;
   } catch (error) {
     console.error("Error fetching listings:", error);
     // For demo purposes, if it fails (like index missing or permissions), return empty array

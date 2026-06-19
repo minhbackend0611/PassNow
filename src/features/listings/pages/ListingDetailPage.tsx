@@ -3,10 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getListingById } from '../../../services/listingService';
 import type { Listing, User } from '../../../types';
 import { Button } from '../../../components/ui/button';
+import { useAuthStore } from '../../../store/useAuthStore';
 
 export default function ListingDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user: currentUser } = useAuthStore();
   const [listing, setListing] = useState<Listing | null>(null);
   const [seller, setSeller] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -191,21 +193,58 @@ export default function ListingDetailPage() {
                     <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
                     <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
                     <span className="material-symbols-outlined text-[14px]">star_half</span>
-                    <span className="text-body-sm font-body-sm text-on-surface-variant ml-1">(12 Reviews)</span>
+                    <span className="text-body-sm font-body-sm text-on-surface-variant ml-1">({seller?.totalReviews || 0} Reviews)</span>
                   </div>
                 </div>
               </div>
-              <button className="text-primary text-label-sm font-label-sm hover:underline">View Profile</button>
+              <button 
+                onClick={() => seller && navigate(`/profile/${seller.uid}`)}
+                className="text-primary text-label-sm font-label-sm hover:underline cursor-pointer"
+              >
+                View Profile
+              </button>
             </div>
           </div>
 
           {/* Primary Action */}
           <div className="mt-auto pt-stack-sm">
-            <button className="w-full bg-primary text-on-primary text-label-md font-label-md py-4 rounded-xl hover:bg-primary/90 hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.08)] transition-all flex justify-center items-center gap-stack-xs active:scale-[0.98]">
-              <span className="material-symbols-outlined">chat</span>
-              Contact Seller
-            </button>
-            <p className="text-center text-label-sm font-label-sm text-on-surface-variant mt-2">Typically replies within 1 hour</p>
+            {currentUser?.uid === listing.sellerId ? (
+              <div className="flex flex-col gap-2">
+                <button 
+                  onClick={() => navigate(`/listings/${listing.id}/edit`)}
+                  className="w-full bg-secondary text-on-secondary text-label-md font-label-md py-4 rounded-xl hover:bg-secondary/90 transition-all flex justify-center items-center gap-stack-xs active:scale-[0.98] cursor-pointer"
+                >
+                  <span className="material-symbols-outlined">edit</span>
+                  Edit Listing
+                </button>
+                <button 
+                  onClick={() => {
+                    if (window.confirm("Are you sure you want to delete this listing?")) {
+                      navigate('/');
+                    }
+                  }}
+                  className="w-full border border-error text-error hover:bg-error/5 text-label-md font-label-md py-4 rounded-xl transition-all flex justify-center items-center gap-stack-xs active:scale-[0.98] cursor-pointer"
+                >
+                  <span className="material-symbols-outlined">delete</span>
+                  Delete Listing
+                </button>
+                <p className="text-center text-label-sm font-label-sm text-on-surface-variant mt-2 flex items-center justify-center gap-1">
+                  <span className="material-symbols-outlined text-[16px]">visibility</span>
+                  {listing.views || 0} views
+                </p>
+              </div>
+            ) : (
+              <>
+                <button 
+                  onClick={() => navigate(`/chat?user=${seller?.uid}`)}
+                  className="w-full bg-primary text-on-primary text-label-md font-label-md py-4 rounded-xl hover:bg-primary/90 hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.08)] transition-all flex justify-center items-center gap-stack-xs active:scale-[0.98] cursor-pointer"
+                >
+                  <span className="material-symbols-outlined">chat</span>
+                  Contact Seller
+                </button>
+                <p className="text-center text-label-sm font-label-sm text-on-surface-variant mt-2">Typically replies within 1 hour</p>
+              </>
+            )}
           </div>
         </div>
       </div>

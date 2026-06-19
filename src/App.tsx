@@ -11,6 +11,7 @@ import HomePage from './features/feed/pages/HomePage';
 import ListingDetailPage from './features/listings/pages/ListingDetailPage';
 import CreateListingPage from './features/listings/pages/CreateListingPage';
 import ProfilePage from './features/profile/pages/ProfilePage';
+import PublicProfilePage from './features/profile/pages/PublicProfilePage';
 
 function App() {
   const { initializeAuthListener, isLoading } = useAuthStore();
@@ -46,6 +47,7 @@ function App() {
             <Route path="/listings/:id" element={<ListingDetailPage />} />
             <Route path="/list" element={<CreateListingPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/profile/:userId" element={<PublicProfilePage />} />
             {/* Future routes: /profile, /chats */}
           </Route>
         </Route>

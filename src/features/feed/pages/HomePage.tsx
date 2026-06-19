@@ -5,12 +5,44 @@ import type { Listing, ListingFilter } from '../../../types';
 import ListingCard from '../components/ListingCard';
 import FeedSidebar from '../components/FeedSidebar';
 
+// Sort listings client-side by same school, then same district, then others
+const sortListingsByPreference = (listings: Listing[], school?: string | null, district?: string | null): Listing[] => {
+  if (!school && !district) return listings;
+  
+  const sameSchool: Listing[] = [];
+  const sameDistrict: Listing[] = [];
+  const otherListings: Listing[] = [];
+
+  listings.forEach(item => {
+    if (school && item.school === school) {
+      sameSchool.push(item);
+    } else if (district && item.district === district) {
+      sameDistrict.push(item);
+    } else {
+      otherListings.push(item);
+    }
+  });
+
+  const sortByDate = (a: Listing, b: Listing) => {
+    const timeA = typeof a.createdAt === 'number' ? a.createdAt : new Date(a.createdAt).getTime();
+    const timeB = typeof b.createdAt === 'number' ? b.createdAt : new Date(b.createdAt).getTime();
+    return timeB - timeA;
+  };
+
+  sameSchool.sort(sortByDate);
+  sameDistrict.sort(sortByDate);
+  otherListings.sort(sortByDate);
+
+  return [...sameSchool, ...sameDistrict, ...otherListings];
+};
+
 export default function HomePage() {
   const { user } = useAuthStore();
   const [listings, setListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState<ListingFilter>({});
   const [activeTab, setActiveTab] = useState<'all' | 'free'>('all');
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -19,18 +51,28 @@ export default function HomePage() {
         ...filter,
         isFree: activeTab === 'free' ? true : undefined
       });
-      setListings(data);
+      
+      // Apply location-preference sorting
+      const sorted = sortListingsByPreference(data, user?.school, user?.district);
+      setListings(sorted);
       setIsLoading(false);
     };
 
     fetchListings();
-  }, [filter, activeTab]);
+  }, [filter, activeTab, user]);
 
   return (
-    <>
-      <FeedSidebar onFilterChange={(newFilters) => setFilter({ ...filter, ...newFilters })} />
+    <div className="flex-1 flex w-full relative">
+      {/* Desktop Sidebar */}
+      <div className="hidden lg:block">
+        <FeedSidebar 
+          key={JSON.stringify(filter)}
+          initialFilters={filter}
+          onFilterChange={(newFilters) => setFilter(newFilters)} 
+        />
+      </div>
       
-      <main className="flex-1 overflow-y-auto bg-surface-bright px-margin-mobile md:px-gutter py-stack-lg">
+      <main className="flex-1 overflow-y-auto bg-surface px-margin-mobile md:px-gutter py-stack-lg min-h-0">
         {/* Campus Context Header */}
         <div className="mb-stack-lg flex flex-col md:flex-row md:items-end justify-between gap-stack-md bg-surface-container-low p-stack-md rounded-2xl border border-outline-variant/50">
           <div>
@@ -46,9 +88,9 @@ export default function HomePage() {
           <div className="flex bg-surface-container rounded-lg p-1 border border-outline-variant w-fit">
             <button 
               onClick={() => setActiveTab('all')}
-              className={`px-4 py-1.5 rounded text-label-md font-label-md transition-all ${
+              className={`px-4 py-1.5 rounded text-label-md font-label-md transition-all cursor-pointer ${
                 activeTab === 'all' 
-                  ? 'bg-surface shadow-sm text-primary' 
+                  ? 'bg-surface shadow-sm text-primary font-bold' 
                   : 'text-on-surface-variant hover:text-on-surface'
               }`}
             >
@@ -56,9 +98,9 @@ export default function HomePage() {
             </button>
             <button 
               onClick={() => setActiveTab('free')}
-              className={`px-4 py-1.5 rounded text-label-md font-label-md transition-all ${
+              className={`px-4 py-1.5 rounded text-label-md font-label-md transition-all cursor-pointer ${
                 activeTab === 'free' 
-                  ? 'bg-surface shadow-sm text-primary' 
+                  ? 'bg-surface shadow-sm text-primary font-bold' 
                   : 'text-on-surface-variant hover:text-on-surface'
               }`}
             >
@@ -79,18 +121,57 @@ export default function HomePage() {
             ))}
           </div>
         ) : (
-          <div className="mt-stack-lg py-12 flex flex-col items-center justify-center text-center bg-surface-container-low rounded-2xl border border-dashed border-outline-variant">
+          <div className="mt-stack-lg py-12 flex flex-col items-center justify-center text-center bg-surface-container-low rounded-2xl border border-dashed border-outline-variant px-4">
             <span className="material-symbols-outlined text-4xl text-outline mb-2" style={{ fontVariationSettings: "'wght' 200" }}>shopping_basket</span>
-            <p className="text-body-md font-body-md text-on-surface-variant mb-4">No items found matching your criteria.</p>
+            <h3 className="text-headline-md font-headline-md text-on-surface mb-1">Không tìm thấy kết quả phù hợp</h3>
+            <p className="text-body-sm font-body-sm text-on-surface-variant mb-4 max-w-xs">Không có tin đăng nào khớp với các bộ lọc bạn chọn.</p>
             <button 
-              onClick={() => { setFilter({}); setActiveTab('all'); }}
-              className="text-primary font-label-md text-label-md hover:underline"
+              onClick={() => setFilter({})}
+              className="px-4 py-2 bg-primary text-on-primary rounded-lg text-label-md font-label-md hover:bg-surface-tint transition-colors cursor-pointer"
             >
-              Clear Filters
+              Xóa bộ lọc
             </button>
           </div>
         )}
       </main>
-    </>
+
+      {/* Floating Mobile Filter Button */}
+      <div className="lg:hidden fixed bottom-20 right-6 z-40">
+        <button 
+          onClick={() => setShowMobileFilters(true)}
+          className="flex items-center gap-2 bg-primary text-on-primary px-5 py-3 rounded-full shadow-lg text-label-md font-label-md hover:bg-surface-tint active:scale-95 transition-all cursor-pointer"
+        >
+          <span className="material-symbols-outlined text-[20px]">tune</span>
+          Lọc kết quả
+        </button>
+      </div>
+
+      {/* Mobile Filters Drawer Overlay */}
+      {showMobileFilters && (
+        <div className="fixed inset-0 z-50 bg-black/40 flex justify-end lg:hidden">
+          <div className="w-80 max-w-[85vw] h-full bg-surface-container-low shadow-2xl flex flex-col animate-slide-in relative">
+            <div className="p-stack-md border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+              <span className="font-headline-md text-headline-md text-on-surface">Lọc kết quả</span>
+              <button 
+                onClick={() => setShowMobileFilters(false)}
+                className="w-8 h-8 rounded-full flex items-center justify-center bg-surface-container-high hover:bg-surface-variant transition-colors cursor-pointer text-on-surface-variant"
+              >
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto">
+              <FeedSidebar 
+                key={JSON.stringify(filter)}
+                initialFilters={filter} 
+                onFilterChange={(newFilters) => {
+                  setFilter(newFilters);
+                  setShowMobileFilters(false);
+                }} 
+              />
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
