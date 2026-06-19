@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PassNow - Home Feed</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-background": "#171d16",
+                      "inverse-on-surface": "#ecf3e7",
+                      "on-surface-variant": "#3e4a3d",
+                      "on-error": "#ffffff",
+                      "surface-container-highest": "#dde5d9",
+                      "on-primary": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary": "#a72d51",
+                      "on-secondary-container": "#684000",
+                      "secondary-fixed": "#ffddb8",
+                      "on-tertiary": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "surface": "#f4fcf0",
+                      "inverse-primary": "#62df7d",
+                      "on-secondary": "#ffffff",
+                      "surface-variant": "#dde5d9",
+                      "tertiary-fixed-dim": "#ffb2bf",
+                      "outline-variant": "#bdcaba",
+                      "secondary": "#855300",
+                      "on-primary-container": "#f7fff2",
+                      "primary-fixed": "#7ffc97",
+                      "surface-dim": "#d5dcd1",
+                      "on-primary-fixed": "#002109",
+                      "error-container": "#ffdad6",
+                      "surface-container": "#e9f0e5",
+                      "on-tertiary-container": "#fffbff",
+                      "outline": "#6e7b6c",
+                      "on-secondary-fixed": "#2a1700",
+                      "secondary-container": "#fea619",
+                      "on-primary-fixed-variant": "#005320",
+                      "primary-container": "#00873a",
+                      "primary": "#006b2c",
+                      "background": "#f4fcf0",
+                      "on-surface": "#171d16",
+                      "surface-bright": "#f4fcf0",
+                      "error": "#ba1a1a",
+                      "on-tertiary-fixed-variant": "#8a143c",
+                      "primary-fixed-dim": "#62df7d",
+                      "tertiary-container": "#c74668",
+                      "surface-tint": "#006e2d",
+                      "secondary-fixed-dim": "#ffb95f",
+                      "surface-container-high": "#e3eadf",
+                      "surface-container-low": "#eff6ea",
+                      "on-tertiary-fixed": "#3f0016",
+                      "tertiary-fixed": "#ffd9de",
+                      "inverse-surface": "#2b322b",
+                      "on-secondary-fixed-variant": "#653e00"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-md": "1rem",
+                      "stack-xs": "0.25rem",
+                      "gutter": "1.5rem",
+                      "stack-sm": "0.5rem",
+                      "stack-lg": "2rem",
+                      "container-max": "1280px",
+                      "margin-mobile": "1rem"
+              },
+              "fontFamily": {
+                      "label-md": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-xl": ["Inter"],
+                      "label-sm": ["Inter"],
+                      "headline-xl-mobile": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "headline-md": ["Inter"]
+              },
+              "fontSize": {
+                      "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                      "headline-lg": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                      "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                      "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                      "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                      "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                      "headline-xl-mobile": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                      "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                      "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }]
+              }
+            }
+          }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md text-body-md antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<header class="sticky top-0 z-50 flex items-center justify-between px-gutter py-stack-sm w-full bg-surface/80 backdrop-blur-md shadow-sm">
+<div class="flex items-center gap-stack-lg">
+<a class="text-headline-lg font-headline-lg font-bold text-primary dark:text-primary-fixed" href="#">
+                PassNow
+            </a>
+<nav class="hidden md:flex items-center gap-stack-md">
+<a class="text-primary dark:text-primary-fixed font-bold border-b-2 border-primary dark:border-primary-fixed pb-1" href="#">
+                    Browse
+                </a>
+<a class="text-on-surface-variant dark:text-outline-variant font-medium hover:text-primary transition-colors" href="#">
+                    How it Works
+                </a>
+<a class="text-on-surface-variant dark:text-outline-variant font-medium hover:text-primary transition-colors" href="#">
+                    About
+                </a>
+</nav>
+</div>
+<div class="flex items-center gap-stack-md">
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container rounded-full border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary text-body-sm font-body-sm w-64 transition-all" placeholder="Search items..." type="text"/>
+</div>
+<button class="bg-primary text-on-primary text-label-md font-label-md px-4 py-2 rounded-lg hover:bg-surface-tint transition-colors hidden sm:block">
+                List an Item
+            </button>
+<button class="text-on-surface-variant border border-outline-variant text-label-md font-label-md px-4 py-2 rounded-lg hover:bg-surface-container transition-colors hidden sm:block">
+                Log In
+            </button>
+<button class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant flex-shrink-0">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A clean, minimalist 3D avatar of a university student with short dark hair, wearing a casual green hoodie, set against a soft pale green background. The lighting is soft and studio-quality, emphasizing a modern corporate-tactile aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDe-hhT9U-aHkp-taW7e8bI-sQGSz9fZ0yhU3-RH4Dy57p7w0gQiEuL7K3UNrYchXRFf1MGcLM2jbpzxYMG58H4Nv55rZ_YnrQmdQctD0JvAglQCFLXbSfPotMkzM4Jf03P8XaaeIM-sE-4fIYBPGDGaQJs8rqEN_b0jlRGixsvtshhLG42pSaIzcD-fJPvanxDabNuTZUcg-PiJdytAyNESe-ZAIgktguYXEdmAn_2b2awZAjMebyb77A3Uez0WV-5jpujPUTSvizg"/>
+</button>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden relative max-w-container-max mx-auto w-full">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 hidden lg:flex flex-col bg-surface-container-low border-r border-outline-variant flex-shrink-0 sticky top-16">
+<div class="p-stack-md border-b border-outline-variant">
+<div class="flex items-center gap-stack-sm mb-1">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">tune</span>
+<h2 class="text-headline-md font-headline-md text-on-surface">Filters</h2>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Narrow your search</p>
+</div>
+<nav class="flex flex-col h-full gap-stack-md p-stack-md overflow-y-auto">
+<a class="flex items-center gap-stack-sm bg-primary-container text-on-primary-container rounded-lg p-stack-sm opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">category</span>
+<span class="text-label-md font-label-md">Categories</span>
+</a>
+<div class="pl-8 flex flex-col gap-2 mb-2">
+<label class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface hover:text-primary cursor-pointer">
+<input checked="" class="rounded border-outline-variant text-primary focus:ring-primary bg-surface" type="checkbox"/> Books
+                    </label>
+<label class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface hover:text-primary cursor-pointer">
+<input class="rounded border-outline-variant text-primary focus:ring-primary bg-surface" type="checkbox"/> Electronics
+                    </label>
+<label class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface hover:text-primary cursor-pointer">
+<input class="rounded border-outline-variant text-primary focus:ring-primary bg-surface" type="checkbox"/> Furniture
+                    </label>
+<label class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface hover:text-primary cursor-pointer">
+<input class="rounded border-outline-variant text-primary focus:ring-primary bg-surface" type="checkbox"/> Clothing
+                    </label>
+</div>
+<a class="flex items-center gap-stack-sm text-on-surface-variant p-stack-sm hover:bg-surface-container-high transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">payments</span>
+<span class="text-label-md font-label-md">Price Range</span>
+</a>
+<a class="flex items-center gap-stack-sm text-on-surface-variant p-stack-sm hover:bg-surface-container-high transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">verified</span>
+<span class="text-label-md font-label-md">Condition</span>
+</a>
+<a class="flex items-center gap-stack-sm text-on-surface-variant p-stack-sm hover:bg-surface-container-high transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">location_on</span>
+<span class="text-label-md font-label-md">Location</span>
+</a>
+<a class="flex items-center gap-stack-sm text-on-surface-variant p-stack-sm hover:bg-surface-container-high transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">school</span>
+<span class="text-label-md font-label-md">School</span>
+</a>
+<div class="mt-auto pt-4">
+<button class="w-full bg-surface-container-high text-on-surface text-label-md font-label-md py-2 rounded-lg hover:bg-surface-dim transition-colors border border-outline-variant">
+                        Apply Filters
+                    </button>
+</div>
+</nav>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto bg-surface-bright px-margin-mobile md:px-gutter py-stack-lg">
+<!-- Campus Context Header -->
+<div class="mb-stack-lg flex flex-col md:flex-row md:items-end justify-between gap-stack-md bg-surface-container-low p-stack-md rounded-2xl border border-outline-variant/50">
+<div>
+<h1 class="text-headline-xl-mobile md:text-headline-xl font-headline-xl-mobile md:font-headline-xl text-on-surface mb-1">Campus Feed</h1>
+<div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+<span>John Doe</span>
+<span class="w-1 h-1 rounded-full bg-outline"></span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">school</span>
+<span class="font-medium text-primary">Đại học Bách Khoa HCM</span>
+</div>
+</div>
+<div class="flex bg-surface-container rounded-lg p-1 border border-outline-variant w-fit">
+<button class="px-4 py-1.5 rounded bg-surface shadow-sm text-label-md font-label-md text-primary transition-all">All Items</button>
+<button class="px-4 py-1.5 rounded text-label-md font-label-md text-on-surface-variant hover:text-on-surface transition-all">Free Only</button>
+</div>
+</div>
+<!-- Bento Grid / Listing Cards -->
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-stack-md md:gap-gutter">
+<!-- Card 1 -->
+<div class="group bg-surface-container-lowest rounded-2xl overflow-hidden border border-outline-variant/60 shadow-[0_2px_4px_rgba(0,0,0,0.04)] hover:shadow-[0_10px_15px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col cursor-pointer">
+<div class="relative aspect-square w-full bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A pristine, gently used Calculus textbook resting on a modern wooden desk by a sunny window. The lighting is bright and airy, typical of a productive morning study session. The corporate-tactile style highlights the textbook's clean cover and crisp pages." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyaaCI3nOc1sMXncBP8zfEhbgbyZbnMT5HGDBKyuwRYxnPyBwgc8JddD72N5YqK-Fe-fqbhqnr4Q_k3DCEx-uOvRVZgkhI6AaJccfBcgYc7IHHpgCa9yFFs8uXDIat5RcxlH-qttL1s2QX5G74Gd2agkzGA9VgDlVBe_4xkpPP-qjFDqtnnSX7DW4YCPxuF2JoxJ3_PbMu13Uypq0gxhMkW-NP0VNnmWT5gOAaphsOnzFa735aNedLYs2H4Ffv0W52iW70cJPL5_1c"/>
+<div class="absolute top-2 right-2 flex flex-col gap-1 items-end">
+<span class="bg-primary text-on-primary text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm uppercase tracking-wider">Like New</span>
+</div>
+</div>
+<div class="p-stack-sm flex flex-col flex-1 gap-1">
+<div class="flex justify-between items-start mt-1">
+<h3 class="text-label-md font-label-md text-on-surface line-clamp-2 leading-tight">Calculus Early Transcendentals 9th Edition</h3>
+</div>
+<div class="mt-auto pt-2 flex items-center justify-between">
+<span class="text-headline-md font-headline-md text-on-surface font-bold">150k</span>
+<span class="flex items-center gap-1 text-[10px] text-on-surface-variant bg-surface-container px-2 py-1 rounded">
+<span class="material-symbols-outlined text-[12px]">school</span> Bách Khoa
+                            </span>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group bg-surface-container-lowest rounded-2xl overflow-hidden border border-outline-variant/60 shadow-[0_2px_4px_rgba(0,0,0,0.04)] hover:shadow-[0_10px_15px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col cursor-pointer">
+<div class="relative aspect-square w-full bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A sleek, silver graphing calculator sitting on a white minimalist table with a faint grid pattern. The lighting is soft studio lighting, creating gentle shadows. The aesthetic is clean, academic, and highly tactile." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvwQbIIKV90xmVwEWXW7vZ8lFDyWKP-HKkd5NJHETH5U3YdRJOPiL8vPMy7r1bBWtYIggVXOWC7BtsXcZCO5j2cNr96DOdpMX_-wGjsz5csfuIhDJ3Or7kyJxg1OfOUswhGSguy0hGXGPNwFYuQrcVboHhrsfrVcqya3lxvOY66ZzguQlwgdwof-ccoh5IOqEnkKnqn3M4gwGGGHHPI4tFVJrgl3XXqVY3E2eK-85u652VjArf5qpXmTEx-i-1i5V12ma8xjL6WVOZ"/>
+<div class="absolute top-2 right-2 flex flex-col gap-1 items-end">
+<span class="bg-surface-dim text-on-surface text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm uppercase tracking-wider border border-outline-variant">Used</span>
+</div>
+</div>
+<div class="p-stack-sm flex flex-col flex-1 gap-1">
+<div class="flex justify-between items-start mt-1">
+<h3 class="text-label-md font-label-md text-on-surface line-clamp-2 leading-tight">Casio FX-580VN X - Perfect Working Condition</h3>
+</div>
+<div class="mt-auto pt-2 flex items-center justify-between">
+<span class="text-headline-md font-headline-md text-on-surface font-bold">300k</span>
+<span class="flex items-center gap-1 text-[10px] text-on-surface-variant bg-surface-container px-2 py-1 rounded">
+<span class="material-symbols-outlined text-[12px]">school</span> Bách Khoa
+                            </span>
+</div>
+</div>
+</div>
+<!-- Card 3 (Free) -->
+<div class="group bg-surface-container-lowest rounded-2xl overflow-hidden border border-primary/30 shadow-[0_2px_4px_rgba(0,0,0,0.04)] hover:shadow-[0_10px_15px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col cursor-pointer ring-1 ring-primary-container/20">
+<div class="relative aspect-[4/3] w-full bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A neatly folded stack of white lab coats resting on a light wood dorm bed. The sunlight creates a warm, inviting atmosphere. The focus is on the clean fabric texture, conveying a sense of academic readiness and sustainability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDPwNhfhL0EUPT9Xl9L0oFUGyxKPTsaMtkDhw4ihMe5pUaoz7PRCRxEGc-9uw9B0MQ0JRpVxzFK20smEGOnBJMh9XCHe7833eu9Gz71jTZlgZ4ccRr1OhSQGkqahqsUZblBa2xo5-GW1OnkcCiFzyUjVEqXItcCRAcmiYmPkxmPowzIH5FE0fjorRwSNMwOJ9Psdt_5sBn2xZ3F9vlJ8pdnjeOz1GolzgCEatdvGQjAkxZsqpodrmdgeU7MATWYu8cErSuuuUOD4UT"/>
+<div class="absolute top-2 left-2">
+<span class="bg-secondary-container text-on-secondary-container text-label-sm font-label-sm px-2.5 py-1 rounded-lg shadow-sm font-bold tracking-wide">FREE</span>
+</div>
+<div class="absolute top-2 right-2 flex flex-col gap-1 items-end">
+<span class="bg-surface-dim text-on-surface text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm uppercase tracking-wider border border-outline-variant">Used</span>
+</div>
+</div>
+<div class="p-stack-sm flex flex-col flex-1 gap-1 bg-primary/5">
+<div class="flex justify-between items-start mt-1">
+<h3 class="text-label-md font-label-md text-on-surface line-clamp-2 leading-tight">Chemistry Lab Coat (Size M) - Graduating Soon</h3>
+</div>
+<div class="mt-auto pt-2 flex items-center justify-between">
+<span class="text-label-md font-label-md text-secondary font-bold">0k</span>
+<span class="flex items-center gap-1 text-[10px] text-on-surface-variant bg-surface px-2 py-1 rounded border border-outline-variant/30">
+<span class="material-symbols-outlined text-[12px]">school</span> Bách Khoa
+                            </span>
+</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group bg-surface-container-lowest rounded-2xl overflow-hidden border border-outline-variant/60 shadow-[0_2px_4px_rgba(0,0,0,0.04)] hover:shadow-[0_10px_15px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col cursor-pointer">
+<div class="relative aspect-square w-full bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A minimalist black desk lamp illuminating a clean workspace setup. The light casts a soft pool on a neutral gray mat. The overall composition is sleek, modern, and aligned with a corporate-tactile marketplace aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBr5Jk_Nk1ungwK4XUTIaJMXTN0stJ8ouPiMbvnDNqtzV-HQVjgPizWhp8GHY5zuAbvVyvonUjm4M8kAjQ9XLJbP0ZMb166BxjfeVad7YcGlSDQmYtpPorOZe7TCmFB-a4Cg44b6FYyI3G3G00z8DjdedT7jWcuGwHLXQcfEl-p-8AfeiLLt0-vDl3yqQk3YQcJ3jU4UpLRsRNZxTt6DeheV1oakzbx2gBGmuLwzoPxmdkcnG9IXvEYGVHDp0cl_XIEQyJ15y2iHQSA"/>
+<div class="absolute top-2 right-2 flex flex-col gap-1 items-end">
+<span class="bg-inverse-primary text-on-primary-fixed text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm uppercase tracking-wider">New</span>
+</div>
+</div>
+<div class="p-stack-sm flex flex-col flex-1 gap-1">
+<div class="flex justify-between items-start mt-1">
+<h3 class="text-label-md font-label-md text-on-surface line-clamp-2 leading-tight">LED Desk Lamp with USB Charging Port</h3>
+</div>
+<div class="mt-auto pt-2 flex items-center justify-between">
+<span class="text-headline-md font-headline-md text-on-surface font-bold">200k</span>
+<span class="flex items-center gap-1 text-[10px] text-on-surface-variant bg-surface-container px-2 py-1 rounded">
+<span class="material-symbols-outlined text-[12px]">school</span> Bách Khoa
+                            </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Empty State / Load More -->
+<div class="mt-stack-lg py-12 flex flex-col items-center justify-center text-center bg-surface-container-low rounded-2xl border border-dashed border-outline-variant">
+<span class="material-symbols-outlined text-4xl text-outline mb-2" style="font-variation-settings: 'wght' 200;">shopping_basket</span>
+<p class="text-body-md font-body-md text-on-surface-variant mb-4">You've reached the end of the feed for now.</p>
+<button class="text-primary font-label-md text-label-md hover:underline">Refresh Feed</button>
+</div>
+</main>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex lg:hidden justify-around items-center px-4 py-2 pb-safe bg-surface dark:bg-inverse-surface shadow-[0_-2px_10px_rgba(0,0,0,0.05)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-2xl px-4 py-1 scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-label-sm font-label-sm mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 active:bg-surface-container-highest rounded-2xl transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">search</span>
+<span class="text-label-sm font-label-sm mt-1">Browse</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 active:bg-surface-container-highest rounded-2xl transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">add_circle</span>
+<span class="text-label-sm font-label-sm mt-1">List</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 active:bg-surface-container-highest rounded-2xl transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="text-label-sm font-label-sm mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

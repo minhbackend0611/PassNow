@@ -1,0 +1,31 @@
+# .pre-commit-config.yaml
+# Pre-commit configuration for linting, security scanning, and code formatting checks
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-added-large-files
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.4
+    hooks:
+      - id: ruff
+        args: [ --fix ]
+      - id: ruff-format
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.3.0
+    hooks:
+      - id: codespell
+        additional_dependencies:
+          - tomli
+
+  - repo: https://github.com/returntocorp/semgrep
+    rev: v1.72.0
+    hooks:
+      - id: semgrep
+        args: [ --config, .semgrep/rules.yaml, --error ]

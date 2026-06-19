@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PassNow - User Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#684000",
+                        "surface-dim": "#d5dcd1",
+                        "primary-fixed": "#7ffc97",
+                        "surface-tint": "#006e2d",
+                        "surface-container-highest": "#dde5d9",
+                        "primary-container": "#00873a",
+                        "on-tertiary-container": "#fffbff",
+                        "surface": "#f4fcf0",
+                        "on-primary-fixed-variant": "#005320",
+                        "on-surface-variant": "#3e4a3d",
+                        "tertiary-container": "#c74668",
+                        "on-primary": "#ffffff",
+                        "background": "#f4fcf0",
+                        "surface-container-low": "#eff6ea",
+                        "secondary-fixed": "#ffddb8",
+                        "on-error-container": "#93000a",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb2bf",
+                        "secondary-container": "#fea619",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#a72d51",
+                        "on-background": "#171d16",
+                        "tertiary-fixed": "#ffd9de",
+                        "on-secondary-fixed": "#2a1700",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#3f0016",
+                        "primary": "#006b2c",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "surface-variant": "#dde5d9",
+                        "on-surface": "#171d16",
+                        "inverse-primary": "#62df7d",
+                        "surface-container": "#e9f0e5",
+                        "surface-bright": "#f4fcf0",
+                        "on-tertiary-fixed-variant": "#8a143c",
+                        "primary-fixed-dim": "#62df7d",
+                        "on-primary-fixed": "#002109",
+                        "inverse-on-surface": "#ecf3e7",
+                        "error": "#ba1a1a",
+                        "outline-variant": "#bdcaba",
+                        "surface-container-high": "#e3eadf",
+                        "secondary": "#855300",
+                        "outline": "#6e7b6c",
+                        "on-primary-container": "#f7fff2",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "inverse-surface": "#2b322b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "2rem",
+                        "stack-sm": "0.5rem",
+                        "stack-md": "1rem",
+                        "margin-mobile": "1rem",
+                        "container-max": "1280px",
+                        "stack-xs": "0.25rem",
+                        "gutter": "1.5rem"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-xl-mobile": ["Inter"],
+                        "headline-xl": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-xl-mobile": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        };
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-safe md:pb-0">
+<!-- TopNavBar (Hidden on Mobile, Visible on Desktop) -->
+<nav class="sticky top-0 z-50 flex items-center justify-between px-gutter py-stack-sm w-full bg-surface/80 backdrop-blur-md shadow-sm hidden md:flex">
+<div class="text-headline-lg font-headline-lg font-bold text-primary dark:text-primary-fixed">
+            PassNow
+        </div>
+<div class="flex items-center gap-stack-lg flex-1 ml-gutter justify-start">
+<a class="text-on-surface-variant dark:text-outline-variant font-medium hover:text-primary transition-colors text-label-md font-label-md" href="#">Browse</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-medium hover:text-primary transition-colors text-label-md font-label-md" href="#">How it Works</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-medium hover:text-primary transition-colors text-label-md font-label-md" href="#">About</a>
+</div>
+<div class="flex items-center gap-stack-md">
+<button class="text-label-md font-label-md text-on-surface-variant font-medium hover:text-primary transition-colors">Log In</button>
+<button class="bg-primary text-on-primary text-label-md font-label-md px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors">List an Item</button>
+<img alt="User profile" class="w-10 h-10 rounded-full object-cover shadow-sm border border-outline-variant" data-alt="A small circular profile picture of a young university student with a bright smile, wearing a casual denim jacket, against a light clean background, typical of a modern app avatar, soft natural lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDI-8hqgoVUv6iKOMPjDN6pVn1zQc2N7m8mgekUMdokXUTGmmxZJTbpVhCNiIejuKlpgD0i7yab3NXMpnfkuRROOaeHw32r0GXPIIuANbKhWHEXTOOImx4nVRCxH0YRSlse-24pLHOXMEqLCCeJE5-eB_gKQYXJKuPIKdZp7-EIx9p2A_w1OyZpujGqYL3tzR2MPCPqQGsd8k7AMOGb8WzPBKb9ht78ZUXfRYcP5jw4c-D4IfB0dNmiDX0o7nyADI3FHHs39eDwzx0r"/>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="max-w-container-max mx-auto px-margin-mobile md:px-gutter py-stack-lg md:py-[40px] flex flex-col gap-stack-lg md:gap-[48px]">
+<!-- Profile Header Bento -->
+<section class="bg-surface-container-lowest rounded-2xl shadow-[0_2px_15px_rgba(0,0,0,0.04)] border border-outline-variant p-stack-lg flex flex-col md:flex-row items-start md:items-center gap-stack-lg relative overflow-hidden">
+<!-- Decorative blur background element -->
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-primary-container rounded-full blur-[80px] opacity-20 pointer-events-none"></div>
+<div class="relative shrink-0">
+<img alt="User Avatar" class="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover shadow-md border-4 border-surface" data-alt="A high-quality, professional headshot of a friendly university student outdoors on a bright, sunny campus day. The student is wearing a neat polo shirt, smiling warmly at the camera. The background is softly blurred showing green trees and campus buildings, conveying trust and academic vitality in a modern corporate-modern style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJkomesmrvyIJgP62uCqXG4YRYxHIvZaBDq5gZZn4iSs_cWb3Dn7mpu2xLbHtRxZrN4MPar_fhWz2nBwUvdnISNeASrMWj13wrnsBTE5zOas-OI2iJjhFgXYMMPrw9XD7-Rz3-WncCtHCk5PVGSyxRjhLbT5oHT_FZjKahW0xMZ8LRCnMiGIlMFDjpUc1P4jGKRToXwAH317cmp9gZ3BAbbvhvlrsbOjYRxQne1aEwdYkDlmK6JDqQo1qHkrcinC4ROPUb1p_vbwac"/>
+<div class="absolute bottom-0 right-0 bg-secondary-container text-on-secondary-container rounded-full p-1 shadow-sm border-2 border-surface flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="flex-1 flex flex-col gap-stack-xs z-10">
+<h1 class="text-headline-xl-mobile md:text-headline-xl font-headline-xl-mobile md:font-headline-xl text-on-surface">Minh Tran</h1>
+<div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-body-md font-body-md text-on-surface-variant">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">school</span>
+<span>Ho Chi Minh City University of Technology</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+<span>District 10</span>
+</div>
+</div>
+<div class="flex items-center gap-2 mt-stack-xs">
+<div class="flex items-center text-secondary">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]">star_half</span>
+</div>
+<span class="text-label-md font-label-md text-on-surface font-semibold">4.8</span>
+<span class="text-body-sm font-body-sm text-outline">(42 reviews)</span>
+</div>
+</div>
+<div class="w-full md:w-auto flex md:flex-col items-center md:items-end gap-stack-sm md:gap-stack-md pt-stack-md md:pt-0 border-t md:border-t-0 md:border-l border-outline-variant md:pl-stack-lg z-10">
+<div class="flex-1 md:flex-none text-center md:text-right">
+<div class="text-headline-md font-headline-md text-primary">128</div>
+<div class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Items Sold</div>
+</div>
+<div class="hidden md:block w-8 h-[1px] bg-outline-variant"></div>
+<div class="flex-1 md:flex-none text-center md:text-right">
+<div class="text-headline-md font-headline-md text-on-surface">Aug 2022</div>
+<div class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Joined</div>
+</div>
+</div>
+</section>
+<!-- Tabs & Content -->
+<div class="flex flex-col gap-stack-md">
+<!-- Tab Navigation -->
+<div class="flex border-b border-outline-variant gap-stack-lg">
+<button class="pb-stack-sm border-b-2 border-primary text-primary text-label-md font-label-md font-bold transition-colors">Active Listings</button>
+<button class="pb-stack-sm border-b-2 border-transparent text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md font-medium">Reviews</button>
+</div>
+<!-- Active Listings Grid -->
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-gutter mt-stack-sm">
+<!-- Listing Card 1 -->
+<div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant overflow-hidden group hover:shadow-[0_10px_15px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col">
+<div class="aspect-square w-full relative bg-surface-container-low">
+<img alt="Calculus Textbook" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A pristine, overhead product shot of a used but clean calculus textbook, well-lit against a soft white background, emphasizing sustainability and academic focus, corporate-modern style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAS3daS-zVh2ZXAm6vkOYtLwOHGy-wxOXENJ8k62TwIz5AUKZoWVwACoXf9P-s0H238Ged6RQ-pa4OY9VnjUQwxh2JNBzjZLRBYviQrv5guTiHr6FPZVmcvV8FGwuGK5csxhbLnLq0xwioBKCGwQAcjr-XEQmRYsGZD_hi4xs4gyadn-lbvSaSUiNTYvKrmD1hI7TvpkqOLsQ3wCq_RNnSQHN62hHAO80Pj0c6dQJxampysJJS7X7hEw27MFviosK35CtBcvX0I7mVw"/>
+<div class="absolute top-2 right-2 bg-surface/90 backdrop-blur-sm px-2 py-1 rounded-full text-label-sm font-label-sm text-outline border border-outline-variant">Used</div>
+</div>
+<div class="p-stack-md flex flex-col gap-stack-xs flex-1">
+<h3 class="text-body-md font-body-md text-on-surface font-medium line-clamp-1">Calculus Early Transcendentals</h3>
+<div class="text-headline-md font-headline-md text-primary mt-auto">150,000 ₫</div>
+<div class="text-body-sm font-body-sm text-outline mt-stack-xs">Posted 2 days ago</div>
+</div>
+</div>
+<!-- Listing Card 2 -->
+<div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant overflow-hidden group hover:shadow-[0_10px_15px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col">
+<div class="aspect-square w-full relative bg-surface-container-low">
+<img alt="Scientific Calculator" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A clean, bright photo of a scientific calculator (Casio fx-580VN X) resting on a clean light wood desk. The lighting is soft and natural, casting minimal shadows, corporate-modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC68WqadjTYV2xovBfs-wxm9-VQgR8PO4bewOmPkSrpoOLINgvOQe1x1r2kLohI7KnRmZiu5xTv6uhCzPWbSS0UGmx9Wjvfom_mpcWEVlPfiwOIqJDXIgqJcLyfJhwLVZp9y5WTnrWK6QYrapU_-h7XpAfnDjXjIWgZYHX3aV-NpdTxHFBkZKvVohWaCS-KYV7zkV7S4alW4A3oqnlmr3BVayrw9bh9VGm7GlS43Vlv9t7pg1_zBS28_BTyIDRcSt02oDfUsxQe0lre"/>
+<div class="absolute top-2 right-2 bg-inverse-primary/20 text-primary-container backdrop-blur-sm px-2 py-1 rounded-full text-label-sm font-label-sm border border-primary-fixed-dim">Like New</div>
+</div>
+<div class="p-stack-md flex flex-col gap-stack-xs flex-1">
+<h3 class="text-body-md font-body-md text-on-surface font-medium line-clamp-1">Casio fx-580VN X</h3>
+<div class="text-headline-md font-headline-md text-primary mt-auto">400,000 ₫</div>
+<div class="text-body-sm font-body-sm text-outline mt-stack-xs">Posted 1 week ago</div>
+</div>
+</div>
+<!-- Listing Card 3 -->
+<div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant overflow-hidden group hover:shadow-[0_10px_15px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col">
+<div class="aspect-square w-full relative bg-surface-container-low flex items-center justify-center">
+<span class="material-symbols-outlined text-[64px] text-outline-variant">image</span>
+</div>
+<div class="p-stack-md flex flex-col gap-stack-xs flex-1">
+<div class="h-5 bg-surface-container rounded animate-pulse w-3/4"></div>
+<div class="h-7 bg-surface-container rounded animate-pulse w-1/2 mt-auto"></div>
+<div class="h-4 bg-surface-container rounded animate-pulse w-1/3 mt-stack-xs"></div>
+</div>
+</div>
+</div>
+<!-- Report Action -->
+<div class="flex justify-center mt-stack-lg pt-stack-lg border-t border-outline-variant">
+<button class="flex items-center gap-1 text-label-md font-label-md text-outline hover:text-error transition-colors">
+<span class="material-symbols-outlined text-[18px]">flag</span>
+                    Report User
+                </button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Hidden on Web, Visible on Mobile) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex md:hidden justify-around items-center px-4 py-2 pb-safe bg-surface dark:bg-inverse-surface shadow-[0_-2px_10px_rgba(0,0,0,0.05)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 active:bg-surface-container-highest transition-colors rounded-2xl" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-label-sm font-label-sm mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 active:bg-surface-container-highest transition-colors rounded-2xl" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="text-label-sm font-label-sm mt-1">Browse</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 active:bg-surface-container-highest transition-colors rounded-2xl" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="text-label-sm font-label-sm mt-1">List</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-2xl px-4 py-1 scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="text-label-sm font-label-sm mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

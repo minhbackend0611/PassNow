@@ -1,0 +1,12 @@
+{
+  "pre_tool_call": {
+    "validate_script": ".agents/validate_tool_call.py"
+  },
+  "blocked_commands": [
+    "rm -rf /",
+    "rm -rf C:\\Windows",
+    "format",
+    "mkfs",
+    "chmod -R 777"
+  ]
+}

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PassNow - Messages</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f4fcf0",
+                        "background": "#f4fcf0",
+                        "on-tertiary-container": "#fffbff",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "on-surface": "#171d16",
+                        "inverse-on-surface": "#ecf3e7",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "tertiary": "#a72d51",
+                        "tertiary-fixed-dim": "#ffb2bf",
+                        "primary-container": "#00873a",
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#e3eadf",
+                        "on-secondary-fixed": "#2a1700",
+                        "outline": "#6e7b6c",
+                        "on-error-container": "#93000a",
+                        "secondary-container": "#fea619",
+                        "surface-container-low": "#eff6ea",
+                        "surface-container": "#e9f0e5",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#c74668",
+                        "tertiary-fixed": "#ffd9de",
+                        "primary-fixed-dim": "#62df7d",
+                        "on-tertiary-fixed": "#3f0016",
+                        "surface-bright": "#f4fcf0",
+                        "on-primary": "#ffffff",
+                        "on-secondary-container": "#684000",
+                        "surface-variant": "#dde5d9",
+                        "primary-fixed": "#7ffc97",
+                        "surface-dim": "#d5dcd1",
+                        "on-tertiary-fixed-variant": "#8a143c",
+                        "inverse-primary": "#62df7d",
+                        "secondary": "#855300",
+                        "surface-tint": "#006e2d",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "on-primary-fixed": "#002109",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#2b322b",
+                        "secondary-fixed": "#ffddb8",
+                        "primary": "#006b2c",
+                        "on-primary-fixed-variant": "#005320",
+                        "outline-variant": "#bdcaba",
+                        "on-primary-container": "#f7fff2",
+                        "surface-container-highest": "#dde5d9",
+                        "on-background": "#171d16",
+                        "on-surface-variant": "#3e4a3d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "0.5rem",
+                        "stack-xs": "0.25rem",
+                        "container-max": "1280px",
+                        "margin-mobile": "1rem",
+                        "stack-lg": "2rem",
+                        "gutter": "1.5rem",
+                        "stack-md": "1rem"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Inter"],
+                        "headline-xl-mobile": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-xl": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-xl-mobile": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #dde5d9;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background h-screen flex flex-col overflow-hidden font-body-md text-body-md">
+<!-- TopNavBar -->
+<header class="bg-surface shadow-sm sticky top-0 z-50 flex items-center justify-between px-gutter py-stack-sm w-full bg-surface/80 backdrop-blur-md">
+<div class="flex items-center gap-stack-lg">
+<div class="text-headline-lg font-headline-lg font-bold text-primary">PassNow</div>
+<nav class="hidden md:flex items-center gap-stack-md">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors text-label-md font-label-md" href="#">Browse</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors text-label-md font-label-md" href="#">How it Works</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors text-label-md font-label-md" href="#">About</a>
+<!-- Adding Messages explicitly as it's the active intent, even if not in original TopNavBar nav links, to satisfy context if needed, but per rule we highlight closest match or just rely on the canvas if it's a focus screen. Since it's a chat interface, we can suppress the active state of generic nav links or show a 'Back to marketplace'. -->
+<a class="text-primary font-bold border-b-2 border-primary pb-1 text-label-md font-label-md flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">chat</span>
+                    Messages
+                </a>
+</nav>
+</div>
+<div class="flex items-center gap-stack-sm">
+<a class="hidden md:flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md mr-4" href="#">
+<span class="material-symbols-outlined text-sm">arrow_back</span>
+                 Back to Marketplace
+             </a>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg text-label-md font-label-md hover:bg-surface-tint transition-colors">List an Item</button>
+<img alt="User profile" class="w-10 h-10 rounded-full object-cover ml-2 border border-outline-variant" data-alt="A small circular avatar of a university student with short brown hair, wearing a casual green hoodie, smiling warmly against a bright, well-lit white background. The image is crisp, professional, and conveys a sense of trust and approachability suitable for a marketplace profile." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-9H8rZNsF2HRVomqfoYi0cO7p8LpS9rgX5kuOSoTrgP0PsqTXQZC-yd3QwJTjov2O829QV4WFRoAESTeT9rWpqsz3P-t2tSM5llC-p4rOOEbLkJyoX1qlFQaeAn6tLJY7GuoDX3gafhFuhN7olhHuRlanRLaVTSHCGaHhD-b5QioePg52R2C5oOUV0ioosYPbResNR4AOrtMhzKy563_9_IEO4smokllXaXZvReyAkLa2cRMPRW7CaOcMEHW6pJp4NMJ_4cFaUjmg"/>
+</div>
+</header>
+<!-- Main Chat Interface -->
+<main class="flex-1 flex overflow-hidden">
+<!-- Sidebar: Conversation List -->
+<aside class="w-full md:w-80 lg:w-96 bg-surface-container-low border-r border-outline-variant flex flex-col flex-shrink-0 z-10 transition-transform duration-300 transform md:translate-x-0 absolute md:relative h-full">
+<div class="p-stack-md border-b border-outline-variant flex justify-between items-center bg-surface-container-lowest">
+<h2 class="text-headline-md font-headline-md text-on-surface">Messages</h2>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</div>
+<div class="p-stack-sm">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="w-full pl-9 pr-4 py-2 bg-surface-container rounded-lg border-none text-body-sm font-body-sm focus:ring-1 focus:ring-primary transition-shadow text-on-surface placeholder:text-on-surface-variant" placeholder="Search messages..." type="text"/>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto custom-scrollbar">
+<!-- Active Conversation -->
+<button class="w-full text-left p-stack-md flex gap-stack-sm hover:bg-surface-container-high transition-colors bg-primary-container/10 border-l-4 border-primary">
+<div class="relative">
+<img alt="Calculus Textbook" class="w-12 h-12 rounded-lg object-cover" data-alt="A small square thumbnail image showing a slightly used college calculus textbook lying flat on a light wooden desk. The book has a dark green cover with bold white text. The lighting is bright and natural, casting soft shadows, creating a clear and realistic product view for a marketplace." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHEajJPiv1hLIVojFU6FeVi1lYmWtFxKXnfTBiMYIoSGPL4F3fr12AawuBzUzCPlF_heGV-jm1ooRd5wxB15Yz6IfZ0sqKra3CQBGaZxoMUzWka2_NIfLKbFmkDcZ25rRKTwV6rMwnYDLA6e_FbM0eJ0PXA1uQEkDmNrmvLdNY0wwldQLT_GAD4q8pOBvydhDRcas5beeV9yQs8-2Um7wo8AONhSfXiw2IpEe32BM3h1eQVvLueQZDmhsAqhf6LH6TIOU65tPTqFmZ"/>
+<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-primary rounded-full border-2 border-surface-container-low"></div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-1">
+<h3 class="text-label-md font-label-md text-on-surface truncate">Sarah Jenkins</h3>
+<span class="text-label-sm font-label-sm text-on-surface-variant">10:42 AM</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant truncate">Is the calculus book still available?</p>
+<div class="mt-1 flex items-center gap-1 text-label-sm font-label-sm text-primary">
+<span class="material-symbols-outlined text-[12px]">menu_book</span>
+<span class="truncate">Calculus 8th Ed.</span>
+</div>
+</div>
+</button>
+<!-- Unread Conversation -->
+<button class="w-full text-left p-stack-md flex gap-stack-sm hover:bg-surface-container-high transition-colors border-l-4 border-transparent">
+<img alt="Desk Lamp" class="w-12 h-12 rounded-lg object-cover" data-alt="A small square thumbnail of a sleek, modern silver desk lamp with a flexible arm, sitting on a pristine white surface. The lamp is turned off, and the scene is illuminated by soft, ambient daylight from a nearby window, conveying a minimalist and clean aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2v_EhQo_LOPxgLckvK91EDnHXampj3ZcPyeMBpaDZDMwWPRgV1F8gmruJ6kecq8cEZfeu687v529L_MopsrmLUp3bnRAQuzIO9xlZlA8qp2tE4nAe8823AtKXLQ9V898vmvs6Ks-rrmXEqNtepUX6XZNaCKhJQgLLDiP98BeWfBRQwA3fPVdaWAZCX-aE_nKR-ULRgnc-n93ZWMJdgysCjHM5GRpCxRQ9SxIicjlRzhywnBHQV4H88GOLM5MrwWslgPwlwiuC96CP"/>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-1">
+<h3 class="text-label-md font-label-md text-on-surface font-bold truncate">Marcus T.</h3>
+<span class="text-label-sm font-label-sm text-primary font-bold">Yesterday</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface font-medium truncate">I can do $15 if you meet me at the library.</p>
+<div class="mt-1 flex items-center gap-1 text-label-sm font-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[12px]">lightbulb</span>
+<span class="truncate">Silver LED Desk Lamp</span>
+</div>
+</div>
+<div class="w-2 h-2 bg-primary rounded-full mt-2"></div>
+</button>
+<!-- Read Conversation -->
+<button class="w-full text-left p-stack-md flex gap-stack-sm hover:bg-surface-container-high transition-colors border-l-4 border-transparent">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">pedal_bike</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-1">
+<h3 class="text-label-md font-label-md text-on-surface truncate">Elena R.</h3>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Tuesday</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant truncate">Thanks! It works great.</p>
+<div class="mt-1 flex items-center gap-1 text-label-sm font-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[12px]">check_circle</span>
+<span class="truncate">Mountain Bike - Sold</span>
+</div>
+</div>
+</button>
+</div>
+</aside>
+<!-- Chat Area -->
+<section class="flex-1 flex flex-col bg-surface-container-lowest h-full relative">
+<!-- Mobile Toggle / Header -->
+<div class="md:hidden p-stack-sm border-b border-outline-variant flex items-center gap-stack-sm bg-surface">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="text-label-md font-label-md font-bold">Sarah Jenkins</div>
+</div>
+<!-- Item Summary Context Card -->
+<div class="p-stack-md border-b border-outline-variant bg-surface-container-lowest shadow-sm z-10 flex justify-between items-center">
+<div class="flex gap-stack-md items-center">
+<img alt="Calculus Textbook" class="w-16 h-16 rounded-xl object-cover shadow-sm" data-alt="A clear, bright photograph of a thick college calculus textbook with a dark green cover, resting on a clean wooden table. The lighting is soft and natural, emphasizing the 'Like New' condition of the book, suitable for a high-quality marketplace listing." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFgTLygMdZmUPItW8Pb2XRt06FreTU87jrmKwEvLYC-VZmRqKDwwbocv8kfkhWkp_KjS9ijkYBwVSb-7_uJ6UvNv_dls_pwScEYvfAr5waf0gkOqgzJCJRHXKSZIaYJBaiOEhlODF2xiyOFelOYXEPaE128IxQ75jtoGyGrHWQyuuo1TNsJ_xnq3HbGBp6ZudGI5xCS8ZCEs_0-vZyNlTOSQgrjvxC2MbSik3JkOA67o22dYvBXn81rFdJwZBUEVjogI-bIeXht2aE"/>
+<div>
+<h2 class="text-headline-md font-headline-md text-on-surface">Calculus 8th Edition - Stewart</h2>
+<div class="flex items-center gap-stack-sm mt-1">
+<span class="text-body-md font-body-md font-bold text-primary">$45.00</span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span class="px-2 py-0.5 bg-secondary-container/20 text-on-secondary-container text-label-sm font-label-sm rounded-full">Like New</span>
+</div>
+</div>
+</div>
+<div class="hidden lg:flex gap-stack-sm">
+<button class="px-4 py-2 border border-outline text-on-surface rounded-lg text-label-md font-label-md hover:bg-surface-container-low transition-colors">View Listing</button>
+<button class="px-4 py-2 bg-secondary text-on-secondary rounded-lg text-label-md font-label-md hover:bg-on-secondary-container transition-colors">Mark as Sold</button>
+</div>
+</div>
+<!-- Message History -->
+<div class="flex-1 overflow-y-auto p-stack-lg flex flex-col gap-stack-md custom-scrollbar bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9IiNkZGU1ZDkiLz48L3N2Zz4=')]">
+<div class="flex justify-center my-4">
+<span class="px-3 py-1 bg-surface-container text-on-surface-variant rounded-full text-label-sm font-label-sm">Today</span>
+</div>
+<!-- Received Message -->
+<div class="flex gap-stack-sm max-w-[80%]">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center text-label-sm font-label-sm flex-shrink-0 mt-auto">
+                        SJ
+                    </div>
+<div class="flex flex-col gap-1">
+<div class="bg-surface p-stack-sm px-stack-md rounded-2xl rounded-bl-none shadow-sm border border-outline-variant text-body-md font-body-md text-on-surface">
+                            Hi! Is the calculus book still available? I need it for Professor Smith's class this semester.
+                        </div>
+<span class="text-label-sm font-label-sm text-on-surface-variant ml-1">10:42 AM</span>
+</div>
+</div>
+<!-- Sent Message -->
+<div class="flex gap-stack-sm max-w-[80%] self-end flex-row-reverse">
+<div class="flex flex-col gap-1 items-end">
+<div class="bg-primary text-on-primary p-stack-sm px-stack-md rounded-2xl rounded-br-none shadow-sm text-body-md font-body-md">
+                            Hey Sarah! Yes, it's still available. It's in great condition, barely used it last semester.
+                        </div>
+</div>
+</div>
+<!-- Sent Message -->
+<div class="flex gap-stack-sm max-w-[80%] self-end flex-row-reverse">
+<div class="flex flex-col gap-1 items-end">
+<div class="bg-primary text-on-primary p-stack-sm px-stack-md rounded-2xl rounded-br-none shadow-sm text-body-md font-body-md">
+                            Are you on campus today? We could meet up at the library.
+                        </div>
+<span class="text-label-sm font-label-sm text-on-surface-variant mr-1 flex items-center gap-1">
+                            10:45 AM
+                            <span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">done_all</span>
+</span>
+</div>
+</div>
+</div>
+<!-- Message Input -->
+<div class="p-stack-md bg-surface border-t border-outline-variant shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
+<div class="flex items-end gap-stack-sm max-w-4xl mx-auto bg-surface-container-low rounded-2xl p-2 border border-outline-variant focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-surface-container">
+<span class="material-symbols-outlined">add_photo_alternate</span>
+</button>
+<textarea class="flex-1 bg-transparent border-none resize-none py-2 text-body-md font-body-md text-on-surface focus:ring-0 placeholder:text-on-surface-variant min-h-[40px] max-h-32 custom-scrollbar outline-none" placeholder="Type a message..." rows="1"></textarea>
+<button class="p-2 bg-primary text-on-primary rounded-xl hover:bg-surface-tint transition-colors shadow-sm flex items-center justify-center h-10 w-10">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+<div class="text-center mt-2">
+<span class="text-label-sm font-label-sm text-on-surface-variant">Meet in public spaces. Never send money in advance.</span>
+</div>
+</div>
+</section>
+</main>
+</body></html>

@@ -1,0 +1,26 @@
+# .semgrep/rules.yaml
+# Custom security rules for static analysis
+
+rules:
+  - id: detect-hardcoded-api-key
+    patterns:
+      - pattern: |
+          $KEY = "AIzaSy..."
+      - pattern: |
+          $KEY = "firebase-key-..."
+    message: "Error: Hardcoded API credentials detected. Please use environment variables (process.env or os.environ)."
+    languages:
+      - javascript
+      - typescript
+      - python
+    severity: ERROR
+
+  - id: prevent-eval-use
+    patterns:
+      - pattern: eval(...)
+    message: "Warning: Do not use eval() as it exposes code to security vulnerabilities."
+    languages:
+      - javascript
+      - typescript
+      - python
+    severity: WARNING

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PassNow - Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#684000",
+                        "surface-dim": "#d5dcd1",
+                        "primary-fixed": "#7ffc97",
+                        "surface-tint": "#006e2d",
+                        "surface-container-highest": "#dde5d9",
+                        "primary-container": "#00873a",
+                        "on-tertiary-container": "#fffbff",
+                        "surface": "#f4fcf0",
+                        "on-primary-fixed-variant": "#005320",
+                        "on-surface-variant": "#3e4a3d",
+                        "tertiary-container": "#c74668",
+                        "on-primary": "#ffffff",
+                        "background": "#f4fcf0",
+                        "surface-container-low": "#eff6ea",
+                        "secondary-fixed": "#ffddb8",
+                        "on-error-container": "#93000a",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb2bf",
+                        "secondary-container": "#fea619",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#a72d51",
+                        "on-background": "#171d16",
+                        "tertiary-fixed": "#ffd9de",
+                        "on-secondary-fixed": "#2a1700",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#3f0016",
+                        "primary": "#006b2c",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "surface-variant": "#dde5d9",
+                        "on-surface": "#171d16",
+                        "inverse-primary": "#62df7d",
+                        "surface-container": "#e9f0e5",
+                        "surface-bright": "#f4fcf0",
+                        "on-tertiary-fixed-variant": "#8a143c",
+                        "primary-fixed-dim": "#62df7d",
+                        "on-primary-fixed": "#002109",
+                        "inverse-on-surface": "#ecf3e7",
+                        "error": "#ba1a1a",
+                        "outline-variant": "#bdcaba",
+                        "surface-container-high": "#e3eadf",
+                        "secondary": "#855300",
+                        "outline": "#6e7b6c",
+                        "on-primary-container": "#f7fff2",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "inverse-surface": "#2b322b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "2rem",
+                        "stack-sm": "0.5rem",
+                        "stack-md": "1rem",
+                        "margin-mobile": "1rem",
+                        "container-max": "1280px",
+                        "stack-xs": "0.25rem",
+                        "gutter": "1.5rem"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-xl-mobile": ["Inter"],
+                        "headline-xl": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-xl-mobile": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased">
+<!-- TopNavBar -->
+<nav class="sticky top-0 z-50 flex items-center justify-between px-gutter py-stack-sm w-full bg-surface/80 backdrop-blur-md shadow-sm">
+<div class="flex items-center gap-stack-md">
+<span class="text-headline-lg font-headline-lg font-bold text-primary dark:text-primary-fixed">PassNow</span>
+</div>
+<div class="hidden md:flex items-center gap-stack-lg">
+<a class="text-on-surface-variant dark:text-outline-variant font-medium text-label-md font-label-md hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Browse</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-medium text-label-md font-label-md hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">How it Works</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-medium text-label-md font-label-md hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">About</a>
+</div>
+<div class="flex items-center gap-stack-sm">
+<button class="text-label-md font-label-md font-medium text-primary hover:bg-surface-container rounded-lg px-4 py-2 transition-colors">Log In</button>
+<button class="bg-primary text-on-primary rounded-lg px-4 py-2 text-label-md font-label-md font-medium shadow-sm hover:bg-on-primary-fixed-variant transition-colors flex items-center gap-2">
+<span>List an Item</span>
+</button>
+</div>
+</nav>
+<div class="flex-1 flex w-full max-w-container-max mx-auto px-margin-mobile md:px-gutter py-stack-lg gap-gutter">
+<!-- Sidebar Navigation (Settings specific) -->
+<aside class="hidden md:flex flex-col w-64 flex-shrink-0 gap-stack-sm">
+<h2 class="text-headline-md font-headline-md text-on-surface mb-stack-sm px-stack-sm">Settings</h2>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-stack-sm bg-primary-container text-on-primary-container rounded-lg p-stack-sm opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="text-label-md font-label-md">Account Settings</span>
+</a>
+<a class="flex items-center gap-stack-sm text-on-surface-variant p-stack-sm hover:bg-surface-container-high transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">security</span>
+<span class="text-label-md font-label-md">Security</span>
+</a>
+<a class="flex items-center gap-stack-sm text-on-surface-variant p-stack-sm hover:bg-surface-container-high transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="text-label-md font-label-md">Notifications</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 max-w-3xl">
+<div class="mb-stack-lg">
+<h1 class="text-headline-xl-mobile md:text-headline-xl font-headline-xl-mobile md:font-headline-xl mb-stack-xs">Account Settings</h1>
+<p class="text-body-md font-body-md text-on-surface-variant">Manage your profile information and verified credentials.</p>
+</div>
+<!-- Profile Card -->
+<div class="bg-surface-container-lowest rounded-2xl shadow-[0_2px_4px_rgba(0,0,0,0.04)] border border-outline-variant p-stack-lg mb-stack-lg">
+<h3 class="text-headline-md font-headline-md mb-stack-md border-b border-outline-variant pb-stack-sm">Public Profile</h3>
+<div class="flex flex-col md:flex-row gap-stack-lg items-start">
+<!-- Avatar Upload -->
+<div class="flex flex-col items-center gap-stack-sm flex-shrink-0">
+<div class="w-32 h-32 rounded-full overflow-hidden border-2 border-primary-container relative group cursor-pointer">
+<img class="w-full h-full object-cover" data-alt="A close-up studio portrait of a young university student looking at the camera, wearing casual modern clothing. Bright, soft studio lighting on a neutral white background. The image feels clean, professional, and trustworthy, fitting a modern corporate-tactile aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKQJOFRse7UAMvXqm8Km9CDPjcLSg6yXTp3dWSRpqH7_NyHO2xaMzCp04LpdxThWRkRex26L4G6yP4E--mhLBzSKoyNGHLHOU7cL_FPHm30Sk18DB6u4k8ZZ4WV9M8Rzl9oP8A8GRB22fF6TtFhzhS6M8QuS_NGa4VzvLIZfH8UEko6Od5RbtLIQCDxyWRWbo5dayWDuLu6asZZsI81UQpbf11XikETwnN5_ZLqKA39xAq_O8lGyN0YoPw71wOFdgIJtPa7nXCyvGM"/>
+<div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-white">photo_camera</span>
+</div>
+</div>
+<button class="text-label-sm font-label-sm text-primary hover:underline">Change Picture</button>
+</div>
+<!-- Form Fields -->
+<div class="flex-1 w-full space-y-stack-md">
+<div>
+<label class="block text-label-sm font-label-sm text-on-surface-variant mb-1">Display Name</label>
+<input class="w-full bg-surface rounded-lg border border-outline-variant px-3 py-2 text-body-md font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors" type="text" value="Alex Student"/>
+</div>
+<div>
+<label class="block text-label-sm font-label-sm text-on-surface-variant mb-1">Email Address</label>
+<div class="flex gap-2">
+<input class="w-full bg-surface-container-low text-on-surface-variant rounded-lg border border-outline-variant px-3 py-2 text-body-md font-body-md cursor-not-allowed" disabled="" type="email" value="alex@university.edu"/>
+<button class="text-primary text-label-sm font-label-sm whitespace-nowrap hover:underline px-2">Change</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<div>
+<label class="block text-label-sm font-label-sm text-on-surface-variant mb-1">University / School</label>
+<div class="relative">
+<input class="w-full bg-surface rounded-lg border border-outline-variant px-3 py-2 text-body-md font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors pl-10" type="text" value="State University"/>
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-[20px]">school</span>
+</div>
+</div>
+<div>
+<label class="block text-label-sm font-label-sm text-on-surface-variant mb-1">Campus District</label>
+<div class="relative">
+<select class="w-full bg-surface rounded-lg border border-outline-variant px-3 py-2 text-body-md font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors appearance-none pl-10">
+<option>North Campus</option>
+<option>South Campus</option>
+<option>Downtown</option>
+</select>
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-[20px]">location_on</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Linked Accounts / Verification -->
+<div class="bg-surface-container-lowest rounded-2xl shadow-[0_2px_4px_rgba(0,0,0,0.04)] border border-outline-variant p-stack-lg mb-stack-lg">
+<h3 class="text-headline-md font-headline-md mb-stack-md border-b border-outline-variant pb-stack-sm">Verified Credentials</h3>
+<div class="space-y-stack-md">
+<div class="flex items-center justify-between p-stack-md bg-surface-container rounded-lg border border-outline-variant">
+<div class="flex items-center gap-stack-md">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<div>
+<h4 class="text-label-md font-label-md text-on-surface">Student Status</h4>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Verified via alex@university.edu</p>
+</div>
+</div>
+<span class="text-primary text-label-sm font-label-sm flex items-center gap-1 bg-surface-container-high px-2 py-1 rounded-full border border-primary/20">
+<span class="material-symbols-outlined text-[16px]">check_circle</span> Verified
+                        </span>
+</div>
+<div class="flex items-center justify-between p-stack-md bg-surface-container rounded-lg border border-outline-variant">
+<div class="flex items-center gap-stack-md">
+<div class="w-10 h-10 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined">phone_iphone</span>
+</div>
+<div>
+<h4 class="text-label-md font-label-md text-on-surface">Phone Number</h4>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Add a number for SMS alerts</p>
+</div>
+</div>
+<button class="text-on-surface-variant text-label-sm font-label-sm hover:text-primary transition-colors">Connect</button>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex justify-end gap-stack-md">
+<button class="px-6 py-2 rounded-lg text-label-md font-label-md text-on-surface-variant border border-outline-variant hover:bg-surface-container-low transition-colors">Cancel</button>
+<button class="px-6 py-2 rounded-lg text-label-md font-label-md bg-primary text-on-primary shadow-sm hover:bg-on-primary-fixed-variant transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">save</span>
+                    Save Changes
+                </button>
+</div>
+</main>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex lg:hidden justify-around items-center px-4 py-2 pb-safe bg-surface shadow-[0_-2px_10px_rgba(0,0,0,0.05)] rounded-t-xl border-t-0">
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 active:bg-surface-container-highest">
+<span class="material-symbols-outlined">home</span>
+<span class="text-label-sm font-label-sm">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 active:bg-surface-container-highest">
+<span class="material-symbols-outlined">search</span>
+<span class="text-label-sm font-label-sm">Browse</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 active:bg-surface-container-highest">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="text-label-sm font-label-sm">List</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-2xl px-4 py-1 scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="text-label-sm font-label-sm">Profile</span>
+</div>
+</nav>
+</body></html>

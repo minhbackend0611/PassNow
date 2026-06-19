@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>My Transactions - PassNow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f4fcf0",
+                        "on-primary-fixed-variant": "#005320",
+                        "secondary": "#855300",
+                        "surface-container": "#e9f0e5",
+                        "on-primary-fixed": "#002109",
+                        "inverse-surface": "#2b322b",
+                        "on-tertiary-fixed": "#3f0016",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#a72d51",
+                        "surface-container-low": "#eff6ea",
+                        "surface-container-high": "#e3eadf",
+                        "primary-fixed-dim": "#62df7d",
+                        "surface-bright": "#f4fcf0",
+                        "surface-variant": "#dde5d9",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#d5dcd1",
+                        "secondary-fixed": "#ffddb8",
+                        "secondary-container": "#fea619",
+                        "on-secondary-container": "#684000",
+                        "surface-tint": "#006e2d",
+                        "error": "#ba1a1a",
+                        "primary-container": "#00873a",
+                        "outline-variant": "#bdcaba",
+                        "inverse-primary": "#62df7d",
+                        "primary-fixed": "#7ffc97",
+                        "error-container": "#ffdad6",
+                        "background": "#f4fcf0",
+                        "surface-container-highest": "#dde5d9",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#171d16",
+                        "inverse-on-surface": "#ecf3e7",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "on-background": "#171d16",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-container": "#c74668",
+                        "on-primary-container": "#f7fff2",
+                        "on-tertiary-fixed-variant": "#8a143c",
+                        "on-tertiary-container": "#fffbff",
+                        "outline": "#6e7b6c",
+                        "on-secondary-fixed": "#2a1700",
+                        "tertiary-fixed-dim": "#ffb2bf",
+                        "tertiary-fixed": "#ffd9de",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "on-surface-variant": "#3e4a3d",
+                        "primary": "#006b2c",
+                        "on-error": "#ffffff",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-xs": "0.25rem",
+                        "margin-mobile": "1rem",
+                        "container-max": "1280px",
+                        "stack-md": "1rem",
+                        "gutter": "1.5rem",
+                        "stack-lg": "2rem",
+                        "stack-sm": "0.5rem"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-xl-mobile": ["Inter"],
+                        "headline-xl": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-xl-mobile": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="sticky top-0 z-50 flex items-center justify-between px-gutter py-stack-sm w-full bg-surface/80 backdrop-blur-md shadow-sm">
+<div class="flex items-center gap-gutter">
+<a class="text-headline-lg font-headline-lg font-bold text-primary dark:text-primary-fixed" href="#">PassNow</a>
+<!-- Search bar omitted for simplicity on this specific view, but typically here -->
+</div>
+<nav class="hidden md:flex items-center gap-stack-lg">
+<a class="text-on-surface-variant dark:text-outline-variant font-medium hover:text-primary dark:hover:text-primary-fixed transition-colors text-label-md font-label-md" href="#">Browse</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-medium hover:text-primary dark:hover:text-primary-fixed transition-colors text-label-md font-label-md" href="#">How it Works</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-medium hover:text-primary dark:hover:text-primary-fixed transition-colors text-label-md font-label-md" href="#">About</a>
+</nav>
+<div class="flex items-center gap-stack-md">
+<button class="hidden md:inline-flex items-center justify-center px-4 py-2 bg-primary text-on-primary rounded-lg text-label-md font-label-md hover:bg-on-primary-fixed-variant transition-colors">List an Item</button>
+<button class="flex items-center justify-center p-2 rounded-full bg-surface-container-high hover:bg-surface-variant transition-colors group">
+<img alt="User profile" class="w-8 h-8 rounded-full object-cover" data-alt="A clean, professional headshot of a university student smiling, brightly lit against a neutral background. The lighting is soft and even, typical of modern corporate or academic profile pictures." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEF86vy_w9KYWuw-xgEd0JqsflJE87a8a43HhNeB5wGrGRM3_9lbrhm_7qnKr_FuyyGXASOUbH2Vf50J3qgo5wQzCRdaHRX8q59_-KIKAsXsdVSUTKDOnZ8Jov_NtLNFIAk-epaMRvLa5rD85Mest7nkckhKxQCiPezz3fgvE5ctTWR3V6y8ZiQBSn1Q7xDkXarRArgZFK-whiP3dRmKtE7xp7ErpFBbCdNH5YOBMKp6jvteQ4RwNAbPrgx3n046N6XkByN7MIuQc8"/>
+</button>
+</div>
+</header>
+<main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-gutter py-stack-lg flex flex-col gap-stack-lg pb-24 md:pb-stack-lg">
+<header class="flex flex-col gap-stack-sm">
+<h1 class="text-headline-xl-mobile md:text-headline-xl font-headline-xl-mobile md:font-headline-xl text-on-surface">My Transactions</h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant">Track your buying and selling activity.</p>
+</header>
+<!-- Tabs -->
+<div class="flex border-b border-outline-variant w-full overflow-x-auto hide-scrollbar">
+<button class="flex-1 md:flex-none text-center px-gutter py-stack-sm text-label-md font-label-md text-primary border-b-2 border-primary font-bold transition-colors whitespace-nowrap">Buying</button>
+<button class="flex-1 md:flex-none text-center px-gutter py-stack-sm text-label-md font-label-md text-on-surface-variant hover:text-primary transition-colors whitespace-nowrap border-b-2 border-transparent hover:border-outline-variant">Selling</button>
+</div>
+<!-- Transaction List -->
+<div class="flex flex-col gap-stack-sm">
+<!-- Transaction Card 1 (Pending) -->
+<div class="flex flex-col sm:flex-row items-start sm:items-center gap-stack-md p-stack-md bg-surface-container-lowest border border-outline-variant rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+<div class="w-full sm:w-24 h-24 rounded-lg overflow-hidden shrink-0 bg-surface-container">
+<img alt="Organic Chemistry Textbook" class="w-full h-full object-cover" data-alt="A lightly used chemistry textbook, stacked with a notebook. Shot from a slight angle with bright, soft studio lighting to highlight the textbook's cover details. Minimalist background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAChwnd4OHTZUuH8nvXaA_gAhz7iLtz4KlXygMG3bDXymIy9cp8na3WpLAc0Rf2i1Hcy8E2fjUcCmP6GW9gGgtEn253hzsOiT8wgvpkROMxNzOau1kRPHlwwhJr-IvOylJGP-adnf-fzfDDNTYqmGizdeAV0jT1FsAP2cytsaXNiQ-_Zcys8EO6zBpG_91xCvTmLY5sNASKSvG-040Af2ATN8kYtWbI0Ans6tOdfEB40r7Lwnn_SwygzGXeITmiRIPEiD7-JKPNM2fn"/>
+</div>
+<div class="flex-grow flex flex-col gap-stack-xs min-w-0">
+<div class="flex justify-between items-start w-full">
+<h3 class="text-headline-md font-headline-md text-on-surface truncate">Organic Chemistry Textbook</h3>
+<span class="text-headline-md font-headline-md text-on-surface whitespace-nowrap">$45.00</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Seller: <span class="font-medium text-on-surface">Alex R.</span></p>
+<div class="flex items-center gap-stack-sm mt-stack-xs">
+<span class="inline-flex items-center px-2 py-1 rounded-full bg-secondary-container text-on-secondary-container text-label-sm font-label-sm">
+<span class="material-symbols-outlined filled text-[16px] mr-1">schedule</span> Pending
+                        </span>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Meeting requested for Tomorrow, 2:00 PM</span>
+</div>
+</div>
+<div class="w-full sm:w-auto flex sm:flex-col gap-stack-sm shrink-0">
+<button class="flex-1 sm:flex-none px-4 py-2 bg-surface-container-high text-on-surface rounded-lg text-label-md font-label-md hover:bg-surface-variant transition-colors text-center">Message</button>
+<button class="flex-1 sm:flex-none px-4 py-2 bg-primary text-on-primary rounded-lg text-label-md font-label-md hover:bg-on-primary-fixed-variant transition-colors text-center">Confirm Meetup</button>
+</div>
+</div>
+<!-- Transaction Card 2 (Reserved) -->
+<div class="flex flex-col sm:flex-row items-start sm:items-center gap-stack-md p-stack-md bg-surface-container-lowest border border-outline-variant rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+<div class="w-full sm:w-24 h-24 rounded-lg overflow-hidden shrink-0 bg-surface-container">
+<img alt="Minimalist Desk Lamp" class="w-full h-full object-cover" data-alt="A sleek, modern desk lamp. The lamp is white with a metallic base, photographed against a clean, light-colored backdrop to emphasize its minimalist design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJvBOdi7nTmHnpjFdseDhDTtNjNmeJPgoQtxymkNBV4dVWLz7XBdXYVcMyRXvQslTNWwFJk-BxoGOPisLVlFaXjcKTud-i1qoheJvtRgqXeVpDwrHWxqdoahCwCgz5Q38Gi-98gb1Sx6pjKGHz1ceXJjjnRzxS2lpj96ZxGBwj31CnvZ_2g2CjllhF2Gjd483bAPQVtTOID2R5yqAZeXNrg7yvqgk9uCM5rmXeaCtorL-b48FjLink9TXBU8R-LkMgSI2e9Nc4sKHW"/>
+</div>
+<div class="flex-grow flex flex-col gap-stack-xs min-w-0">
+<div class="flex justify-between items-start w-full">
+<h3 class="text-headline-md font-headline-md text-on-surface truncate">Minimalist Desk Lamp</h3>
+<span class="text-headline-md font-headline-md text-on-surface whitespace-nowrap">$15.00</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Seller: <span class="font-medium text-on-surface">Sam T.</span></p>
+<div class="flex items-center gap-stack-sm mt-stack-xs">
+<span class="inline-flex items-center px-2 py-1 rounded-full bg-surface-variant text-on-surface-variant border border-outline-variant text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[16px] mr-1">lock</span> Reserved
+                        </span>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Awaiting seller confirmation</span>
+</div>
+</div>
+<div class="w-full sm:w-auto flex sm:flex-col gap-stack-sm shrink-0">
+<button class="flex-1 sm:flex-none px-4 py-2 bg-surface-container-high text-on-surface rounded-lg text-label-md font-label-md hover:bg-surface-variant transition-colors text-center w-full">Message</button>
+</div>
+</div>
+<!-- Transaction Card 3 (Completed) -->
+<div class="flex flex-col sm:flex-row items-start sm:items-center gap-stack-md p-stack-md bg-surface border border-outline-variant opacity-75 rounded-2xl">
+<div class="w-full sm:w-24 h-24 rounded-lg overflow-hidden shrink-0 bg-surface-container grayscale">
+<img alt="Graphing Calculator" class="w-full h-full object-cover" data-alt="A gently used graphing calculator lying flat on a wooden surface. Natural, even lighting with a slight desaturated tone to indicate past activity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcgbGgO_vOzHqALESi0wah91v2wSs7OBFgxW-BtwC7B4GCw-Y1B7FzHN0uM8hKCWEwpYBdLcnXabrlzH34e8bUk0WaDGrZjSpRZKTrhBDsqMWZZcBlIr9nwvD-wXPX6rW9jyOlpb2mKyOciUMNpwq_ydasHiX9Q_m8Rcj-GgjkRwI5W_9caLDGe6SVpC5PlukkpWTJkAx1smvLv9cC9WNu4wcG5ylEA-lbe1z0impKfmWCe7LB_nnmfYKX3yNDAL4a25W9KtjtnUTz"/>
+</div>
+<div class="flex-grow flex flex-col gap-stack-xs min-w-0">
+<div class="flex justify-between items-start w-full">
+<h3 class="text-headline-md font-headline-md text-on-surface truncate line-through decoration-outline">Graphing Calculator TI-84</h3>
+<span class="text-headline-md font-headline-md text-on-surface whitespace-nowrap">$60.00</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Seller: <span class="font-medium text-on-surface">Jordan M.</span></p>
+<div class="flex items-center gap-stack-sm mt-stack-xs">
+<span class="inline-flex items-center px-2 py-1 rounded-full bg-primary-fixed-dim text-on-primary-fixed border border-primary text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[16px] mr-1">check_circle</span> Completed
+                        </span>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Completed on Oct 12, 2023</span>
+</div>
+</div>
+<div class="w-full sm:w-auto flex sm:flex-col gap-stack-sm shrink-0">
+<button class="flex-1 sm:flex-none px-4 py-2 bg-surface text-primary border border-primary rounded-lg text-label-md font-label-md hover:bg-primary-container hover:text-on-primary-container transition-colors text-center w-full">Leave Review</button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex lg:hidden justify-around items-center px-4 py-2 pb-safe bg-surface dark:bg-inverse-surface shadow-[0_-2px_10px_rgba(0,0,0,0.05)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 active:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-label-sm font-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 active:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="text-label-sm font-label-sm">Browse</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 active:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="text-label-sm font-label-sm">List</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-2xl px-4 py-1 scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-label-sm font-label-sm">Profile</span>
+</a>
+</nav>
+<style>
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</body></html>

@@ -1,0 +1,30 @@
+# policies.yaml
+# Security authorization policy configuration for the AI Agent coding framework
+
+environments:
+  localhost:
+    blocked_tools:
+      - send_email
+      - deploy_to_prod
+  staging:
+    blocked_tools:
+      - deploy_to_prod
+
+roles:
+  viewer:
+    allowed_tools:
+      - list_dir
+      - view_file
+      - grep_search
+  developer:
+    allowed_tools:
+      - list_dir
+      - view_file
+      - grep_search
+      - write_to_file
+      - replace_file_content
+      - multi_replace_file_content
+      - run_command
+  admin:
+    allowed_tools:
+      - "*"

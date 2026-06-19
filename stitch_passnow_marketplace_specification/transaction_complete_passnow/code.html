@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Transaction Complete - PassNow</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS Setup -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f4fcf0",
+                        "on-primary-fixed-variant": "#005320",
+                        "secondary": "#855300",
+                        "surface-container": "#e9f0e5",
+                        "on-primary-fixed": "#002109",
+                        "inverse-surface": "#2b322b",
+                        "on-tertiary-fixed": "#3f0016",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#a72d51",
+                        "surface-container-low": "#eff6ea",
+                        "surface-container-high": "#e3eadf",
+                        "primary-fixed-dim": "#62df7d",
+                        "surface-bright": "#f4fcf0",
+                        "surface-variant": "#dde5d9",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#d5dcd1",
+                        "secondary-fixed": "#ffddb8",
+                        "secondary-container": "#fea619",
+                        "on-secondary-container": "#684000",
+                        "surface-tint": "#006e2d",
+                        "error": "#ba1a1a",
+                        "primary-container": "#00873a",
+                        "outline-variant": "#bdcaba",
+                        "inverse-primary": "#62df7d",
+                        "primary-fixed": "#7ffc97",
+                        "error-container": "#ffdad6",
+                        "background": "#f4fcf0",
+                        "surface-container-highest": "#dde5d9",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#171d16",
+                        "inverse-on-surface": "#ecf3e7",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "on-background": "#171d16",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-container": "#c74668",
+                        "on-primary-container": "#f7fff2",
+                        "on-tertiary-fixed-variant": "#8a143c",
+                        "on-tertiary-container": "#fffbff",
+                        "outline": "#6e7b6c",
+                        "on-secondary-fixed": "#2a1700",
+                        "tertiary-fixed-dim": "#ffb2bf",
+                        "tertiary-fixed": "#ffd9de",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "on-surface-variant": "#3e4a3d",
+                        "primary": "#006b2c",
+                        "on-error": "#ffffff",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "3xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-xs": "0.25rem",
+                        "margin-mobile": "1rem",
+                        "container-max": "1280px",
+                        "stack-md": "1rem",
+                        "gutter": "1.5rem",
+                        "stack-lg": "2rem",
+                        "stack-sm": "0.5rem"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-xl-mobile": ["Inter"],
+                        "headline-xl": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-xl-mobile": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Custom animations for the success state */
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes slideUpFade {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        .animate-pop-in {
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        .animate-slide-up {
+            animation: slideUpFade 0.5s ease-out forwards;
+            opacity: 0;
+        }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex items-center justify-center p-margin-mobile md:p-gutter selection:bg-primary-container selection:text-on-primary-container">
+<!-- 
+        Navigation Shell suppressed. 
+        Reason: This is a linear/transactional confirmation screen. 
+        Focus is entirely on the success state and next action (rating).
+    -->
+<main class="w-full max-w-2xl mx-auto">
+<!-- Main Content Card -->
+<div class="bg-surface-container-lowest rounded-3xl shadow-[0_10px_30px_-10px_rgba(0,0,0,0.05)] border border-outline-variant overflow-hidden animate-slide-up">
+<!-- Header Section (Success Focus) -->
+<div class="p-stack-lg md:p-[3rem] flex flex-col items-center text-center border-b border-outline-variant bg-gradient-to-b from-surface-container-low to-surface-container-lowest relative overflow-hidden">
+<!-- Decorative background shapes -->
+<div class="absolute -top-20 -left-20 w-64 h-64 bg-primary-container/20 rounded-full blur-3xl"></div>
+<div class="absolute -bottom-20 -right-20 w-48 h-48 bg-primary/10 rounded-full blur-2xl"></div>
+<div class="relative z-10 flex flex-col items-center gap-stack-md">
+<div class="w-20 h-20 bg-primary-container rounded-full flex items-center justify-center text-on-primary-container shadow-sm animate-pop-in">
+<span class="material-symbols-outlined filled !text-[48px]">check_circle</span>
+</div>
+<div class="space-y-stack-xs animate-slide-up delay-100">
+<h1 class="text-headline-xl-mobile md:text-headline-xl font-headline-xl md:font-headline-xl text-on-surface">Transaction Complete!</h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant max-w-md mx-auto">
+                            Both parties have confirmed. You have successfully completed this exchange.
+                        </p>
+</div>
+</div>
+</div>
+<div class="p-stack-lg md:p-[3rem] flex flex-col gap-stack-lg">
+<!-- Item Summary Bento Box -->
+<section class="animate-slide-up delay-200">
+<h2 class="text-label-md font-label-md text-on-surface-variant uppercase tracking-wider mb-stack-sm">Order Summary</h2>
+<div class="flex flex-col sm:flex-row gap-stack-md p-stack-md bg-surface-container-low rounded-2xl border border-outline-variant items-start sm:items-center">
+<div class="w-full sm:w-24 h-24 shrink-0 rounded-xl overflow-hidden bg-surface-variant relative shadow-sm">
+<img class="w-full h-full object-cover" data-alt="A clean, top-down photograph of a thick university calculus textbook with a blue cover, resting on a pristine light oak wooden desk. The lighting is soft and natural, evoking a modern, academic light-mode aesthetic. A single yellow pencil lies next to it." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3vyQFduU5QCPCQSzxg7VjTAdJgJ4N284JZtPVvvwCHxZDCRDSM6V0b_sfwakLqXdR35qaR4Q31O1gyN4Gxz9tYaLxlrtY1KJ-S7CpAUqI4EYY_eIK4w2AQSFumXOGwsFCDeW5lh4IuU2iuxYbLfN6OS8R_gn0zaNFVY5IyXT5uaSeWfN-nVoDFwv34BxSg04ns8WcyVR85OAKTUP-Lry0LLfXGtpB2AqGuJQ4X2TqPTvL1ZMny-l-tBmsNSe5oPRxfxil87gdBY3X"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2 mb-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-primary/10 text-primary text-label-sm font-label-sm">Like New</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined !text-[14px]">sell</span>
+                                    Item
+                                </span>
+</div>
+<h3 class="text-headline-md font-headline-md text-on-surface truncate">Calculus Early Transcendentals 9th Ed</h3>
+<p class="text-body-md font-body-md text-on-surface-variant mt-1">Sold by Alex M. • Campus Central</p>
+</div>
+<div class="text-right shrink-0 mt-stack-sm sm:mt-0">
+<span class="text-headline-lg font-headline-lg text-on-surface">$45.00</span>
+</div>
+</div>
+</section>
+<!-- Rating Section -->
+<section class="bg-surface-container rounded-2xl p-stack-lg border border-outline-variant shadow-sm animate-slide-up delay-300">
+<div class="flex flex-col items-center text-center gap-stack-md">
+<div class="w-12 h-12 rounded-full bg-surface-variant overflow-hidden ring-4 ring-surface-container-lowest">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a young university student smiling warmly, set against a blurred modern campus background. The lighting is bright and cheerful, fitting a high-integrity, community-focused modern UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCa2BsCI-9cOEroK8WgSQXtdve8672gLjy9k95vWOblbT4uGqt0vLqIoTpMGGCsSJZoUirKWCoaSFHvjsBmexqdMGAfqhlU1lxH846BJusq3lI8V4_dd_zdIZI3j381j0zwbHFI_9faX856eVK4YUD1pofh5PBlgC5m73D0UMGSKdB3Fv_pVE4cdj4bG-9vNeEBR3oiucfMB9MjvQBY5CIhaoh7j0LtcP7PTuskb3Mv3RM3ITtM-nR-gK4X2BegLzl273kUGKRKbf3t"/>
+</div>
+<div>
+<h2 class="text-headline-md font-headline-md text-on-surface">Rate Alex M.</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Your feedback builds community trust.</p>
+</div>
+<!-- Interactive Stars -->
+<div aria-label="Rate your experience" class="flex items-center gap-2" id="star-rating" role="radiogroup">
+<button class="star-btn text-outline-variant hover:text-secondary-container transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-full p-1" data-value="1">
+<span class="material-symbols-outlined !text-[36px] transition-transform hover:scale-110">star</span>
+</button>
+<button class="star-btn text-outline-variant hover:text-secondary-container transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-full p-1" data-value="2">
+<span class="material-symbols-outlined !text-[36px] transition-transform hover:scale-110">star</span>
+</button>
+<button class="star-btn text-outline-variant hover:text-secondary-container transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-full p-1" data-value="3">
+<span class="material-symbols-outlined !text-[36px] transition-transform hover:scale-110">star</span>
+</button>
+<button class="star-btn text-outline-variant hover:text-secondary-container transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-full p-1" data-value="4">
+<span class="material-symbols-outlined !text-[36px] transition-transform hover:scale-110">star</span>
+</button>
+<button class="star-btn text-outline-variant hover:text-secondary-container transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-full p-1" data-value="5">
+<span class="material-symbols-outlined !text-[36px] transition-transform hover:scale-110">star</span>
+</button>
+</div>
+<!-- Comment Field (Initially somewhat hidden or subtle until stars clicked, or just prominent) -->
+<div class="w-full mt-stack-sm text-left">
+<label class="block text-label-md font-label-md text-on-surface mb-stack-xs" for="review-comment">Leave a comment (Optional)</label>
+<textarea class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-sm text-body-md font-body-md text-on-surface placeholder:text-outline focus:border-primary focus:ring-1 focus:ring-primary transition-all resize-none" id="review-comment" placeholder="How was your experience trading with this student?" rows="3"></textarea>
+</div>
+<button class="w-full sm:w-auto mt-stack-sm bg-primary hover:bg-on-primary-fixed-variant text-on-primary text-label-md font-label-md px-8 py-3 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" id="submit-review-btn">
+                            Submit Review
+                        </button>
+</div>
+</section>
+</div>
+<!-- Bottom Navigation/Action -->
+<div class="bg-surface-container-low px-stack-lg py-stack-md border-t border-outline-variant flex justify-center">
+<a class="text-label-md font-label-md text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2" href="#">
+<span class="material-symbols-outlined !text-[18px]">arrow_back</span>
+                    Return to Dashboard
+                </a>
+</div>
+</div>
+</main>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const stars = document.querySelectorAll('.star-btn');
+            const submitBtn = document.getElementById('submit-review-btn');
+            let currentRating = 0;
+
+            // Rating logic
+            stars.forEach(star => {
+                star.addEventListener('mouseenter', function() {
+                    const value = parseInt(this.getAttribute('data-value'));
+                    highlightStars(value, true);
+                });
+
+                star.addEventListener('mouseleave', function() {
+                    highlightStars(currentRating, false);
+                });
+
+                star.addEventListener('click', function() {
+                    currentRating = parseInt(this.getAttribute('data-value'));
+                    highlightStars(currentRating, false);
+                    
+                    // Add a little pop animation to the clicked star
+                    const icon = this.querySelector('span');
+                    icon.style.transform = 'scale(1.2)';
+                    setTimeout(() => icon.style.transform = 'scale(1)', 150);
+                });
+            });
+
+            function highlightStars(count, isHover) {
+                stars.forEach(s => {
+                    const val = parseInt(s.getAttribute('data-value'));
+                    const icon = s.querySelector('span');
+                    
+                    if (val <= count) {
+                        icon.classList.add('filled');
+                        s.classList.remove('text-outline-variant');
+                        s.classList.add('text-secondary-container');
+                    } else {
+                        icon.classList.remove('filled');
+                        s.classList.add('text-outline-variant');
+                        s.classList.remove('text-secondary-container');
+                    }
+                });
+            }
+
+            // Simulate submission
+            submitBtn.addEventListener('click', function() {
+                if (currentRating === 0) {
+                    alert("Please select a star rating first.");
+                    return;
+                }
+                
+                const originalText = this.innerHTML;
+                this.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Submitting...';
+                this.disabled = true;
+
+                setTimeout(() => {
+                    this.innerHTML = '<span class="material-symbols-outlined filled">check</span> Review Saved';
+                    this.classList.remove('bg-primary', 'hover:bg-on-primary-fixed-variant');
+                    this.classList.add('bg-primary-container', 'text-on-primary-container');
+                }, 1000);
+            });
+        });
+    </script>
+</body></html>

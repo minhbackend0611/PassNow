@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Listing Detail - PassNow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-background": "#171d16",
+                        "inverse-on-surface": "#ecf3e7",
+                        "on-surface-variant": "#3e4a3d",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#dde5d9",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#a72d51",
+                        "on-secondary-container": "#684000",
+                        "secondary-fixed": "#ffddb8",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface": "#f4fcf0",
+                        "inverse-primary": "#62df7d",
+                        "on-secondary": "#ffffff",
+                        "surface-variant": "#dde5d9",
+                        "tertiary-fixed-dim": "#ffb2bf",
+                        "outline-variant": "#bdcaba",
+                        "secondary": "#855300",
+                        "on-primary-container": "#f7fff2",
+                        "primary-fixed": "#7ffc97",
+                        "surface-dim": "#d5dcd1",
+                        "on-primary-fixed": "#002109",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#e9f0e5",
+                        "on-tertiary-container": "#fffbff",
+                        "outline": "#6e7b6c",
+                        "on-secondary-fixed": "#2a1700",
+                        "secondary-container": "#fea619",
+                        "on-primary-fixed-variant": "#005320",
+                        "primary-container": "#00873a",
+                        "primary": "#006b2c",
+                        "background": "#f4fcf0",
+                        "on-surface": "#171d16",
+                        "surface-bright": "#f4fcf0",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#8a143c",
+                        "primary-fixed-dim": "#62df7d",
+                        "tertiary-container": "#c74668",
+                        "surface-tint": "#006e2d",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "surface-container-high": "#e3eadf",
+                        "surface-container-low": "#eff6ea",
+                        "on-tertiary-fixed": "#3f0016",
+                        "tertiary-fixed": "#ffd9de",
+                        "inverse-surface": "#2b322b",
+                        "on-secondary-fixed-variant": "#653e00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "1rem",
+                        "stack-xs": "0.25rem",
+                        "gutter": "1.5rem",
+                        "stack-sm": "0.5rem",
+                        "stack-lg": "2rem",
+                        "container-max": "1280px",
+                        "margin-mobile": "1rem"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-xl": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-xl-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "headline-xl-mobile": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col font-body-md">
+<!-- TopNavBar -->
+<header class="sticky top-0 z-50 flex items-center justify-between px-gutter py-stack-sm w-full bg-surface/80 backdrop-blur-md shadow-sm">
+<div class="flex items-center gap-stack-lg">
+<a class="text-headline-lg font-headline-lg font-bold text-primary" href="#">PassNow</a>
+<nav class="hidden md:flex items-center gap-stack-md">
+<!-- Active: Browse -->
+<a class="text-primary font-bold border-b-2 border-primary pb-1 text-label-md font-label-md hover:text-primary transition-colors hover:scale-95 duration-100" href="#">Browse</a>
+<a class="text-on-surface-variant font-medium text-label-md font-label-md hover:text-primary transition-colors" href="#">How it Works</a>
+<a class="text-on-surface-variant font-medium text-label-md font-label-md hover:text-primary transition-colors" href="#">About</a>
+</nav>
+</div>
+<div class="flex items-center gap-stack-md">
+<button class="hidden md:block text-label-md font-label-md font-medium text-on-surface-variant hover:text-primary transition-colors">Log In</button>
+<button class="bg-primary text-on-primary text-label-md font-label-md px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors hidden md:block">List an Item</button>
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden text-on-surface">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<!-- Profile Avatar Placeholder for Desktop when logged in -->
+<div class="hidden md:block w-8 h-8 rounded-full overflow-hidden bg-surface-variant border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A clean, professional headshot portrait of a university student looking friendly and trustworthy. Soft natural lighting highlights their features against a bright, minimalist background, fitting a modern, high-quality digital marketplace aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKjm9mHLXtdfNcXbZt9doH4riajWqT4RSHMYmHU6WegB1wbptNVcsipiaOZssGDj6_NqRr9oZPyaGtOOTBLkzXum7Nhgg9RN59PrnNAk3bF8wj3qgezJAK5dkyNeVcftwGHZJ-KMBsLL9vBWc1r9V_QQ79-gBk14146Hfk70P9NLpruk0-ghjKpum2rDVxWK13XEcFO4ai_YUHdWvLqc0rGhYFfCssFIYP5wYaR64PI1IYIw7cOBg7c0CFyq0NGc1_li8LEY7snP3s"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-gutter py-stack-lg pb-24 md:pb-stack-lg flex flex-col gap-stack-lg">
+<!-- Breadcrumb & Actions Row -->
+<div class="flex justify-between items-center text-body-sm font-body-sm text-on-surface-variant">
+<div class="flex items-center gap-stack-xs">
+<a class="hover:text-primary" href="#">Browse</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<a class="hover:text-primary" href="#">Electronics</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-on-surface">Graphing Calculator TI-84 Plus CE</span>
+</div>
+<div class="flex items-center gap-stack-sm">
+<button class="flex items-center gap-stack-xs hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">share</span>
+<span class="hidden sm:inline">Share</span>
+</button>
+<button class="flex items-center gap-stack-xs hover:text-tertiary transition-colors">
+<span class="material-symbols-outlined text-[20px]">favorite_border</span>
+<span class="hidden sm:inline">Save</span>
+</button>
+</div>
+</div>
+<!-- Listing Core Details Bento Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Image Carousel Area (Left) -->
+<div class="lg:col-span-7 flex flex-col gap-stack-sm">
+<div class="w-full aspect-[4/3] rounded-2xl overflow-hidden bg-surface-container-highest relative shadow-sm border border-outline-variant/30">
+<img class="w-full h-full object-cover" data-alt="A high-quality, brightly lit close-up photograph of a sleek, black graphing calculator resting on a clean, white minimalist desk surface. Natural sunlight streams from the left, casting a soft, appealing shadow to the right. The image exudes a modern, pristine, and trustworthy product aesthetic suitable for an upscale student marketplace." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCy1jPRotRSKwTh1fnkz_IYcgxPyYjRg4-muWhFv5FABrj4RD6MqwkY36Q_a7U4pqCQv_U9JpcWZp9I-dpLRAAXsjz6ulZ1WTPQRqINiAL54skgYlIvFylXjvXvp-N89h0XGolDAAbSwusmP_n10VIAL4geZXOYx0HqnZ0eC3qW1guJtX1kwawwqehib36V9IwRLT9XLTx0tkMWA-QgDVHbpu42i85GyaexlVt_maM-q4U-c2qcVNfYBDd1GkcUIz_sCxLi1Aq9xIIe"/>
+<!-- Carousel Controls Overlay -->
+<div class="absolute inset-0 flex justify-between items-center px-4 opacity-0 hover:opacity-100 transition-opacity duration-300">
+<button class="w-10 h-10 rounded-full bg-surface/80 backdrop-blur-sm flex items-center justify-center text-on-surface hover:bg-surface shadow-sm">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-surface/80 backdrop-blur-sm flex items-center justify-center text-on-surface hover:bg-surface shadow-sm">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Thumbnails -->
+<div class="flex gap-stack-sm overflow-x-auto snap-x pb-2 scrollbar-hide">
+<div class="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden border-2 border-primary snap-start">
+<img class="w-full h-full object-cover" data-alt="A crisp, detailed product photograph showing the front face of a black graphing calculator, clearly displaying the buttons and screen. The lighting is soft and neutral, emphasizing the pristine condition of the device against a seamless white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxzxb9Rt-qRejAEKfWXpjgBjWOSQrrOQedMTq5B63qgfEyZ6eojjIV-4ysoilSZwtg4rw5sAfU2A18NQ6okuybSs6FtYcsRMiFptxZ0Ke8wwmIVeFRfUquc2q2n09-RGCr36cbZ2hp5gJjUvLUVlzdanAj7D2fTFRQArJFdSfOfY_vrSAezPkMJJbY4UbXtVdylTwTMgRVSVQ8msinalPVJOu_waE-feok6hqsPulfiV4hjZTYBsHLHlumFqTvNE36lJH_Nr7Ej2Mm"/>
+</div>
+<div class="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden border border-outline-variant opacity-70 hover:opacity-100 cursor-pointer snap-start">
+<img class="w-full h-full object-cover" data-alt="A macro shot detailing the back panel of a graphing calculator, highlighting the battery compartment and serial number area. The image uses sharp focus and clean, bright studio lighting to convey transparency and excellent condition in a modern digital marketplace context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRPPHjuGMxkKA1eR2PlGj03La3QzWtzgB7bCb3DFhW1M5Saxhcx8l6eQ2bP7ZM32W2N9SOcoIjjtyq1HyZO-d7hcdm9lMVvEGZUTYS94ShTaSJ1SRgwaomKiZLYfH-UqsgevBU35kJarOpYPsAlPp6OOcyGnl6xSshp0VTDURA6Z6Kf6JbrtZOrPJFdefAKqXXd6NzqpFGqV6v019dsjPMTZkOU0MRZEb1z1xO5QXv-XPtzO6UEzhRh6HQDJuNU4AovNzRhHt2L4hV"/>
+</div>
+<div class="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden border border-outline-variant opacity-70 hover:opacity-100 cursor-pointer snap-start">
+<img class="w-full h-full object-cover" data-alt="A stylish, angled product shot of a graphing calculator lying next to a neatly arranged notebook and a sleek pen on a light wood textured table. The composition is bright, optimistic, and academically focused, fitting a premium student marketplace." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfOPbKNDLYutQJIQ-PmtWA4NQmRGCLswyKZFtS9TjWMNeB6Y0Qky7-19niwsr90JGYHSB0mpGQtbgBE1iorNLlLcbPaPY63Mb9SJItzCIEqxYihycxbRZBe0RP2IafC9Ykbr8DMu4dD_UWidvEuE-9UeNXv4uvi6-qozsh9gCOlwUpUSB58sl8Yc1ISjOAG3obTsbZSG3j3ObEBwSTMA1FCLUCcVkMI6drxihFAw5JHcfsb9BQW7A11wF4jOjK21KtHmsUUfvarK2D"/>
+</div>
+</div>
+</div>
+<!-- Detail Info & Action Area (Right) -->
+<div class="lg:col-span-5 flex flex-col gap-stack-md">
+<!-- Header Info -->
+<div class="flex flex-col gap-stack-xs">
+<div class="flex items-center gap-stack-xs mb-1">
+<span class="bg-primary/10 text-primary text-label-sm font-label-sm px-2 py-1 rounded-full border border-primary/20">Like New</span>
+<span class="text-on-surface-variant text-label-sm font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">school</span> Engineering
+                        </span>
+</div>
+<h1 class="text-headline-xl-mobile md:text-headline-xl font-headline-xl-mobile md:font-headline-xl text-on-surface">Graphing Calculator TI-84 Plus CE</h1>
+<div class="text-headline-lg font-headline-lg text-primary mt-2">$85.00</div>
+</div>
+<!-- Description Card -->
+<div class="bg-surface-container-lowest rounded-xl p-stack-md shadow-[0_2px_4px_rgba(0,0,0,0.04)] border border-outline-variant/30 flex flex-col gap-stack-sm">
+<h3 class="text-headline-md font-headline-md text-on-surface">Description</h3>
+<p class="text-body-md font-body-md text-on-surface-variant leading-relaxed">
+                        Only used for one semester in Calculus II. Screen is flawless, no scratches. Comes with the original charging cable and a hard protective slide case. Excellent battery life. Selling because I switched majors and no longer need it. Need gone by Friday!
+                    </p>
+</div>
+<!-- Location & Logistics Card -->
+<div class="bg-surface-container-lowest rounded-xl p-stack-md shadow-[0_2px_4px_rgba(0,0,0,0.04)] border border-outline-variant/30 flex flex-col gap-stack-sm">
+<h3 class="text-label-md font-label-md text-on-surface uppercase tracking-wider">Logistics</h3>
+<div class="flex flex-col gap-stack-xs">
+<div class="flex items-center gap-stack-sm text-body-sm font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px] text-primary">location_on</span>
+<span>North Campus Library (Preferred Meetup)</span>
+</div>
+<div class="flex items-center gap-stack-sm text-body-sm font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px] text-primary">payments</span>
+<span>Accepts Venmo, CashApp, or Cash</span>
+</div>
+</div>
+</div>
+<!-- Seller Profile Card -->
+<div class="bg-surface-container-low rounded-xl p-stack-md border border-outline-variant/50 flex flex-col gap-stack-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-stack-sm">
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-variant border-2 border-surface">
+<img class="w-full h-full object-cover" data-alt="A friendly, bright profile picture of a female university student smiling outdoors on a sunny campus. The background features blurred brick buildings and green trees. The lighting is natural and vibrant, conveying approachability and community trust." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDd4JJnuF1L7muOKl_7ZLTD7VrpM5ASaXk8lFgJZSoLB7-sF4mqaqNWmoYo-regkg7ofYBg22ZsOpkBa7HYRz2jVy8S3NOaHUlo0xHMEW1XyKBsIXx_GI6JTpVTKcde4XW0YlTTb01koAVGjkfqG0eAaIUPGKGzaa30p-gxyhvfZ-j0W8N4vunT2S3aHG97X00B61D3lD4kr1x2BM322g42PqGY49BU0VPJmbKa7ERxc5Y0N-Z9L08isK24ZJ9ZEIk2hgkgbI8rKaF-"/>
+</div>
+<div class="flex flex-col">
+<span class="text-label-md font-label-md text-on-surface">Sarah J.</span>
+<div class="flex items-center gap-1 text-secondary-container">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]">star_half</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant ml-1">(12 Reviews)</span>
+</div>
+</div>
+</div>
+<button class="text-primary text-label-sm font-label-sm hover:underline">View Profile</button>
+</div>
+</div>
+<!-- Primary Action -->
+<div class="mt-auto pt-stack-sm">
+<button class="w-full bg-primary text-on-primary text-label-md font-label-md py-4 rounded-xl hover:bg-primary/90 hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.08)] transition-all flex justify-center items-center gap-stack-xs active:scale-[0.98]">
+<span class="material-symbols-outlined">chat</span>
+                        Contact Seller
+                    </button>
+<p class="text-center text-label-sm font-label-sm text-on-surface-variant mt-2">Typically replies within 1 hour</p>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex md:hidden justify-around items-center px-4 py-2 pb-safe bg-surface shadow-[0_-2px_10px_rgba(0,0,0,0.05)] rounded-t-xl border-t border-outline-variant/20">
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="text-label-sm font-label-sm">Home</span>
+</button>
+<!-- Active -->
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-2xl px-4 py-1 active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined mb-1">search</span>
+<span class="text-label-sm font-label-sm">Browse</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined mb-1">add_circle</span>
+<span class="text-label-sm font-label-sm">List</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="text-label-sm font-label-sm">Profile</span>
+</button>
+</nav>
+</body></html>

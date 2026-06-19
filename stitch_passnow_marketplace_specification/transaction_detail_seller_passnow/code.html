@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PassNow - Transaction Details</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface": "#f4fcf0",
+                      "on-primary-fixed-variant": "#005320",
+                      "secondary": "#855300",
+                      "surface-container": "#e9f0e5",
+                      "on-primary-fixed": "#002109",
+                      "inverse-surface": "#2b322b",
+                      "on-tertiary-fixed": "#3f0016",
+                      "on-error-container": "#93000a",
+                      "tertiary": "#a72d51",
+                      "surface-container-low": "#eff6ea",
+                      "surface-container-high": "#e3eadf",
+                      "primary-fixed-dim": "#62df7d",
+                      "surface-bright": "#f4fcf0",
+                      "surface-variant": "#dde5d9",
+                      "on-secondary": "#ffffff",
+                      "surface-dim": "#d5dcd1",
+                      "secondary-fixed": "#ffddb8",
+                      "secondary-container": "#fea619",
+                      "on-secondary-container": "#684000",
+                      "surface-tint": "#006e2d",
+                      "error": "#ba1a1a",
+                      "primary-container": "#00873a",
+                      "outline-variant": "#bdcaba",
+                      "inverse-primary": "#62df7d",
+                      "primary-fixed": "#7ffc97",
+                      "error-container": "#ffdad6",
+                      "background": "#f4fcf0",
+                      "surface-container-highest": "#dde5d9",
+                      "on-primary": "#ffffff",
+                      "on-surface": "#171d16",
+                      "inverse-on-surface": "#ecf3e7",
+                      "on-secondary-fixed-variant": "#653e00",
+                      "on-background": "#171d16",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary-container": "#c74668",
+                      "on-primary-container": "#f7fff2",
+                      "on-tertiary-fixed-variant": "#8a143c",
+                      "on-tertiary-container": "#fffbff",
+                      "outline": "#6e7b6c",
+                      "on-secondary-fixed": "#2a1700",
+                      "tertiary-fixed-dim": "#ffb2bf",
+                      "tertiary-fixed": "#ffd9de",
+                      "secondary-fixed-dim": "#ffb95f",
+                      "on-surface-variant": "#3e4a3d",
+                      "primary": "#006b2c",
+                      "on-error": "#ffffff",
+                      "on-tertiary": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-xs": "0.25rem",
+                      "margin-mobile": "1rem",
+                      "container-max": "1280px",
+                      "stack-md": "1rem",
+                      "gutter": "1.5rem",
+                      "stack-lg": "2rem",
+                      "stack-sm": "0.5rem"
+              },
+              "fontFamily": {
+                      "body-sm": ["Inter"],
+                      "label-sm": ["Inter"],
+                      "label-md": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "headline-xl-mobile": ["Inter"],
+                      "headline-xl": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "body-md": ["Inter"]
+              },
+              "fontSize": {
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "headline-xl-mobile": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+      </script>
+<style>
+          .ambient-shadow {
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+          }
+          .interactive-shadow:hover {
+              box-shadow: 0 10px 15px rgba(0, 0, 0, 0.08);
+          }
+          
+          /* Micro-interaction for status pill pulse */
+          @keyframes subtle-pulse {
+              0% { box-shadow: 0 0 0 0 rgba(254, 166, 25, 0.4); }
+              70% { box-shadow: 0 0 0 6px rgba(254, 166, 25, 0); }
+              100% { box-shadow: 0 0 0 0 rgba(254, 166, 25, 0); }
+          }
+          .status-pulse {
+              animation: subtle-pulse 2s infinite;
+          }
+      </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Area (Transactional/Task Focused - Suppressed main nav, simplified header) -->
+<header class="sticky top-0 z-50 flex items-center justify-between px-gutter py-stack-sm w-full bg-surface/90 backdrop-blur-md shadow-sm border-b border-outline-variant/30">
+<div class="flex items-center gap-stack-sm">
+<button aria-label="Go back" class="p-2 rounded-full hover:bg-surface-container-high transition-colors text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<h1 class="text-headline-md font-headline-md font-bold text-on-surface">Transaction Details</h1>
+</div>
+<div class="text-label-md font-label-md font-bold text-primary dark:text-primary-fixed">PassNow</div>
+</header>
+<main class="max-w-container-max mx-auto px-margin-mobile md:px-gutter py-stack-lg min-h-screen">
+<!-- Transaction Header & Status -->
+<div class="mb-stack-lg flex flex-col md:flex-row md:items-center justify-between gap-stack-md">
+<div>
+<h2 class="text-headline-lg font-headline-lg text-on-surface mb-stack-xs">Order #PN-8472-X9</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Placed on Oct 24, 2023 • 14:30 PM</p>
+</div>
+<div class="inline-flex items-center gap-2 bg-secondary-container/20 text-on-secondary-container px-4 py-2 rounded-full border border-secondary-container/30 status-pulse w-fit">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">pending_actions</span>
+<span class="text-label-md font-label-md font-bold">Pending Confirmation</span>
+</div>
+</div>
+<!-- Main Content Layout (Asymmetric grid) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Progress & Item Details (8 cols) -->
+<div class="lg:col-span-8 flex flex-col gap-gutter">
+<!-- Progress Tracker Card -->
+<section class="bg-white rounded-2xl p-stack-lg ambient-shadow border border-outline-variant/30">
+<h3 class="text-headline-md font-headline-md text-on-surface mb-stack-lg">Transaction Progress</h3>
+<div class="relative flex items-center justify-between w-full">
+<!-- Connecting Line Background -->
+<div class="absolute left-[10%] right-[10%] top-1/2 -translate-y-1/2 h-1 bg-surface-variant rounded-full z-0"></div>
+<!-- Active Connecting Line -->
+<div class="absolute left-[10%] w-[40%] top-1/2 -translate-y-1/2 h-1 bg-primary rounded-full z-0 transition-all duration-500"></div>
+<!-- Step 1: Listed -->
+<div class="relative z-10 flex flex-col items-center gap-stack-sm w-1/3">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary shadow-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="text-label-md font-label-md text-on-surface font-semibold">Listed</span>
+</div>
+<!-- Step 2: Reserved (Active) -->
+<div class="relative z-10 flex flex-col items-center gap-stack-sm w-1/3">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary shadow-md ring-4 ring-primary/20">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">handshake</span>
+</div>
+<span class="text-label-md font-label-md text-primary font-bold">Reserved</span>
+</div>
+<!-- Step 3: Completed (Upcoming) -->
+<div class="relative z-10 flex flex-col items-center gap-stack-sm w-1/3 opacity-60">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant border-2 border-outline-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">done_all</span>
+</div>
+<span class="text-label-md font-label-md text-on-surface-variant">Completed</span>
+</div>
+</div>
+<div class="mt-stack-lg p-stack-md bg-surface-container-low rounded-xl flex items-start gap-stack-sm border border-outline-variant/50">
+<span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings: 'FILL' 1;">info</span>
+<div>
+<p class="text-body-sm font-body-sm text-on-surface font-medium">Action Required</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Please meet with the buyer to hand over the item. Once completed, click 'Confirm Handover' below to finalize the transaction.</p>
+</div>
+</div>
+</section>
+<!-- Item Details Card -->
+<section class="bg-white rounded-2xl p-stack-lg ambient-shadow border border-outline-variant/30 flex flex-col sm:flex-row gap-gutter">
+<div class="w-full sm:w-1/3 aspect-square rounded-xl overflow-hidden bg-surface-container shrink-0 relative">
+<img class="w-full h-full object-cover" data-alt="A high-quality, brightly lit photograph of a slightly used university textbook on organic chemistry resting on a clean wooden desk. The lighting is soft and natural, emphasizing the modern, eco-friendly marketplace aesthetic with subtle green undertones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1cRR72YjlwvrlAuoxZEEioDn76CSDpfbY-BJAuMG_cbljcQ2Q4BmNpfSEx10pqNeJ5kNkLguiUT2PjFcVaMysl8nV9U-kQKKjpjg71bn_N6yyHqycT01uma7H_Nz47MQipZkTQasGlzeT0dXS54EJ6AxFrh4EbCgfFtjQnZZ45254Wc26mWmr7_hNZBC9YBia-LLTPibggAv9UkIqvAsiLsO9yr5aLSU3WPu2yLkQYV3fOLpscELu1Jz_wPbtG5W06Suc2lMRKL4x"/>
+<!-- Condition Badge -->
+<div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full border border-outline-variant/30 text-label-sm font-label-sm text-on-surface-variant flex items-center gap-1 shadow-sm">
+<span class="w-2 h-2 rounded-full bg-primary-fixed-dim"></span> Like New
+                        </div>
+</div>
+<div class="flex flex-col flex-grow justify-between py-stack-xs">
+<div>
+<div class="flex justify-between items-start mb-stack-sm">
+<h3 class="text-headline-md font-headline-md text-on-surface leading-tight">Organic Chemistry, 8th Edition (Wade)</h3>
+<p class="text-headline-lg font-headline-lg font-bold text-primary">$45.00</p>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant mb-stack-md line-clamp-2">Hardcover textbook in excellent condition. No highlighting or writing inside. Includes access code (unused). Essential for CHEM 201/202.</p>
+<div class="flex flex-wrap gap-stack-sm mb-stack-md">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-surface-container-low text-label-sm font-label-sm text-on-surface-variant border border-outline-variant/30">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 0;">category</span> Books
+                                </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-surface-container-low text-label-sm font-label-sm text-on-surface-variant border border-outline-variant/30">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 0;">school</span> Science Dept.
+                                </span>
+</div>
+</div>
+<div class="pt-stack-sm border-t border-outline-variant/30 flex justify-between items-center">
+<span class="text-body-sm font-body-sm text-on-surface-variant">Listing ID: PN-TX-992</span>
+<button class="text-label-md font-label-md text-primary hover:underline font-semibold">View Original Listing</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Buyer Info & Actions (4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-gutter">
+<!-- Buyer Profile Card -->
+<section class="bg-white rounded-2xl p-stack-lg ambient-shadow border border-outline-variant/30 flex flex-col h-full">
+<h3 class="text-headline-md font-headline-md text-on-surface mb-stack-md">Buyer Information</h3>
+<div class="flex items-center gap-stack-md mb-stack-lg">
+<div class="w-16 h-16 rounded-full bg-surface-container-high overflow-hidden shrink-0 border-2 border-surface">
+<img class="w-full h-full object-cover" data-alt="A professional, bright portrait photo of a university student smiling warmly. The lighting is high-key and optimistic, fitting a modern corporate-tactile marketplace aesthetic. The background is a soft, blurred campus setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCi1dCJmCsJ7bYW4bxYElXJLvNiRw3CVYhsrKEFPPvOrCu-LhwYgs1qY5eaMiRuyc6-hswRhk3s3FK62QOFq3T6J5atP3tEplJPY7kvNSte_wUqafAs-SgZmQJqJKTiq_JuKWMfwqT3OcH62udR1d6M1rXpBYsoe43cieLvZBnsWmFq38IKwg8bF010fF4k_kcqDwhbJeKnXCnf6jEMgYoLPbCzlFt7Ph26ihn_rDkaU4bOpXQAisoxPL4v7B6ucRERQD0WVSleqWc9"/>
+</div>
+<div>
+<h4 class="text-body-lg font-body-lg font-semibold text-on-surface">Sarah J.</h4>
+<div class="flex items-center gap-1 text-label-sm font-label-sm text-on-surface-variant mt-1">
+<span class="material-symbols-outlined text-secondary-container text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-on-surface font-medium">4.9</span> (12 transactions)
+                            </div>
+<p class="text-label-sm font-label-sm text-on-surface-variant mt-1">Joined Sept 2022</p>
+</div>
+</div>
+<div class="space-y-stack-md flex-grow">
+<!-- Message Action -->
+<button class="w-full flex items-center justify-between p-stack-sm rounded-lg border border-outline-variant/50 hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-stack-sm">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform" style="font-variation-settings: 'FILL' 0;">chat</span>
+<span class="text-body-md font-body-md text-on-surface font-medium">Message Sarah</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">chevron_right</span>
+</button>
+<!-- Meeting Location (if agreed) -->
+<div class="bg-surface-container-low rounded-xl p-stack-sm border border-outline-variant/30">
+<div class="flex items-center gap-stack-sm mb-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 0;">location_on</span>
+<span class="text-label-sm font-label-sm uppercase tracking-wider">Agreed Meeting Spot</span>
+</div>
+<p class="text-body-md font-body-md text-on-surface font-medium px-1">Campus Library, North Entrance</p>
+</div>
+</div>
+<!-- Primary Action -->
+<div class="mt-stack-lg pt-stack-md border-t border-outline-variant/30">
+<button class="w-full bg-primary hover:bg-on-primary-fixed-variant text-on-primary text-label-md font-label-md font-bold py-3 px-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-center gap-2 active:scale-[0.98]">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">handshake</span>
+                            Confirm Handover
+                        </button>
+<p class="text-label-sm font-label-sm text-center text-on-surface-variant mt-stack-sm">Only click this after you have given the item to the buyer.</p>
+</div>
+</section>
+<!-- Support Card -->
+<section class="bg-surface-container-lowest rounded-2xl p-stack-md border border-outline-variant/20 flex items-center justify-between">
+<div class="flex items-center gap-stack-sm">
+<span class="material-symbols-outlined text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">help</span>
+<span class="text-body-sm font-body-sm text-on-surface">Issue with transaction?</span>
+</div>
+<button class="text-label-sm font-label-sm text-secondary hover:underline font-semibold">Get Support</button>
+</section>
+</div>
+</div>
+</main>
+</body></html>
