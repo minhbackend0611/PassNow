@@ -1,9 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../../store/useAuthStore';
 import { auth } from '../../lib/firebase';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { LogOut, Search, Menu } from 'lucide-react';
 
 export default function TopNavBar() {
   const { user } = useAuthStore();
@@ -13,12 +10,12 @@ export default function TopNavBar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 flex items-center justify-between px-4 md:px-6 py-2 w-full bg-surface/80 backdrop-blur-md shadow-sm border-b border-outline-variant/30">
-      <div className="flex items-center gap-6">
-        <Link to="/" className="text-2xl font-bold text-primary dark:text-primary-fixed">
+    <header className="sticky top-0 z-50 flex items-center justify-between px-gutter py-stack-sm w-full bg-surface/80 backdrop-blur-md shadow-sm">
+      <div className="flex items-center gap-stack-lg">
+        <Link to="/" className="text-headline-lg font-headline-lg font-bold text-primary dark:text-primary-fixed">
           PassNow
         </Link>
-        <nav className="hidden md:flex items-center gap-4">
+        <nav className="hidden md:flex items-center gap-stack-md">
           <Link to="/" className="text-primary dark:text-primary-fixed font-bold border-b-2 border-primary dark:border-primary-fixed pb-1">
             Browse
           </Link>
@@ -31,44 +28,35 @@ export default function TopNavBar() {
         </nav>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-stack-md">
         <div className="relative hidden md:block">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant w-4 h-4" />
-          <Input 
-            className="pl-9 pr-4 py-1.5 h-9 bg-surface-container rounded-full border-outline-variant focus-visible:border-primary w-64 transition-all" 
-            placeholder="Search items..." 
-            type="text" 
-          />
+          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" style={{ fontVariationSettings: "'FILL' 0" }}>search</span>
+          <input className="pl-10 pr-4 py-2 bg-surface-container rounded-full border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary text-body-sm font-body-sm w-64 transition-all" placeholder="Search items..." type="text" />
         </div>
         
-        <Button className="hidden sm:flex" variant="default" size="sm">
+        <button className="bg-primary text-on-primary text-label-md font-label-md px-4 py-2 rounded-lg hover:bg-surface-tint transition-colors hidden sm:block">
           List an Item
-        </Button>
+        </button>
 
         {user ? (
-          <div className="hidden md:flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full overflow-hidden bg-surface-variant border border-outline-variant flex-shrink-0 flex items-center justify-center font-bold text-primary">
+          <div className="flex items-center gap-stack-sm">
+            <button className="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant flex-shrink-0" onClick={handleSignOut} title="Sign Out">
               {user.photoURL ? (
                 <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" />
               ) : (
-                user.displayName?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()
+                <span className="w-full h-full flex items-center justify-center font-bold text-primary text-lg">
+                  {user.displayName?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()}
+                </span>
               )}
-            </div>
-            <Button variant="ghost" size="icon" onClick={handleSignOut} title="Sign Out">
-              <LogOut className="w-4 h-4 text-on-surface-variant hover:text-error" />
-            </Button>
+            </button>
           </div>
         ) : (
-          <div className="hidden md:flex items-center gap-2">
-            <Link to="/login">
-              <Button variant="outline" size="sm">Log In</Button>
-            </Link>
-          </div>
+          <Link to="/login">
+            <button className="text-on-surface-variant border border-outline-variant text-label-md font-label-md px-4 py-2 rounded-lg hover:bg-surface-container transition-colors hidden sm:block">
+              Log In
+            </button>
+          </Link>
         )}
-
-        <button className="md:hidden text-on-surface p-1">
-          <Menu className="w-6 h-6" />
-        </button>
       </div>
     </header>
   );
