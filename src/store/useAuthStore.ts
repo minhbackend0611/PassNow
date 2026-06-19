@@ -66,7 +66,18 @@ export const useAuthStore = create<AuthState>((set) => ({
           }
         } catch (error) {
           console.error("Error fetching user profile:", error);
-          set({ user: null, isLoading: false });
+          // Fallback to basic auth user info to avoid blocking login entirely on db permission errors
+          set({
+            user: {
+              uid: firebaseUser.uid,
+              email: firebaseUser.email,
+              displayName: firebaseUser.displayName,
+              school: null,
+              district: null,
+              isProfileComplete: false,
+            },
+            isLoading: false,
+          });
         }
       } else {
         set({ user: null, isLoading: false });
