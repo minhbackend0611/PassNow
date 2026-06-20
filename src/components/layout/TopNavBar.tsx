@@ -34,9 +34,11 @@ export default function TopNavBar() {
           <input className="pl-10 pr-4 py-2 bg-surface-container rounded-full border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary text-body-sm font-body-sm w-64 transition-all" placeholder="Search items..." type="text" />
         </div>
         
-        <button className="bg-primary text-on-primary text-label-md font-label-md px-4 py-2 rounded-lg hover:bg-surface-tint transition-colors hidden sm:block">
-          List an Item
-        </button>
+        <Link to="/list">
+          <button className="bg-primary text-on-primary text-label-md font-label-md px-4 py-2 rounded-lg hover:bg-surface-tint transition-colors hidden sm:block">
+            List an Item
+          </button>
+        </Link>
 
         {user ? (
           <div className="flex items-center gap-stack-sm">
