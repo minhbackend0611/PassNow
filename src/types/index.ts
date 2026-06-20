@@ -24,8 +24,10 @@ export interface Listing {
   condition: ItemCondition;
   images: string[];
   sellerId: string;
-  school: string;
-  district: string;
+  school: string; // Used for broad filtering
+  district: string; // Used for broad filtering
+  specificAddress?: string; // Exact pickup location
+  coordinates?: { lat: number; lng: number };
   category: string;
   status: ListingStatus;
   isFree: boolean;

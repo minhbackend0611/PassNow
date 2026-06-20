@@ -14,6 +14,7 @@ const createListingSchema = z.object({
   description: z.string(),
   listingType: z.enum(['sell', 'free']),
   price: z.coerce.number().min(0).optional(),
+  specificAddress: z.string().min(1, { message: 'Address is required' }),
 }).refine((data) => {
   if (data.listingType === 'sell' && (!data.price || data.price <= 0)) {
     return false;
@@ -35,16 +36,51 @@ export default function CreateListingPage() {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<CreateListingValues>({
     resolver: zodResolver(createListingSchema),
     defaultValues: {
       listingType: 'sell',
       description: '',
+      specificAddress: '',
     }
   });
 
   const listingType = watch('listingType');
+  const [isLocating, setIsLocating] = useState(false);
+  const [coordinates, setCoordinates] = useState<{lat: number, lng: number} | undefined>(undefined);
+
+  const handleDetectLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser");
+      return;
+    }
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        setCoordinates({ lat: latitude, lng: longitude });
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+          const data = await res.json();
+          if (data && data.display_name) {
+            setValue('specificAddress', data.display_name, { shouldValidate: true });
+          }
+        } catch (error) {
+          console.error("Error fetching address:", error);
+          alert("Could not fetch address for this location.");
+        } finally {
+          setIsLocating(false);
+        }
+      },
+      (error) => {
+        console.error(error);
+        alert("Could not get your location. Please check browser permissions.");
+        setIsLocating(false);
+      }
+    );
+  };
 
   const onSubmit = async (data: CreateListingValues) => {
     if (!user) return;
@@ -62,6 +98,8 @@ export default function CreateListingPage() {
         images: ['https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=1000'], // Mock image
         school: user.school || 'Unknown',
         district: user.district || 'Unknown',
+        specificAddress: data.specificAddress,
+        coordinates,
         sellerId: user.uid,
       });
 
@@ -237,15 +275,27 @@ export default function CreateListingPage() {
 
           {/* Section: Location */}
           <section>
-            <h2 className="text-label-md font-label-md text-on-surface mb-stack-xs">Pickup Location</h2>
-            <div className="flex items-center gap-stack-sm p-4 bg-surface-container rounded-lg border border-outline-variant/30">
-              <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>location_on</span>
-              <div>
-                <p className="text-body-md font-body-md text-on-surface">{user?.school || 'University Campus Center'}</p>
-                <p className="text-body-sm font-body-sm text-on-surface-variant">{user?.district || 'North District'}</p>
-              </div>
-              <button type="button" className="ml-auto text-label-sm font-label-sm text-primary hover:underline" onClick={() => navigate('/profile')}>Edit</button>
+            <div className="flex justify-between items-end mb-stack-xs">
+              <label className="block text-label-md font-label-md text-on-surface" htmlFor="specificAddress">Pickup Location <span className="text-error">*</span></label>
+              <button 
+                type="button" 
+                onClick={handleDetectLocation}
+                disabled={isLocating}
+                className="flex items-center gap-1 text-label-sm font-label-sm text-primary hover:text-surface-tint disabled:opacity-50 transition-colors"
+              >
+                <span className={`material-symbols-outlined text-[16px] ${isLocating ? 'animate-spin' : ''}`}>
+                  {isLocating ? 'refresh' : 'my_location'}
+                </span>
+                {isLocating ? 'Locating...' : 'Detect Location'}
+              </button>
             </div>
+            <input 
+              id="specificAddress" 
+              className={`w-full rounded-lg bg-surface-container-lowest px-4 py-3 text-body-md font-body-md transition-all placeholder:text-on-surface-variant/50 ${errors.specificAddress ? 'border-error focus:border-error' : 'border-outline-variant focus:border-on-surface'} rounded-lg focus:outline-none focus:ring-0`} 
+              placeholder="e.g., 1 Dai Co Viet, Hai Ba Trung, Hanoi" 
+              {...register('specificAddress')}
+            />
+            {errors.specificAddress && <span className="text-label-sm font-label-sm text-error mt-1 block">{errors.specificAddress.message}</span>}
           </section>
 
           {/* Actions */}

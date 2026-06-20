@@ -85,6 +85,7 @@ describe('CreateListingPage', () => {
     fireEvent.change(screen.getByLabelText(/Category/i), { target: { value: 'Electronics' } });
     fireEvent.change(screen.getByLabelText(/Condition/i), { target: { value: 'New' } });
     fireEvent.change(screen.getByPlaceholderText('0'), { target: { value: '1000' } });
+    fireEvent.change(screen.getByPlaceholderText(/1 Dai Co Viet/i), { target: { value: 'Test Address' } });
 
     // Submit
     fireEvent.click(screen.getByText('Post Listing'));
@@ -95,7 +96,8 @@ describe('CreateListingPage', () => {
         category: 'Electronics',
         condition: 'New',
         price: 1000,
-        isFree: false
+        isFree: false,
+        specificAddress: 'Test Address'
       }));
     });
   });

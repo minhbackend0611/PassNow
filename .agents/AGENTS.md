@@ -30,3 +30,9 @@ These guidelines govern all AI agent behaviors, coding patterns, and security co
 - Write failing tests first for any bug fix request to reproduce the issue.
 - Perform incremental git commits for changes and push code to the remote repository once changes are validated.
 - **MANDATORY AUTOMATION TESTS**: For every new feature or module implemented, you MUST write corresponding automation tests using the project's testing framework (Vitest/RTL) to ensure functionality works correctly before completion.
+
+---
+
+## 4. UI/UX Aesthetic Rules
+- **Constant Alignment Check**: On every UI modification, the agent MUST review the UI layout, styling, and interactivity to ensure it strictly adheres to the design specifications provided by the user in the `stitch_passnow_marketplace_specification` folder. Use the exact HTML structure and Tailwind classes provided in those template files whenever possible.
+- **No basic MVP UI**: Always incorporate hover effects, micro-animations, glassmorphism (where applicable), and modern typography as per the provided spec. Never output bare-bones or unpolished Tailwind components. If a UI looks too basic, rewrite the styles to match the templates before presenting it to the user.

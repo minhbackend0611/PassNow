@@ -202,7 +202,7 @@ export default function ListingDetailPage() {
             <div className="flex flex-col gap-stack-xs">
               <div className="flex items-center gap-stack-sm text-body-sm font-body-sm text-on-surface-variant">
                 <span className="material-symbols-outlined text-[20px] text-primary">location_on</span>
-                <span>{listing.school} - {listing.district}</span>
+                <span>{listing.specificAddress || `${listing.school} - ${listing.district}`}</span>
               </div>
               {!listing.isFree && (
                 <div className="flex items-center gap-stack-sm text-body-sm font-body-sm text-on-surface-variant">
