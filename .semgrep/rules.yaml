@@ -3,16 +3,25 @@
 
 rules:
   - id: detect-hardcoded-api-key
-    patterns:
-      - pattern: |
-          $KEY = "AIzaSy..."
-      - pattern: |
-          $KEY = "firebase-key-..."
-    message: "Error: Hardcoded API credentials detected. Please use environment variables (process.env or os.environ)."
+    pattern-regex: '(?i)(AIza[0-9A-Za-z-_]{35})'
+    message: "Error: Hardcoded Firebase API credentials detected. Please use environment variables."
     languages:
       - javascript
       - typescript
       - python
+    severity: ERROR
+
+  - id: detect-hardcoded-firebase-config
+    patterns:
+      - pattern-either:
+          - pattern: |
+              { ..., apiKey: "...", ... }
+          - pattern: |
+              { ..., projectId: "...", ... }
+    message: "Error: Hardcoded Firebase configuration object detected. Use import.meta.env."
+    languages:
+      - javascript
+      - typescript
     severity: ERROR
 
   - id: prevent-eval-use

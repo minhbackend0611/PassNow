@@ -19,6 +19,7 @@ These guidelines govern all AI agent behaviors, coding patterns, and security co
 2. **Access Control**: Enforce authorization gates. Ensure only resource owners can update or delete listings and profiles. Check Firestore Security Rules.
 3. **No Hardcoded Credentials**: Never commit or hardcode Firebase API keys, private tokens, or secrets. Use environment variables (from `.env.local`).
 4. **Safety Hooks**: All commands and tool calls must comply with `.agents/hooks.json` and pass validation in `.agents/validate_tool_call.py`.
+5. **No Access to Sensitive Files**: The AI agent is STRICTLY FORBIDDEN from viewing, opening, or accessing sensitive files such as `.env`, `.env.local`, or any file containing real credentials. The agent is only allowed to create and access `.env.example` containing dummy placeholder values.
 
 ---
 

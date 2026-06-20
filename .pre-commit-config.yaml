@@ -29,3 +29,11 @@ repos:
     hooks:
       - id: semgrep
         args: [ --config, .semgrep/rules.yaml, --error ]
+
+  - repo: local
+    hooks:
+      - id: security-check
+        name: Custom Security Check (.env & .gitignore)
+        entry: python scripts/security_check.py
+        language: system
+        pass_filenames: false
