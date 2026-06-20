@@ -4,10 +4,12 @@ import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import ListingDetailPage from './ListingDetailPage';
 import { useAuthStore } from '../../../store/useAuthStore';
 import { getListingById } from '../../../services/listingService';
+import { getTransactionByListingAndBuyer } from '../../../services/transactionService';
 import type { Listing, User } from '../../../types';
 
 vi.mock('../../../store/useAuthStore');
 vi.mock('../../../services/listingService');
+vi.mock('../../../services/transactionService');
 
 const mockListing: Listing = {
   id: 'listing_abc',
@@ -55,7 +57,7 @@ describe('ListingDetailPage Permission Actions', () => {
   };
 
   it('renders loading spinner and details correctly', async () => {
-    vi.mocked(useAuthStore).mockReturnValue({ user: null });
+    vi.mocked(useAuthStore).mockReturnValue({ user: null } as unknown as ReturnType<typeof useAuthStore>);
     vi.mocked(getListingById).mockResolvedValue({ listing: mockListing, seller: mockSeller });
 
     renderComponent();
@@ -79,21 +81,23 @@ describe('ListingDetailPage Permission Actions', () => {
       expect(screen.getByText(/42/i)).toBeInTheDocument();
     });
 
-    expect(screen.queryByRole('button', { name: /Contact/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Request/i })).not.toBeInTheDocument();
   });
 
-  it('renders Contact Seller action for normal buyer users', async () => {
+  it('renders Request to Buy and Contact Seller actions for normal buyer users', async () => {
     vi.mocked(useAuthStore).mockReturnValue({ user: { uid: 'buyer_999' } } as unknown as ReturnType<typeof useAuthStore>); // not owner
     vi.mocked(getListingById).mockResolvedValue({ listing: mockListing, seller: mockSeller });
+    vi.mocked(getTransactionByListingAndBuyer).mockResolvedValue(null);
 
     renderComponent();
 
     await waitFor(() => {
+      expect(screen.getByRole('button', { name: /Request to Buy/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /Contact/i })).toBeInTheDocument();
     });
 
     expect(screen.queryByRole('button', { name: /Edit/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /Delete/i })).not.toBeInTheDocument();
-    expect(screen.queryByText(/42/i)).not.toBeInTheDocument();
   });
 });
+

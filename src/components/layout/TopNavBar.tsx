@@ -40,6 +40,9 @@ export default function TopNavBar() {
 
         {user ? (
           <div className="flex items-center gap-stack-sm">
+            <Link to="/transactions" className="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-all" title="Transactions">
+              <span className="material-symbols-outlined text-[24px]">receipt_long</span>
+            </Link>
             <Link to="/profile" className="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant flex-shrink-0 block hover:ring-2 hover:ring-primary transition-all" title="Profile">
               {user.photoURL ? (
                 <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" />

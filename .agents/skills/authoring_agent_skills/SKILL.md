@@ -19,13 +19,14 @@ license: MIT
 - Setting up third-party libraries, CLI tools, or MCP servers.
 
 ## Anatomy of a Skill
-A skill folder must be located under `.agents/skills/<directory_name>/` (where `<directory_name>` is `snake_case`) and must contain at least a `SKILL.md` file:
+A skill folder must be located under `.agents/skills/<directory_name>/` (where `<directory_name>` is `snake_case`) and must contain at least a `SKILL.md` file. You should proactively consider adding supplementary directories if the skill requires them:
 ```
 .agents/skills/skill_directory/
 ├── SKILL.md      # Required: YAML frontmatter + markdown instructions
-├── scripts/      # Optional: helper scripts/code
-├── references/   # Optional: supplemental documentation (under 500 lines)
-└── assets/       # Optional: templates, assets, schemas
+├── scripts/      # Optional: helper scripts, automation, or code execution utilities
+├── references/   # Optional: supplemental documentation or deep dives (if SKILL.md gets too long)
+├── assets/       # Optional: templates, image assets, JSON schemas, or configuration files
+└── examples/     # Optional: concrete code examples or reference implementations
 ```
 
 ## Workflow for Creating a Skill
@@ -36,7 +37,9 @@ A skill folder must be located under `.agents/skills/<directory_name>/` (where `
    - The description must be verb-led, clear, and specify triggers ("Use this when...") and anti-triggers ("Do NOT use for..."). Keep it under 1024 characters in YAML.
 3. **Write the Body**:
    - Follow the template below. Keep the instructions concrete, actionable, and explanation-first (give the *why* instead of just the *what*). Keep the body under 500 lines.
-4. **Register or Verify**:
+4. **Add Supplementary Materials (Important)**:
+   - Always consider if the skill needs helper scripts (in `scripts/`), templates (in `assets/`), or code examples (in `examples/`). If yes, create these directories and files alongside the `SKILL.md`.
+5. **Register or Verify**:
    - Ensure the skill is discovered. (Skills in `.agents/skills/` are automatically discovered).
    - Verify trigger accuracy and check for potential regressions or token bloat.
 

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getListingById } from '../../../services/listingService';
-import type { Listing, User } from '../../../types';
+import { requestTransaction, cancelTransaction, getTransactionByListingAndBuyer } from '../../../services/transactionService';
+import type { Listing, User, Transaction } from '../../../types';
 import { Button } from '../../../components/ui/button';
 import { useAuthStore } from '../../../store/useAuthStore';
 
@@ -11,7 +12,9 @@ export default function ListingDetailPage() {
   const { user: currentUser } = useAuthStore();
   const [listing, setListing] = useState<Listing | null>(null);
   const [seller, setSeller] = useState<User | null>(null);
+  const [transaction, setTransaction] = useState<Transaction | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isProcessingTransaction, setIsProcessingTransaction] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
@@ -22,6 +25,10 @@ export default function ListingDetailPage() {
       if (data) {
         setListing(data.listing);
         setSeller(data.seller);
+        if (currentUser && data.listing.status !== 'available') {
+           const tx = await getTransactionByListingAndBuyer(data.listing.id, currentUser.uid);
+           if (tx) setTransaction(tx);
+        }
       }
       setIsLoading(false);
     };
@@ -52,6 +59,38 @@ export default function ListingDetailPage() {
 
   const handleNextImage = () => {
     setCurrentImageIndex((prev) => (prev === listing.images.length - 1 ? 0 : prev + 1));
+  };
+
+  const handleRequestTransaction = async () => {
+    if (!currentUser || !listing) return;
+    setIsProcessingTransaction(true);
+    const txId = await requestTransaction(listing.id, listing.title, listing.sellerId, currentUser.uid);
+    if (txId) {
+      setListing({ ...listing, status: 'reserved' });
+      setTransaction({
+        id: txId,
+        listingId: listing.id,
+        listingTitle: listing.title,
+        sellerId: listing.sellerId,
+        buyerId: currentUser.uid,
+        sellerConfirmed: false,
+        buyerConfirmed: false,
+        status: 'pending',
+        createdAt: Date.now()
+      });
+    }
+    setIsProcessingTransaction(false);
+  };
+
+  const handleCancelRequest = async () => {
+    if (!transaction || !listing) return;
+    setIsProcessingTransaction(true);
+    const success = await cancelTransaction(transaction.id, listing.id);
+    if (success) {
+      setListing({ ...listing, status: 'available' });
+      setTransaction(null);
+    }
+    setIsProcessingTransaction(false);
   };
 
   const displayImage = listing.images && listing.images.length > 0 
@@ -234,16 +273,45 @@ export default function ListingDetailPage() {
                 </p>
               </div>
             ) : (
-              <>
+              <div className="flex flex-col gap-2">
+                {listing.status === 'available' ? (
+                  <button 
+                    onClick={handleRequestTransaction}
+                    disabled={isProcessingTransaction || !currentUser}
+                    className="w-full bg-primary text-on-primary text-label-md font-label-md py-4 rounded-xl hover:bg-primary/90 hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.08)] transition-all flex justify-center items-center gap-stack-xs active:scale-[0.98] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <span className="material-symbols-outlined">
+                      {isProcessingTransaction ? 'hourglass_empty' : 'shopping_cart'}
+                    </span>
+                    {listing.isFree ? 'Request Free Item' : 'Request to Buy'}
+                  </button>
+                ) : listing.status === 'reserved' && transaction ? (
+                  <button 
+                    onClick={handleCancelRequest}
+                    disabled={isProcessingTransaction}
+                    className="w-full border border-error text-error hover:bg-error/5 text-label-md font-label-md py-4 rounded-xl transition-all flex justify-center items-center gap-stack-xs active:scale-[0.98] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <span className="material-symbols-outlined">
+                      {isProcessingTransaction ? 'hourglass_empty' : 'cancel'}
+                    </span>
+                    Cancel Request
+                  </button>
+                ) : (
+                  <div className="w-full bg-surface-variant text-on-surface-variant text-label-md font-label-md py-4 rounded-xl flex justify-center items-center gap-stack-xs">
+                    <span className="material-symbols-outlined">lock</span>
+                    {listing.status === 'completed' || listing.status === 'sold' ? 'Completed' : 'Reserved by someone else'}
+                  </div>
+                )}
+                
                 <button 
                   onClick={() => navigate(`/chat?user=${seller?.uid}`)}
-                  className="w-full bg-primary text-on-primary text-label-md font-label-md py-4 rounded-xl hover:bg-primary/90 hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.08)] transition-all flex justify-center items-center gap-stack-xs active:scale-[0.98] cursor-pointer"
+                  className="w-full border border-outline text-on-surface text-label-md font-label-md py-3 rounded-xl hover:bg-surface-variant/50 transition-all flex justify-center items-center gap-stack-xs active:scale-[0.98] cursor-pointer"
                 >
-                  <span className="material-symbols-outlined">chat</span>
+                  <span className="material-symbols-outlined text-[20px]">chat</span>
                   Contact Seller
                 </button>
                 <p className="text-center text-label-sm font-label-sm text-on-surface-variant mt-2">Typically replies within 1 hour</p>
-              </>
+              </div>
             )}
           </div>
         </div>

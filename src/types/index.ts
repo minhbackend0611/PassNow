@@ -14,6 +14,8 @@ export interface User {
 
 export type ItemCondition = 'New' | 'Like New' | 'Used' | 'Fair';
 
+export type ListingStatus = 'available' | 'reserved' | 'sold' | 'completed';
+
 export interface Listing {
   id: string;
   title: string;
@@ -25,7 +27,7 @@ export interface Listing {
   school: string;
   district: string;
   category: string;
-  status: 'available' | 'sold';
+  status: ListingStatus;
   isFree: boolean;
   createdAt: string | number;
   updatedAt: string;
@@ -42,4 +44,19 @@ export interface ListingFilter {
   minPrice?: number;
   maxPrice?: number;
   sellerId?: string;
+}
+
+export type TransactionStatus = 'pending' | 'completed';
+
+export interface Transaction {
+  id: string;
+  listingId: string;
+  listingTitle: string;
+  sellerId: string;
+  buyerId: string;
+  sellerConfirmed: boolean;
+  buyerConfirmed: boolean;
+  status: TransactionStatus;
+  createdAt: number;
+  completedAt?: number | null;
 }
