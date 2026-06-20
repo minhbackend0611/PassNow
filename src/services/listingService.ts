@@ -1,5 +1,6 @@
 import { collection, doc, getDoc, getDocs, query, where, orderBy, QueryConstraint, addDoc } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { db, storage } from '../lib/firebase';
 import type { Listing, ListingFilter, User } from '../types';
 
 const LISTINGS_COLLECTION = 'listings';
@@ -109,5 +110,21 @@ export const createListing = async (
   } catch (error) {
     console.error("Error creating listing:", error);
     return null;
+  }
+};
+
+export const uploadListingImages = async (userId: string, files: File[]): Promise<string[]> => {
+  try {
+    const uploadPromises = files.map(async (file, index) => {
+      const fileName = `${Date.now()}_${index}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+      const storageRef = ref(storage, `listings/${userId}/${fileName}`);
+      await uploadBytes(storageRef, file);
+      return await getDownloadURL(storageRef);
+    });
+    
+    return Promise.all(uploadPromises);
+  } catch (error) {
+    console.error("Error uploading images:", error);
+    throw new Error("Failed to upload images");
   }
 };

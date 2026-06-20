@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../../store/useAuthStore';
-import { createListing } from '../../../services/listingService';
+import { createListing, uploadListingImages } from '../../../services/listingService';
 import type { ItemCondition } from '../../../types';
 
 const createListingSchema = z.object({
@@ -50,6 +50,35 @@ export default function CreateListingPage() {
   const listingType = watch('listingType');
   const [isLocating, setIsLocating] = useState(false);
   const [coordinates, setCoordinates] = useState<{lat: number, lng: number} | undefined>(undefined);
+  
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files);
+      if (imageFiles.length + newFiles.length > 5) {
+        alert("You can only upload up to 5 photos.");
+        return;
+      }
+      const combinedFiles = [...imageFiles, ...newFiles].slice(0, 5);
+      setImageFiles(combinedFiles);
+      
+      const newPreviews = combinedFiles.map(file => URL.createObjectURL(file));
+      setImagePreviews(newPreviews);
+    }
+  };
+
+  const removeImage = (index: number) => {
+    const newFiles = [...imageFiles];
+    newFiles.splice(index, 1);
+    setImageFiles(newFiles);
+
+    const newPreviews = [...imagePreviews];
+    URL.revokeObjectURL(newPreviews[index]);
+    newPreviews.splice(index, 1);
+    setImagePreviews(newPreviews);
+  };
 
   const handleDetectLocation = () => {
     if (!navigator.geolocation) {
@@ -76,18 +105,25 @@ export default function CreateListingPage() {
       },
       (error) => {
         console.error(error);
-        alert("Could not get your location. Please check browser permissions.");
+        alert(`Could not get your location automatically (${error.message}). Please enter your pickup location manually.`);
         setIsLocating(false);
-      }
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     );
   };
 
   const onSubmit = async (data: CreateListingValues) => {
     if (!user) return;
+    if (imageFiles.length === 0) {
+      alert("Please upload at least one photo.");
+      return;
+    }
     
     setIsLoading(true);
     try {
       const isFree = data.listingType === 'free';
+      const uploadedImageUrls = await uploadListingImages(user.uid, imageFiles);
+
       const listingId = await createListing({
         title: data.title,
         description: data.description,
@@ -95,7 +131,7 @@ export default function CreateListingPage() {
         isFree,
         condition: data.condition as ItemCondition,
         category: data.category,
-        images: ['https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=1000'], // Mock image
+        images: uploadedImageUrls,
         school: user.school || 'Unknown',
         district: user.district || 'Unknown',
         specificAddress: data.specificAddress,
@@ -138,14 +174,28 @@ export default function CreateListingPage() {
           <section>
             <h2 className="text-label-md font-label-md text-on-surface mb-stack-xs">Photos (up to 5) <span className="text-error">*</span></h2>
             <div className="grid grid-cols-3 sm:grid-cols-5 gap-stack-sm">
-              <div className="aspect-square border-2 border-dashed border-outline-variant rounded-xl flex flex-col items-center justify-center gap-stack-xs text-outline hover:border-primary hover:text-primary transition-colors cursor-pointer bg-surface-container-lowest">
-                <span className="material-symbols-outlined text-headline-lg">add_photo_alternate</span>
-                <span className="text-label-sm font-label-sm">Add Photo</span>
-              </div>
-              <div className="aspect-square bg-surface-container-low rounded-xl border border-outline-variant/30 hidden sm:block"></div>
-              <div className="aspect-square bg-surface-container-low rounded-xl border border-outline-variant/30 hidden sm:block"></div>
-              <div className="aspect-square bg-surface-container-low rounded-xl border border-outline-variant/30 hidden sm:block"></div>
-              <div className="aspect-square bg-surface-container-low rounded-xl border border-outline-variant/30 hidden sm:block"></div>
+              {imagePreviews.map((preview, index) => (
+                <div key={index} className="aspect-square relative rounded-xl border border-outline-variant/30 overflow-hidden group">
+                  <img src={preview} alt={`Preview ${index}`} className="w-full h-full object-cover" />
+                  <button 
+                    type="button" 
+                    onClick={() => removeImage(index)}
+                    className="absolute top-1 right-1 bg-surface-container-highest/80 text-on-surface-variant hover:text-error rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">close</span>
+                  </button>
+                </div>
+              ))}
+              {imagePreviews.length < 5 && (
+                <label className="aspect-square border-2 border-dashed border-outline-variant rounded-xl flex flex-col items-center justify-center gap-stack-xs text-outline hover:border-primary hover:text-primary transition-colors cursor-pointer bg-surface-container-lowest">
+                  <input type="file" multiple accept="image/*" className="hidden" onChange={handleImageChange} />
+                  <span className="material-symbols-outlined text-headline-lg">add_photo_alternate</span>
+                  <span className="text-label-sm font-label-sm text-center px-1">Add Photo</span>
+                </label>
+              )}
+              {Array.from({ length: Math.max(0, 4 - imagePreviews.length) }).map((_, i) => (
+                <div key={`placeholder-${i}`} className="aspect-square bg-surface-container-low rounded-xl border border-outline-variant/30 hidden sm:block"></div>
+              ))}
             </div>
           </section>
 
