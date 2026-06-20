@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -51,6 +51,13 @@ export default function CreateListingPage() {
   const [isLocating, setIsLocating] = useState(false);
   const [coordinates, setCoordinates] = useState<{lat: number, lng: number} | undefined>(undefined);
   
+  // Autocomplete state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchTimeout = useRef<NodeJS.Timeout | null>(null);
+  
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
@@ -80,20 +87,102 @@ export default function CreateListingPage() {
     setImagePreviews(newPreviews);
   };
 
+  const handleSearchQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    setShowSuggestions(true);
+    
+    if (!value.trim()) {
+      setSuggestions([]);
+      return;
+    }
+
+    setIsSearching(true);
+    if (searchTimeout.current) clearTimeout(searchTimeout.current);
+    
+    searchTimeout.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}&limit=5`);
+        const data = await res.json();
+        setSuggestions(data || []);
+      } catch (err) {
+        console.error("Error fetching suggestions:", err);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 500);
+  };
+
+  const handleSelectSuggestion = (suggestion: any) => {
+    setSearchQuery(suggestion.display_name);
+    setValue('specificAddress', suggestion.display_name, { shouldValidate: true });
+    setCoordinates({ lat: parseFloat(suggestion.lat), lng: parseFloat(suggestion.lon) });
+    setShowSuggestions(false);
+  };
+
+  const handleBlur = () => {
+    // Delay hiding so click event on suggestion can fire
+    setTimeout(() => {
+      setShowSuggestions(false);
+      // Strict constraint: if they typed something but didn't select, revert to the last valid selection or empty
+      const currentAddress = watch('specificAddress');
+      if (searchQuery !== currentAddress) {
+        setSearchQuery(currentAddress || '');
+      }
+    }, 200);
+  };
+
+  const handleUseMyUniversity = () => {
+    if (!user?.school) {
+      alert("You haven't set a school in your profile yet.");
+      return;
+    }
+    
+    setIsLocating(true);
+    // Simulate typing the school
+    setSearchQuery(user.school);
+    setValue('specificAddress', user.school, { shouldValidate: true });
+    
+    // Fetch coordinates for it
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(user.school)}&limit=1`)
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.length > 0) {
+          const suggestion = data[0];
+          setSearchQuery(suggestion.display_name);
+          setValue('specificAddress', suggestion.display_name, { shouldValidate: true });
+          setCoordinates({ lat: parseFloat(suggestion.lat), lng: parseFloat(suggestion.lon) });
+        } else {
+          alert("Could not find exact coordinates for your school. Please select manually from the suggestions if needed.");
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Could not find coordinates for your school.");
+      })
+      .finally(() => setIsLocating(false));
+  };
+
   const handleDetectLocation = () => {
     if (!navigator.geolocation) {
       alert("Geolocation is not supported by your browser");
       return;
     }
     setIsLocating(true);
+    let hasResolved = false; // Flag to prevent race conditions
+
     navigator.geolocation.getCurrentPosition(
       async (position) => {
+        if (hasResolved) return;
+        hasResolved = true;
+        
         const { latitude, longitude } = position.coords;
         setCoordinates({ lat: latitude, lng: longitude });
         try {
           const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
           const data = await res.json();
           if (data && data.display_name) {
+            setSearchQuery(data.display_name);
             setValue('specificAddress', data.display_name, { shouldValidate: true });
           }
         } catch (error) {
@@ -104,6 +193,8 @@ export default function CreateListingPage() {
         }
       },
       (error) => {
+        if (hasResolved) return;
+        hasResolved = true;
         console.error(error);
         alert(`Could not get your location automatically (${error.message}). Please enter your pickup location manually.`);
         setIsLocating(false);
@@ -325,26 +416,71 @@ export default function CreateListingPage() {
 
           {/* Section: Location */}
           <section>
-            <div className="flex justify-between items-end mb-stack-xs">
-              <label className="block text-label-md font-label-md text-on-surface" htmlFor="specificAddress">Pickup Location <span className="text-error">*</span></label>
-              <button 
-                type="button" 
-                onClick={handleDetectLocation}
-                disabled={isLocating}
-                className="flex items-center gap-1 text-label-sm font-label-sm text-primary hover:text-surface-tint disabled:opacity-50 transition-colors"
-              >
-                <span className={`material-symbols-outlined text-[16px] ${isLocating ? 'animate-spin' : ''}`}>
-                  {isLocating ? 'refresh' : 'my_location'}
-                </span>
-                {isLocating ? 'Locating...' : 'Detect Location'}
-              </button>
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-stack-xs gap-2">
+              <label className="block text-label-md font-label-md text-on-surface" htmlFor="searchQuery">Pickup Location <span className="text-error">*</span></label>
+              
+              <div className="flex items-center gap-4">
+                <button 
+                  type="button" 
+                  onClick={handleUseMyUniversity}
+                  disabled={isLocating}
+                  className="flex items-center gap-1 text-label-sm font-label-sm text-secondary-container hover:text-secondary disabled:opacity-50 transition-colors bg-secondary-container/10 px-2 py-1 rounded-md border border-secondary-container/30"
+                >
+                  <span className="material-symbols-outlined text-[16px]">school</span>
+                  Use My University
+                </button>
+
+                <button 
+                  type="button" 
+                  onClick={handleDetectLocation}
+                  disabled={isLocating}
+                  className="flex items-center gap-1 text-label-sm font-label-sm text-primary hover:text-surface-tint disabled:opacity-50 transition-colors"
+                >
+                  <span className={`material-symbols-outlined text-[16px] ${isLocating ? 'animate-spin' : ''}`}>
+                    {isLocating ? 'refresh' : 'my_location'}
+                  </span>
+                  {isLocating ? 'Locating...' : 'Detect Location'}
+                </button>
+              </div>
             </div>
-            <input 
-              id="specificAddress" 
-              className={`w-full rounded-lg bg-surface-container-lowest px-4 py-3 text-body-md font-body-md transition-all placeholder:text-on-surface-variant/50 ${errors.specificAddress ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-primary focus:ring-primary/20'} focus:outline-none focus:ring-4 shadow-sm mt-stack-xs`} 
-              placeholder="e.g., 1 Dai Co Viet, Hai Ba Trung, Hanoi" 
-              {...register('specificAddress')}
-            />
+
+            <div className="relative">
+              <input 
+                id="searchQuery" 
+                value={searchQuery}
+                onChange={handleSearchQueryChange}
+                onFocus={() => setShowSuggestions(true)}
+                onBlur={handleBlur}
+                className={`w-full rounded-lg bg-surface-container-lowest px-4 py-3 text-body-md font-body-md transition-all placeholder:text-on-surface-variant/50 ${errors.specificAddress ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-primary focus:ring-primary/20'} focus:outline-none focus:ring-4 shadow-sm mt-stack-xs`} 
+                placeholder="Search for an address or place..." 
+              />
+              
+              {/* Hidden input to store validated address for react-hook-form */}
+              <input type="hidden" {...register('specificAddress')} />
+
+              {/* Suggestions Dropdown */}
+              {showSuggestions && (searchQuery.length > 0) && (
+                <div className="absolute z-10 w-full mt-1 bg-surface-container-lowest border border-outline-variant rounded-lg shadow-lg overflow-hidden max-h-60 overflow-y-auto">
+                  {isSearching ? (
+                    <div className="p-3 text-body-sm text-on-surface-variant text-center">Searching...</div>
+                  ) : suggestions.length > 0 ? (
+                    <ul>
+                      {suggestions.map((s, i) => (
+                        <li 
+                          key={i} 
+                          onMouseDown={() => handleSelectSuggestion(s)}
+                          className="px-4 py-3 hover:bg-surface-container cursor-pointer border-b border-outline-variant/20 last:border-0"
+                        >
+                          <div className="text-body-sm font-body-sm text-on-surface truncate">{s.display_name}</div>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div className="p-3 text-body-sm text-on-surface-variant text-center">No results found</div>
+                  )}
+                </div>
+              )}
+            </div>
             {errors.specificAddress && <span className="text-label-sm font-label-sm text-error mt-1 block">{errors.specificAddress.message}</span>}
           </section>
 
