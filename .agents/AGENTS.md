@@ -34,8 +34,9 @@ These guidelines govern all AI agent behaviors, coding patterns, and security co
 ---
 
 ## 4. UI/UX Aesthetic Rules
-- **Constant Alignment Check**: On every UI modification, the agent MUST review the UI layout, styling, and interactivity to ensure it strictly adheres to the design specifications provided by the user in the `stitch_passnow_marketplace_specification` folder. Use the exact HTML structure and Tailwind classes provided in those template files whenever possible.
-- **No basic MVP UI**: Always incorporate hover effects, micro-animations, glassmorphism (where applicable), and modern typography as per the provided spec. Never output bare-bones or unpolished Tailwind components. If a UI looks too basic, rewrite the styles to match the templates before presenting it to the user.
+- **Adaptive Premium Design**: The provided specifications in `stitch_passnow_marketplace_specification` are a strong baseline, but you DO NOT need to follow them 100% strictly. You are encouraged to adapt, refine, and customize the design to ensure it is "as beautiful, modern, and harmonious as possible".
+- **Color Harmony**: Avoid stark white colors (`#ffffff`) for large backgrounds that might cause eye strain. Instead, use softer, tinted off-white or light surface colors that harmonize with the brand's primary colors (e.g., subtle green tints) to ensure a comfortable viewing experience.
+- **No basic MVP UI**: Always incorporate hover effects, micro-animations, glassmorphism (where applicable), and modern typography. Never output bare-bones or unpolished Tailwind components.
 
 ---
 

@@ -14,7 +14,7 @@ export default {
         "on-error": "#ffffff",
         "surface-container-highest": "#dde5d9",
         "on-primary": "#ffffff",
-        "surface-container-lowest": "#ffffff",
+        "surface-container-lowest": "#fcfdfa",
         "tertiary": "#a72d51",
         "on-secondary-container": "#684000",
         "secondary-fixed": "#ffddb8",
