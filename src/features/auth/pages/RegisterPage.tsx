@@ -81,7 +81,7 @@ export default function RegisterPage() {
               <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-opacity-50">school</span>
               <input 
                 id="reg-email" 
-                className={`w-full pl-10 pr-4 py-2 bg-surface-container-lowest border ${errors.email ? 'border-error focus:border-error' : 'border-outline-variant focus:border-on-surface'} rounded-lg focus:outline-none focus:ring-0 text-body-md font-body-md transition-colors`} 
+                className={`w-full pl-10 pr-4 py-2 bg-surface-container-lowest border ${errors.email ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-primary focus:ring-primary/20'} rounded-lg focus:outline-none focus:ring-4 text-body-md font-body-md transition-all shadow-sm`} 
                 placeholder="student@university.edu" 
                 type="email"
                 {...register('email')}
@@ -96,7 +96,7 @@ export default function RegisterPage() {
               <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-opacity-50">lock</span>
               <input 
                 id="reg-password" 
-                className={`w-full pl-10 pr-4 py-2 bg-surface-container-lowest border ${errors.password ? 'border-error focus:border-error' : 'border-outline-variant focus:border-on-surface'} rounded-lg focus:outline-none focus:ring-0 text-body-md font-body-md transition-colors`} 
+                className={`w-full pl-10 pr-4 py-2 bg-surface-container-lowest border ${errors.password ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-primary focus:ring-primary/20'} rounded-lg focus:outline-none focus:ring-4 text-body-md font-body-md transition-all shadow-sm`} 
                 placeholder="Create a strong password" 
                 type="password"
                 {...register('password')}
@@ -111,7 +111,7 @@ export default function RegisterPage() {
               <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-opacity-50">lock_reset</span>
               <input 
                 id="reg-confirm-password" 
-                className={`w-full pl-10 pr-4 py-2 bg-surface-container-lowest border ${errors.confirmPassword ? 'border-error focus:border-error' : 'border-outline-variant focus:border-on-surface'} rounded-lg focus:outline-none focus:ring-0 text-body-md font-body-md transition-colors`} 
+                className={`w-full pl-10 pr-4 py-2 bg-surface-container-lowest border ${errors.confirmPassword ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-primary focus:ring-primary/20'} rounded-lg focus:outline-none focus:ring-4 text-body-md font-body-md transition-all shadow-sm`} 
                 placeholder="Repeat password" 
                 type="password"
                 {...register('confirmPassword')}

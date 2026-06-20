@@ -256,7 +256,7 @@ export default function ProfilePage() {
                   <label htmlFor="displayName" className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Display Name</label>
                   <input 
                     id="displayName"
-                    className={`w-full bg-surface rounded-lg border ${errors.displayName ? 'border-error focus:border-error' : 'border-outline-variant focus:border-on-surface'} px-3 py-2 text-body-md font-body-md focus:outline-none focus:ring-0 transition-colors`} 
+                    className={`w-full bg-surface rounded-lg border ${errors.displayName ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-primary focus:ring-primary/20'} px-3 py-2 text-body-md font-body-md focus:outline-none focus:ring-4 transition-all shadow-sm`} 
                     type="text" 
                     {...register('displayName')}
                   />
@@ -282,7 +282,7 @@ export default function ProfilePage() {
                   <div className="relative">
                     <select 
                       id="school"
-                      className={`w-full bg-surface rounded-lg border ${errors.school ? 'border-error focus:border-error' : 'border-outline-variant focus:border-on-surface'} px-3 py-2 text-body-md font-body-md focus:outline-none focus:ring-0 transition-colors pl-10 appearance-none`}
+                      className={`w-full bg-surface rounded-lg border ${errors.school ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-primary focus:ring-primary/20'} px-3 py-2 text-body-md font-body-md focus:outline-none focus:ring-4 transition-all shadow-sm pl-10 appearance-none`}
                       {...register('school')}
                       value={watch('school') || ""}
                     >
@@ -304,7 +304,7 @@ export default function ProfilePage() {
                     <div className="relative">
                       <select 
                         id="province"
-                        className={`w-full bg-surface rounded-lg border ${errors.province ? 'border-error focus:border-error' : 'border-outline-variant focus:border-on-surface'} px-3 py-2 text-body-md font-body-md focus:outline-none focus:ring-0 transition-colors pl-10 appearance-none`}
+                        className={`w-full bg-surface rounded-lg border ${errors.province ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-primary focus:ring-primary/20'} px-3 py-2 text-body-md font-body-md focus:outline-none focus:ring-4 transition-all shadow-sm pl-10 appearance-none`}
                         value={selectedProvinceName}
                         onChange={handleProvinceChange}
                       >
@@ -324,7 +324,7 @@ export default function ProfilePage() {
                     <div className="relative">
                       <select 
                         id="district"
-                        className={`w-full bg-surface rounded-lg border ${errors.district ? 'border-error focus:border-error' : 'border-outline-variant focus:border-on-surface'} px-3 py-2 text-body-md font-body-md focus:outline-none focus:ring-0 transition-colors pl-10 appearance-none`}
+                        className={`w-full bg-surface rounded-lg border ${errors.district ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-primary focus:ring-primary/20'} px-3 py-2 text-body-md font-body-md focus:outline-none focus:ring-4 transition-all shadow-sm pl-10 appearance-none`}
                         {...register('district')}
                         disabled={!selectedProvinceName || districts.length === 0}
                       >
