@@ -158,7 +158,7 @@ export default function CreateListingPage() {
               <input 
                 id="title" 
                 maxLength={100} 
-                className={`w-full rounded-lg bg-surface-container-lowest px-4 py-3 text-body-md font-body-md transition-all placeholder:text-on-surface-variant/50 ${errors.title ? 'border-error focus:border-error' : 'border-outline-variant focus:border-on-surface'} rounded-lg focus:outline-none focus:ring-0`} 
+                className={`w-full rounded-lg bg-surface-container-lowest px-4 py-3 text-body-md font-body-md transition-all placeholder:text-on-surface-variant/50 ${errors.title ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-primary focus:ring-primary/20'} focus:outline-none focus:ring-4 shadow-sm`} 
                 placeholder="e.g., Biology 101 Textbook, 4th Ed." 
                 {...register('title')}
               />
@@ -180,7 +180,7 @@ export default function CreateListingPage() {
                 <div className="relative">
                   <select 
                     id="category" 
-                    className={`w-full appearance-none rounded-lg bg-surface-container-lowest px-4 py-3 text-body-md font-body-md transition-all ${errors.category ? 'border-error focus:border-error' : 'border-outline-variant focus:border-on-surface'} rounded-lg focus:outline-none focus:ring-0`} 
+                    className={`w-full appearance-none rounded-lg bg-surface-container-lowest px-4 py-3 text-body-md font-body-md transition-all ${errors.category ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-primary focus:ring-primary/20'} focus:outline-none focus:ring-4 shadow-sm`} 
                     {...register('category')}
                   >
                     <option disabled value="">Select Category</option>
@@ -200,7 +200,7 @@ export default function CreateListingPage() {
                 <div className="relative">
                   <select 
                     id="condition" 
-                    className={`w-full appearance-none rounded-lg bg-surface-container-lowest px-4 py-3 text-body-md font-body-md transition-all ${errors.condition ? 'border-error focus:border-error' : 'border-outline-variant focus:border-on-surface'} rounded-lg focus:outline-none focus:ring-0`} 
+                    className={`w-full appearance-none rounded-lg bg-surface-container-lowest px-4 py-3 text-body-md font-body-md transition-all ${errors.condition ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-primary focus:ring-primary/20'} focus:outline-none focus:ring-4 shadow-sm`} 
                     {...register('condition')}
                   >
                     <option disabled value="">Select Condition</option>
@@ -219,7 +219,7 @@ export default function CreateListingPage() {
               <textarea 
                 id="description" 
                 rows={4} 
-                className="w-full rounded-lg border-outline-variant bg-surface-container-lowest px-4 py-3 text-body-md font-body-md focus:border-on-surface focus:outline-none focus:ring-0 transition-all resize-y placeholder:text-on-surface-variant/50" 
+                className="w-full rounded-lg border-outline-variant bg-surface-container-lowest px-4 py-3 text-body-md font-body-md focus:border-primary focus:ring-primary/20 focus:outline-none focus:ring-4 transition-all resize-y placeholder:text-on-surface-variant/50 shadow-sm" 
                 placeholder="Describe any wear and tear, history, or reasons for giving it away..."
                 {...register('description')}
               ></textarea>
@@ -261,7 +261,7 @@ export default function CreateListingPage() {
                   type="number" 
                   step="1000"
                   min="0"
-                  className={`w-full md:w-1/2 rounded-lg bg-surface-container-lowest pl-14 pr-4 py-3 text-body-md font-body-md transition-all ${errors.price ? 'border-error focus:border-error' : 'border-outline-variant focus:border-on-surface'} rounded-lg focus:outline-none focus:ring-0`} 
+                  className={`w-full md:w-1/2 rounded-lg bg-surface-container-lowest pl-14 pr-4 py-3 text-body-md font-body-md transition-all ${errors.price ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-primary focus:ring-primary/20'} focus:outline-none focus:ring-4 shadow-sm`} 
                   placeholder="0"
                   {...register('price')}
                   disabled={listingType === 'free'}
@@ -291,7 +291,7 @@ export default function CreateListingPage() {
             </div>
             <input 
               id="specificAddress" 
-              className={`w-full rounded-lg bg-surface-container-lowest px-4 py-3 text-body-md font-body-md transition-all placeholder:text-on-surface-variant/50 ${errors.specificAddress ? 'border-error focus:border-error' : 'border-outline-variant focus:border-on-surface'} rounded-lg focus:outline-none focus:ring-0`} 
+              className={`w-full rounded-lg bg-surface-container-lowest px-4 py-3 text-body-md font-body-md transition-all placeholder:text-on-surface-variant/50 ${errors.specificAddress ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-primary focus:ring-primary/20'} focus:outline-none focus:ring-4 shadow-sm mt-stack-xs`} 
               placeholder="e.g., 1 Dai Co Viet, Hai Ba Trung, Hanoi" 
               {...register('specificAddress')}
             />
