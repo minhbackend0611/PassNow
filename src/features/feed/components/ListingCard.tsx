@@ -38,7 +38,10 @@ export default function ListingCard({ listing }: ListingCardProps) {
           </div>
         </div>
         <div className="p-stack-sm flex flex-col flex-1 gap-1 bg-primary/5">
-          <div className="flex justify-between items-start mt-1">
+          <div className="flex items-center gap-1 text-on-surface-variant text-[10px] font-bold uppercase tracking-wider mb-1">
+            <span className="material-symbols-outlined text-[12px]" style={{ fontVariationSettings: "'FILL' 0" }}>category</span> {listing.category || 'Item'}
+          </div>
+          <div className="flex justify-between items-start">
             <h3 className="text-label-md font-label-md text-on-surface line-clamp-2 leading-tight">
               {listing.title}
             </h3>
@@ -60,7 +63,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
       onClick={handleClick}
       className="group bg-surface-container-lowest rounded-2xl overflow-hidden border border-outline-variant/60 shadow-[0_2px_4px_rgba(0,0,0,0.04)] hover:shadow-[0_10px_15px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col cursor-pointer"
     >
-      <div className="relative aspect-square w-full bg-surface-container overflow-hidden">
+      <div className="relative aspect-[4/3] w-full bg-surface-container overflow-hidden">
         <img 
           src={listing.images?.[0] || 'https://via.placeholder.com/300?text=No+Image'} 
           alt={listing.title} 
@@ -77,7 +80,10 @@ export default function ListingCard({ listing }: ListingCardProps) {
         </div>
       </div>
       <div className="p-stack-sm flex flex-col flex-1 gap-1">
-        <div className="flex justify-between items-start mt-1">
+        <div className="flex items-center gap-1 text-on-surface-variant text-[10px] font-bold uppercase tracking-wider mb-1">
+          <span className="material-symbols-outlined text-[12px]" style={{ fontVariationSettings: "'FILL' 0" }}>category</span> {listing.category || 'Item'}
+        </div>
+        <div className="flex justify-between items-start">
           <h3 className="text-label-md font-label-md text-on-surface line-clamp-2 leading-tight">
             {listing.title}
           </h3>

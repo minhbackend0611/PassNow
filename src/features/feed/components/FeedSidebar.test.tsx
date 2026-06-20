@@ -10,9 +10,9 @@ describe('FeedSidebar', () => {
     expect(screen.getByText('Books & Documents')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Min')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Max')).toBeInTheDocument();
-    expect(screen.getByLabelText(/Condition/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/School \/ University/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/District \/ Area/i)).toBeInTheDocument();
+    expect(screen.getByRole('combobox')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/School \(e\.g\. Bách Khoa\)/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/District \(e\.g\. Cầu Giấy\)/i)).toBeInTheDocument();
   });
 
   it('triggers onFilterChange with form values when clicking Apply Filters', () => {
@@ -30,9 +30,9 @@ describe('FeedSidebar', () => {
     const maxInput = screen.getByPlaceholderText('Max');
     fireEvent.change(maxInput, { target: { value: '500' } });
 
-    // Click Category badge
-    const bookCategoryBtn = screen.getByRole('button', { name: /Books & Documents/i });
-    fireEvent.click(bookCategoryBtn);
+    // Click Category checkbox
+    const bookCategoryCheckbox = screen.getByLabelText(/Books & Documents/i);
+    fireEvent.click(bookCategoryCheckbox);
 
     // Apply
     const applyBtn = screen.getByRole('button', { name: /Apply Filters/i });

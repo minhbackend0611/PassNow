@@ -58,24 +58,19 @@ export default function FeedSidebar({ onFilterChange, initialFilters = {} }: Fee
 
 
   return (
-    <aside className="w-full lg:w-64 flex flex-col bg-surface-container-low border-r border-outline-variant flex-shrink-0 h-auto lg:h-[calc(100vh-4rem)] lg:sticky lg:top-16 overflow-y-auto">
-      <div className="p-stack-md border-b border-outline-variant flex justify-between items-center bg-surface-container-low/80 backdrop-blur-sm sticky top-0 z-10">
-        <div>
-          <div className="flex items-center gap-stack-sm mb-0.5">
-            <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>tune</span>
-            <h2 className="text-headline-md font-headline-md text-on-surface">Filters</h2>
-          </div>
-          <p className="text-body-sm font-body-sm text-on-surface-variant">Narrow your search</p>
+    <aside className="h-screen w-64 hidden lg:flex flex-col bg-surface-container-low border-r border-outline-variant flex-shrink-0 sticky top-16">
+      <div className="p-stack-md border-b border-outline-variant">
+        <div className="flex items-center gap-stack-sm mb-1">
+          <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>tune</span>
+          <h2 className="text-headline-md font-headline-md text-on-surface">Filters</h2>
         </div>
-        <button 
-          onClick={handleClearFilters}
-          className="text-label-sm font-label-sm text-primary hover:underline px-2 py-1"
-        >
-          Reset All
-        </button>
+        <div className="flex justify-between items-center">
+          <p className="text-body-sm font-body-sm text-on-surface-variant">Narrow your search</p>
+          <button onClick={handleClearFilters} className="text-label-sm font-label-sm text-primary hover:underline">Reset All</button>
+        </div>
       </div>
 
-      <div className="flex flex-col gap-stack-md p-stack-md">
+      <nav className="flex flex-col h-full gap-stack-md p-stack-md overflow-y-auto">
         {/* Search Input */}
         <div className="flex flex-col gap-1.5">
           <label htmlFor="search" className="text-label-sm font-label-sm text-on-surface-variant">Keyword Search</label>
@@ -101,108 +96,104 @@ export default function FeedSidebar({ onFilterChange, initialFilters = {} }: Fee
           </div>
         </div>
 
-        {/* Categories Badges */}
-        <div className="flex flex-col gap-2">
-          <span className="text-label-sm font-label-sm text-on-surface-variant">Category</span>
-          <div className="flex flex-col gap-1.5">
-            {CATEGORIES.map(cat => {
-              const isActive = selectedCategory === cat.id;
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedCategory(isActive ? '' : cat.id)}
-                  className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-all ${
-                    isActive 
-                      ? 'bg-primary-container text-on-primary-container font-semibold ring-1 ring-primary/20' 
-                      : 'hover:bg-surface-container-high text-on-surface-variant'
-                  }`}
-                >
-                  <span className="material-symbols-outlined text-[18px]">{cat.icon}</span>
-                  <span className="text-body-sm font-body-sm flex-1">{cat.name}</span>
-                  {isActive && <span className="material-symbols-outlined text-[16px] text-primary">check</span>}
-                </button>
-              );
-            })}
-          </div>
+        {/* Categories Section */}
+        <div className="flex items-center gap-stack-sm bg-primary-container text-on-primary-container rounded-lg p-stack-sm opacity-80 transition-opacity">
+          <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>category</span>
+          <span className="text-label-md font-label-md">Categories</span>
+        </div>
+        <div className="pl-8 flex flex-col gap-2 mb-2">
+          {CATEGORIES.map(cat => {
+            const isActive = selectedCategory === cat.id;
+            return (
+              <label key={cat.id} className="flex items-center gap-2 text-body-sm font-body-sm text-on-surface hover:text-primary cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  checked={isActive} 
+                  onChange={() => setSelectedCategory(isActive ? '' : cat.id)} 
+                  className="rounded border-outline-variant text-primary focus:ring-primary bg-surface"
+                /> {cat.name}
+              </label>
+            );
+          })}
         </div>
 
         {/* Price Range */}
-        <div className="flex flex-col gap-2">
-          <span className="text-label-sm font-label-sm text-on-surface-variant">Price Range (kVND)</span>
-          <div className="flex items-center gap-2">
-            <input
-              type="number"
-              value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
-              placeholder="Min"
-              className="w-full bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-0 px-2 py-1.5 text-body-sm font-body-sm focus:outline-none"
-            />
-            <span className="text-outline-variant">—</span>
-            <input
-              type="number"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-              placeholder="Max"
-              className="w-full bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-0 px-2 py-1.5 text-body-sm font-body-sm focus:outline-none"
-            />
-          </div>
+        <div className="flex items-center gap-stack-sm text-on-surface-variant p-stack-sm hover:bg-surface-container-high transition-all rounded-lg">
+          <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>payments</span>
+          <span className="text-label-md font-label-md">Price Range (kVND)</span>
+        </div>
+        <div className="pl-8 flex items-center gap-2">
+          <input
+            type="number"
+            value={minPrice}
+            onChange={(e) => setMinPrice(e.target.value)}
+            placeholder="Min"
+            className="w-full bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-0 px-2 py-1.5 text-body-sm font-body-sm focus:outline-none"
+          />
+          <span className="text-outline-variant">—</span>
+          <input
+            type="number"
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
+            placeholder="Max"
+            className="w-full bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-0 px-2 py-1.5 text-body-sm font-body-sm focus:outline-none"
+          />
         </div>
 
-        {/* Condition Dropdown */}
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="condition" className="text-label-sm font-label-sm text-on-surface-variant">Condition</label>
-          <div className="relative">
-            <select
-              id="condition"
-              value={selectedCondition}
-              onChange={(e) => setSelectedCondition(e.target.value as ItemCondition | '')}
-              className="w-full bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-0 px-3 py-2 pr-8 text-body-sm font-body-sm focus:outline-none appearance-none"
-            >
-              <option value="">Any Condition</option>
-              {CONDITIONS.map(cond => (
-                <option key={cond} value={cond}>{cond}</option>
-              ))}
-            </select>
-            <span className="material-symbols-outlined absolute right-2.5 top-2.5 text-on-surface-variant text-[20px] pointer-events-none">expand_more</span>
-          </div>
+        {/* Condition Section */}
+        <div className="flex items-center gap-stack-sm text-on-surface-variant p-stack-sm hover:bg-surface-container-high transition-all rounded-lg">
+          <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>verified</span>
+          <span className="text-label-md font-label-md">Condition</span>
+        </div>
+        <div className="pl-8 relative">
+          <select
+            id="condition"
+            value={selectedCondition}
+            onChange={(e) => setSelectedCondition(e.target.value as ItemCondition | '')}
+            className="w-full bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-0 px-3 py-2 pr-8 text-body-sm font-body-sm focus:outline-none appearance-none"
+          >
+            <option value="">Any Condition</option>
+            {CONDITIONS.map(cond => (
+              <option key={cond} value={cond}>{cond}</option>
+            ))}
+          </select>
+          <span className="material-symbols-outlined absolute right-2.5 top-2.5 text-on-surface-variant text-[20px] pointer-events-none">expand_more</span>
         </div>
 
-        {/* School & District Text Search */}
-        <div className="flex flex-col gap-3">
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="school" className="text-label-sm font-label-sm text-on-surface-variant">School / University</label>
-            <input
-              id="school"
-              type="text"
-              value={school}
-              onChange={(e) => setSchool(e.target.value)}
-              placeholder="e.g. Bách Khoa"
-              className="w-full bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-0 px-3 py-2 text-body-sm font-body-sm focus:outline-none"
-            />
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="district" className="text-label-sm font-label-sm text-on-surface-variant">District / Area</label>
-            <input
-              id="district"
-              type="text"
-              value={district}
-              onChange={(e) => setDistrict(e.target.value)}
-              placeholder="e.g. Cầu Giấy"
-              className="w-full bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-0 px-3 py-2 text-body-sm font-body-sm focus:outline-none"
-            />
-          </div>
+        {/* Location Section */}
+        <div className="flex items-center gap-stack-sm text-on-surface-variant p-stack-sm hover:bg-surface-container-high transition-all rounded-lg">
+          <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>school</span>
+          <span className="text-label-md font-label-md">Location</span>
+        </div>
+        <div className="pl-8 flex flex-col gap-3">
+          <input
+            id="school"
+            type="text"
+            value={school}
+            onChange={(e) => setSchool(e.target.value)}
+            placeholder="School (e.g. Bách Khoa)"
+            className="w-full bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-0 px-3 py-2 text-body-sm font-body-sm focus:outline-none"
+          />
+          <input
+            id="district"
+            type="text"
+            value={district}
+            onChange={(e) => setDistrict(e.target.value)}
+            placeholder="District (e.g. Cầu Giấy)"
+            className="w-full bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-0 px-3 py-2 text-body-sm font-body-sm focus:outline-none"
+          />
         </div>
 
         {/* Apply Button */}
-        <button
-          onClick={handleApplyFilters}
-          className="w-full mt-2 bg-primary text-on-primary text-label-md font-label-md py-2.5 rounded-lg hover:bg-surface-tint transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
-        >
-          <span className="material-symbols-outlined text-[18px]">done</span>
-          Apply Filters
-        </button>
-      </div>
+        <div className="mt-auto pt-4">
+          <button
+            onClick={handleApplyFilters}
+            className="w-full bg-surface-container-high text-on-surface text-label-md font-label-md py-2 rounded-lg hover:bg-surface-dim transition-colors border border-outline-variant"
+          >
+            Apply Filters
+          </button>
+        </div>
+      </nav>
     </aside>
   );
 }
