@@ -7,12 +7,12 @@ interface FeedSidebarProps {
 }
 
 const CATEGORIES = [
-  { id: 'books', name: 'Sách & Tài liệu', icon: 'book' },
-  { id: 'electronics', name: 'Điện tử', icon: 'devices' },
-  { id: 'furniture', name: 'Nội thất & Gia dụng', icon: 'chair' },
-  { id: 'clothing', name: 'Quần áo & Phụ kiện', icon: 'apparel' },
-  { id: 'vehicles', name: 'Xe cộ', icon: 'directions_car' },
-  { id: 'other', name: 'Khác', icon: 'more_horiz' },
+  { id: 'books', name: 'Books & Documents', icon: 'book' },
+  { id: 'electronics', name: 'Electronics', icon: 'devices' },
+  { id: 'furniture', name: 'Furniture & Appliances', icon: 'chair' },
+  { id: 'clothing', name: 'Clothing & Accessories', icon: 'apparel' },
+  { id: 'vehicles', name: 'Vehicles', icon: 'directions_car' },
+  { id: 'other', name: 'Other', icon: 'more_horiz' },
 ];
 
 const CONDITIONS: ItemCondition[] = ['New', 'Like New', 'Used', 'Fair'];
@@ -128,7 +128,7 @@ export default function FeedSidebar({ onFilterChange, initialFilters = {} }: Fee
 
         {/* Price Range */}
         <div className="flex flex-col gap-2">
-          <span className="text-label-sm font-label-sm text-on-surface-variant">Price Range (kđ)</span>
+          <span className="text-label-sm font-label-sm text-on-surface-variant">Price Range (kVND)</span>
           <div className="flex items-center gap-2">
             <input
               type="number"

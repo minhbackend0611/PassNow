@@ -126,10 +126,10 @@ describe('HomePage Feed sorting and Filters', () => {
     renderComponent();
 
     await waitFor(() => {
-      expect(screen.getByText('Không tìm thấy kết quả phù hợp')).toBeInTheDocument();
+      expect(screen.getByText('No results found')).toBeInTheDocument();
     });
 
-    const clearButton = screen.getByRole('button', { name: /Xóa bộ lọc/i });
+    const clearButton = screen.getByRole('button', { name: /Clear filters/i });
     fireEvent.click(clearButton);
 
     await waitFor(() => {

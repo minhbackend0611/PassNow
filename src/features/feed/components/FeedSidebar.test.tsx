@@ -7,7 +7,7 @@ describe('FeedSidebar', () => {
     render(<FeedSidebar />);
     
     expect(screen.getByLabelText(/Keyword Search/i)).toBeInTheDocument();
-    expect(screen.getByText('Sách & Tài liệu')).toBeInTheDocument();
+    expect(screen.getByText('Books & Documents')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Min')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Max')).toBeInTheDocument();
     expect(screen.getByLabelText(/Condition/i)).toBeInTheDocument();
@@ -31,7 +31,7 @@ describe('FeedSidebar', () => {
     fireEvent.change(maxInput, { target: { value: '500' } });
 
     // Click Category badge
-    const bookCategoryBtn = screen.getByRole('button', { name: /Sách & Tài liệu/i });
+    const bookCategoryBtn = screen.getByRole('button', { name: /Books & Documents/i });
     fireEvent.click(bookCategoryBtn);
 
     // Apply

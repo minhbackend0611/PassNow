@@ -68,7 +68,7 @@ describe('ListingDetailPage Permission Actions', () => {
   });
 
   it('renders Edit and Delete actions plus views count for the seller owner', async () => {
-    vi.mocked(useAuthStore).mockReturnValue({ user: { uid: 'seller_123' } } as any); // is owner
+    vi.mocked(useAuthStore).mockReturnValue({ user: { uid: 'seller_123' } } as unknown as ReturnType<typeof useAuthStore>); // is owner
     vi.mocked(getListingById).mockResolvedValue({ listing: mockListing, seller: mockSeller });
 
     renderComponent();
@@ -83,7 +83,7 @@ describe('ListingDetailPage Permission Actions', () => {
   });
 
   it('renders Contact Seller action for normal buyer users', async () => {
-    vi.mocked(useAuthStore).mockReturnValue({ user: { uid: 'buyer_999' } } as any); // not owner
+    vi.mocked(useAuthStore).mockReturnValue({ user: { uid: 'buyer_999' } } as unknown as ReturnType<typeof useAuthStore>); // not owner
     vi.mocked(getListingById).mockResolvedValue({ listing: mockListing, seller: mockSeller });
 
     renderComponent();

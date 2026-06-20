@@ -123,13 +123,13 @@ export default function HomePage() {
         ) : (
           <div className="mt-stack-lg py-12 flex flex-col items-center justify-center text-center bg-surface-container-low rounded-2xl border border-dashed border-outline-variant px-4">
             <span className="material-symbols-outlined text-4xl text-outline mb-2" style={{ fontVariationSettings: "'wght' 200" }}>shopping_basket</span>
-            <h3 className="text-headline-md font-headline-md text-on-surface mb-1">Không tìm thấy kết quả phù hợp</h3>
-            <p className="text-body-sm font-body-sm text-on-surface-variant mb-4 max-w-xs">Không có tin đăng nào khớp với các bộ lọc bạn chọn.</p>
+            <h3 className="text-headline-md font-headline-md text-on-surface mb-1">No results found</h3>
+            <p className="text-body-sm font-body-sm text-on-surface-variant mb-4 max-w-xs">No listings match your selected filters.</p>
             <button 
               onClick={() => setFilter({})}
               className="px-4 py-2 bg-primary text-on-primary rounded-lg text-label-md font-label-md hover:bg-surface-tint transition-colors cursor-pointer"
             >
-              Xóa bộ lọc
+              Clear filters
             </button>
           </div>
         )}
@@ -142,7 +142,7 @@ export default function HomePage() {
           className="flex items-center gap-2 bg-primary text-on-primary px-5 py-3 rounded-full shadow-lg text-label-md font-label-md hover:bg-surface-tint active:scale-95 transition-all cursor-pointer"
         >
           <span className="material-symbols-outlined text-[20px]">tune</span>
-          Lọc kết quả
+          Filter Results
         </button>
       </div>
 
@@ -151,7 +151,7 @@ export default function HomePage() {
         <div className="fixed inset-0 z-50 bg-black/40 flex justify-end lg:hidden">
           <div className="w-80 max-w-[85vw] h-full bg-surface-container-low shadow-2xl flex flex-col animate-slide-in relative">
             <div className="p-stack-md border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
-              <span className="font-headline-md text-headline-md text-on-surface">Lọc kết quả</span>
+              <span className="font-headline-md text-headline-md text-on-surface">Filter Results</span>
               <button 
                 onClick={() => setShowMobileFilters(false)}
                 className="w-8 h-8 rounded-full flex items-center justify-center bg-surface-container-high hover:bg-surface-variant transition-colors cursor-pointer text-on-surface-variant"
