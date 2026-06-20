@@ -1,4 +1,4 @@
-import { collection, doc, query, where, getDocs, writeBatch, getDoc, orderBy } from 'firebase/firestore';
+import { collection, doc, query, where, getDocs, writeBatch, getDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import type { Transaction } from '../types';
 

@@ -34,7 +34,7 @@ export default function ListingDetailPage() {
     };
 
     fetchDetail();
-  }, [id]);
+  }, [id, currentUser]);
 
   if (isLoading) {
     return (

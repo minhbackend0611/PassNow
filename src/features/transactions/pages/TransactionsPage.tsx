@@ -26,6 +26,7 @@ export default function TransactionsPage() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchTransactions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
@@ -81,26 +82,26 @@ export default function TransactionsPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-4 border-b border-outline-variant/30">
+      <div className="flex border-b border-outline-variant w-full overflow-x-auto hide-scrollbar">
         <button 
           onClick={() => setActiveTab('buying')}
-          className={`pb-2 px-1 font-label-lg text-label-lg transition-colors border-b-2 ${
+          className={`flex-1 md:flex-none text-center px-gutter py-stack-sm text-label-md font-label-md transition-colors whitespace-nowrap border-b-2 ${
             activeTab === 'buying' 
-              ? 'border-primary text-primary' 
-              : 'border-transparent text-on-surface-variant hover:text-on-surface'
+              ? 'border-primary text-primary font-bold' 
+              : 'border-transparent text-on-surface-variant hover:text-primary hover:border-outline-variant'
           }`}
         >
-          Buying / Requests ({buyingTxs.length})
+          Buying ({buyingTxs.length})
         </button>
         <button 
           onClick={() => setActiveTab('selling')}
-          className={`pb-2 px-1 font-label-lg text-label-lg transition-colors border-b-2 ${
+          className={`flex-1 md:flex-none text-center px-gutter py-stack-sm text-label-md font-label-md transition-colors whitespace-nowrap border-b-2 ${
             activeTab === 'selling' 
-              ? 'border-primary text-primary' 
-              : 'border-transparent text-on-surface-variant hover:text-on-surface'
+              ? 'border-primary text-primary font-bold' 
+              : 'border-transparent text-on-surface-variant hover:text-primary hover:border-outline-variant'
           }`}
         >
-          Selling / Giving ({sellingTxs.length})
+          Selling ({sellingTxs.length})
         </button>
       </div>
 
@@ -124,13 +125,13 @@ export default function TransactionsPage() {
             const isBuyer = tx.buyerId === user.uid;
             
             return (
-              <div key={tx.id} className="bg-surface-container-lowest rounded-xl p-4 md:p-6 shadow-[0_2px_4px_rgba(0,0,0,0.04)] border border-outline-variant/30 flex flex-col md:flex-row gap-4 justify-between items-start md:items-center">
-                <div className="flex flex-col gap-1 w-full md:w-auto">
+              <div key={tx.id} className="flex flex-col sm:flex-row items-start sm:items-center gap-stack-md p-stack-md bg-surface-container-lowest border border-outline-variant rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex flex-col gap-1 w-full md:w-auto flex-grow min-w-0">
                   <div className="flex items-center gap-2">
                     <span className={`text-label-sm font-label-sm px-2 py-1 rounded-full border ${
                       tx.status === 'completed' 
-                        ? 'bg-primary/10 text-primary border-primary/20' 
-                        : 'bg-secondary/10 text-secondary border-secondary/20'
+                        ? 'bg-primary-fixed-dim text-on-primary-fixed border-primary' 
+                        : 'bg-secondary-container text-on-secondary-container border-transparent'
                     }`}>
                       {tx.status.toUpperCase()}
                     </span>
@@ -140,11 +141,11 @@ export default function TransactionsPage() {
                   </div>
                   <h3 
                     onClick={() => navigate(`/listings/${tx.listingId}`)}
-                    className="text-title-md font-title-md text-on-surface hover:text-primary cursor-pointer hover:underline mt-1"
+                    className="text-headline-md font-headline-md text-on-surface hover:text-primary cursor-pointer hover:underline mt-1 truncate"
                   >
                     {tx.listingTitle}
                   </h3>
-                  <div className="text-body-sm text-on-surface-variant mt-2 flex flex-col gap-1">
+                  <div className="text-body-sm text-on-surface-variant mt-1 flex flex-col gap-1">
                     <p>Status Details:</p>
                     <p className="flex items-center gap-1">
                       <span className={`material-symbols-outlined text-[16px] ${tx.sellerConfirmed ? 'text-primary' : 'text-on-surface-variant'}`}>
@@ -161,12 +162,12 @@ export default function TransactionsPage() {
                   </div>
                 </div>
 
-                <div className="flex flex-row md:flex-col gap-2 w-full md:w-auto justify-end">
+                <div className="w-full sm:w-auto flex sm:flex-col gap-stack-sm shrink-0">
                   {tx.status === 'pending' && isBuyer && !tx.buyerConfirmed && (
                     <button 
                       onClick={() => handleBuyerConfirm(tx)}
                       disabled={processingId === tx.id}
-                      className="flex-1 md:flex-none bg-primary text-on-primary text-label-md px-4 py-2 rounded-lg hover:bg-primary/90 disabled:opacity-50"
+                      className="flex-1 sm:flex-none px-4 py-2 bg-primary text-on-primary rounded-lg text-label-md font-label-md hover:bg-on-primary-fixed-variant transition-colors text-center disabled:opacity-50"
                     >
                       Confirm Receipt
                     </button>
@@ -176,7 +177,7 @@ export default function TransactionsPage() {
                     <button 
                       onClick={() => handleSellerConfirm(tx)}
                       disabled={processingId === tx.id}
-                      className="flex-1 md:flex-none bg-primary text-on-primary text-label-md px-4 py-2 rounded-lg hover:bg-primary/90 disabled:opacity-50"
+                      className="flex-1 sm:flex-none px-4 py-2 bg-primary text-on-primary rounded-lg text-label-md font-label-md hover:bg-on-primary-fixed-variant transition-colors text-center disabled:opacity-50"
                     >
                       Confirm Delivery
                     </button>
@@ -186,7 +187,7 @@ export default function TransactionsPage() {
                     <button 
                       onClick={() => handleCancel(tx)}
                       disabled={processingId === tx.id}
-                      className="flex-1 md:flex-none border border-error text-error text-label-md px-4 py-2 rounded-lg hover:bg-error/5 disabled:opacity-50"
+                      className="flex-1 sm:flex-none px-4 py-2 bg-surface-container-high text-on-surface rounded-lg text-label-md font-label-md hover:bg-error hover:text-on-error transition-colors text-center disabled:opacity-50"
                     >
                       Cancel Request
                     </button>
@@ -195,7 +196,7 @@ export default function TransactionsPage() {
                   {tx.status === 'completed' && (
                     <button 
                       onClick={() => alert("Rating feature coming soon")}
-                      className="flex-1 md:flex-none border border-primary text-primary text-label-md px-4 py-2 rounded-lg hover:bg-primary/5"
+                      className="flex-1 sm:flex-none px-4 py-2 bg-surface text-primary border border-primary rounded-lg text-label-md font-label-md hover:bg-primary-container hover:text-on-primary-container transition-colors text-center"
                     >
                       Leave Review
                     </button>

@@ -36,3 +36,39 @@ These guidelines govern all AI agent behaviors, coding patterns, and security co
 ## 4. UI/UX Aesthetic Rules
 - **Constant Alignment Check**: On every UI modification, the agent MUST review the UI layout, styling, and interactivity to ensure it strictly adheres to the design specifications provided by the user in the `stitch_passnow_marketplace_specification` folder. Use the exact HTML structure and Tailwind classes provided in those template files whenever possible.
 - **No basic MVP UI**: Always incorporate hover effects, micro-animations, glassmorphism (where applicable), and modern typography as per the provided spec. Never output bare-bones or unpolished Tailwind components. If a UI looks too basic, rewrite the styles to match the templates before presenting it to the user.
+
+---
+
+## 5. Quick Reference: Agent Identity
+
+- **Role**: Technical Architect + Implementation Engine
+- **Mindset**: Code is disposable. Spec is king.
+- **Spec Location**: [specs/passnow-spec.md](specs/passnow-spec.md)
+
+---
+
+## 6. Step-by-Step Developer Workflow
+
+```
+[Read specs/] ➔ [Design Implementation Plan] ➔ [Request User Approval] ➔ [TDD / Code & Test] ➔ [Run pre-commit] ➔ [Verify Walkthrough]
+```
+
+1. **Before Coding**:
+   - Read the spec file: [passnow-spec.md](specs/passnow-spec.md)
+   - Read local guidelines: [.agents/AGENTS.md](.agents/AGENTS.md) and design context: [.agents/CONTEXT.md](.agents/CONTEXT.md)
+   - Propose an approach via an implementation plan and wait for confirmation.
+2. **While Coding**:
+   - Follow the tech stack and design tokens defined in [.agents/CONTEXT.md](.agents/CONTEXT.md).
+   - Generate test files alongside the implementation.
+   - Run in the sandbox environment. Do not touch unrelated files or refactor code outside of task scope.
+3. **After Coding**:
+   - Run full test suite.
+   - Run git hook checks (pre-commit, linter).
+   - Create a walkthrough summary showcasing changes, test results, and UI screenshots/recordings if available.
+   - Perform incremental git commits for code changes and push code to the remote repository once changes are validated.
+
+---
+
+## 7. Custom Skills Pointers
+- Reusable skills are located in [.agents/skills/](.agents/skills/).
+- Code Review assistant skill: [.agents/skills/code-review/SKILL.md](.agents/skills/code-review/SKILL.md).
