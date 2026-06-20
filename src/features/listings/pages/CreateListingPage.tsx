@@ -102,7 +102,7 @@ export default function CreateListingPage() {
     
     searchTimeout.current = setTimeout(async () => {
       try {
-        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}&limit=5`);
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}&countrycodes=vn&limit=5`);
         const data = await res.json();
         setSuggestions(data || []);
       } catch (err) {
@@ -144,7 +144,7 @@ export default function CreateListingPage() {
     setValue('specificAddress', user.school, { shouldValidate: true });
     
     // Fetch coordinates for it
-    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(user.school)}&limit=1`)
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(user.school)}&countrycodes=vn&limit=1`)
       .then(res => res.json())
       .then(data => {
         if (data && data.length > 0) {
