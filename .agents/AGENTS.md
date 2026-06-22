@@ -34,9 +34,13 @@ These guidelines govern all AI agent behaviors, coding patterns, and security co
 ---
 
 ## 4. UI/UX Aesthetic Rules
+- **Full UI/UX Creative Freedom**: You have full authority over all UI/UX design decisions. Prioritize aesthetics, beauty, and modern design principles over strict adherence to the original specs or the `stitch` folder. Feel free to completely redesign layouts, components, and interactions if it results in a vastly superior and visually stunning user experience.
 - **Adaptive Premium Design**: The provided specifications in `stitch_passnow_marketplace_specification` are a strong baseline, but you DO NOT need to follow them 100% strictly. You are encouraged to adapt, refine, and customize the design to ensure it is "as beautiful, modern, and harmonious as possible".
-- **Color Harmony**: Avoid stark white colors (`#ffffff`) for large backgrounds that might cause eye strain. Instead, use softer, tinted off-white or light surface colors that harmonize with the brand's primary colors (e.g., subtle green tints) to ensure a comfortable viewing experience.
+- **Color Harmony**: Avoid stark white colors (`#ffffff`) for large backgrounds that might cause eye strain. Instead, use softer, tinted off-white or light surface colors that harmonize with the brand's primary colors (e.g., subtle green tints) to ensure a comfortable viewing experience. Use soft, theme-aware gradients (e.g., `bg-gradient-to-br from-surface-container-low to-primary/5`) to maintain depth.
 - **No basic MVP UI**: Always incorporate hover effects, micro-animations, glassmorphism (where applicable), and modern typography. Never output bare-bones or unpolished Tailwind components.
+- **Micro-interactions & Physics**: Never rely purely on static color changes on hover (e.g., just changing a border to black). Always use physical transformations (`hover:-translate-y-0.5`, `active:scale-95`) and dynamic shadows (`hover:shadow-md`) to make elements feel tactile, bouncy, and alive. 
+- **Dynamic Components**: Elements like Dropdowns, Search Bars, and List items should have expanding bounds, sliding text (`hover:translate-x-1`), or scaling icons to respond to user intent proactively.
+- **Soft Geometry**: Prefer soft, pill-shaped, or highly rounded corners (`rounded-[32px]`, `rounded-2xl`, `rounded-full`) over sharp edges (`rounded-md`) for major structural components to create a friendlier, organic feel.
 
 ---
 

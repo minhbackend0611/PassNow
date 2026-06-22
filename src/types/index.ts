@@ -25,6 +25,7 @@ export interface Listing {
   images: string[];
   sellerId: string;
   school: string; // Used for broad filtering
+  province: string; // Used for broad filtering
   district: string; // Used for broad filtering
   specificAddress?: string; // Exact pickup location
   coordinates?: { lat: number; lng: number };
@@ -34,10 +35,13 @@ export interface Listing {
   createdAt: string | number;
   updatedAt: string;
   views?: number;
+  quantity?: number;
+  completedCount?: number;
 }
 
 export interface ListingFilter {
   school?: string;
+  province?: string;
   district?: string;
   category?: string;
   isFree?: boolean;
@@ -61,4 +65,33 @@ export interface Transaction {
   status: TransactionStatus;
   createdAt: number;
   completedAt?: number | null;
+}
+
+export interface Review {
+  id: string;
+  transactionId: string;
+  listingId: string;
+  reviewerId: string;
+  revieweeId: string;
+  rating: number;
+  comment?: string;
+  createdAt: number;
+}
+
+export interface Conversation {
+  id: string;
+  metadata: {
+    participants: Record<string, boolean>; // e.g., { [userId1]: true, [userId2]: true }
+    unreadCount?: Record<string, number>; // e.g., { [userId1]: 0, [userId2]: 1 }
+    listingId: string;
+    lastMessage: string;
+    lastMessageAt: number; // unix timestamp
+  };
+}
+
+export interface Message {
+  id: string; // key from Realtime DB
+  senderId: string;
+  text: string;
+  createdAt: number; // unix timestamp
 }

@@ -57,7 +57,7 @@ export default function PublicProfilePage() {
         </p>
         <button 
           onClick={() => navigate('/')} 
-          className="px-6 py-2 bg-primary text-on-primary rounded-lg text-label-md font-label-md hover:bg-surface-tint transition-colors"
+          className="px-6 py-2.5 bg-primary text-on-primary rounded-xl text-label-md font-label-md hover:bg-surface-tint transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95"
         >
           Back to Home
         </button>
@@ -100,11 +100,17 @@ export default function PublicProfilePage() {
   };
 
   return (
-    <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-gutter py-stack-lg pb-24 md:pb-stack-lg flex flex-col gap-stack-lg bg-surface">
+    <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-gutter py-stack-lg pb-24 md:pb-stack-lg flex flex-col gap-stack-lg relative">
+      {/* Animated abstract background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-primary/10 blur-[100px] animate-pulse" style={{ animationDuration: '8s' }}></div>
+        <div className="absolute top-[20%] -right-[10%] w-[40%] h-[60%] rounded-full bg-secondary/10 blur-[120px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '2s' }}></div>
+      </div>
+
       {/* Profile Header Block */}
-      <div className="bg-surface-container-lowest rounded-2xl shadow-[0_2px_15px_rgba(0,0,0,0.04)] border border-outline-variant p-stack-lg md:p-gutter flex flex-col md:flex-row justify-between items-start md:items-center gap-stack-lg relative overflow-hidden">
-        {/* Decorative blur background element */}
-        <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary-container rounded-full blur-[80px] opacity-20 pointer-events-none"></div>
+      <div className="glass-panel p-stack-lg md:p-gutter flex flex-col md:flex-row justify-between items-start md:items-center gap-stack-lg relative overflow-hidden group rounded-[32px] hover:shadow-lg transition-all duration-500 bg-gradient-to-br from-surface-container-low/80 to-primary/5">
+        {/* Glow effect on hover */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
 
         <div className="flex flex-col md:flex-row items-start md:items-center gap-stack-lg z-10 w-full md:w-auto flex-1">
           {/* Avatar */}
@@ -142,15 +148,24 @@ export default function PublicProfilePage() {
 
             {/* Ratings Summary */}
             <div className="flex items-center gap-2 mt-stack-xs">
-              <div className="flex items-center">
-                {renderStars()}
-              </div>
-              <span className="text-label-md font-label-md text-on-surface font-semibold">
-                {ratingVal > 0 ? ratingVal.toFixed(1) : 'No reviews'}
-              </span>
-              <span className="text-body-sm font-body-sm text-outline">
-                ({reviewsCount} {reviewsCount === 1 ? 'review' : 'reviews'})
-              </span>
+              {reviewsCount > 0 ? (
+                <>
+                  <div className="flex items-center">
+                    {renderStars()}
+                  </div>
+                  <span className="text-label-md font-label-md text-on-surface font-semibold">
+                    {ratingVal.toFixed(1)}
+                  </span>
+                  <span className="text-body-sm font-body-sm text-outline">
+                    ({reviewsCount} {reviewsCount === 1 ? 'review' : 'reviews'})
+                  </span>
+                </>
+              ) : (
+                <div className="flex items-center gap-1.5 text-on-surface-variant opacity-80">
+                  <span className="material-symbols-outlined text-[18px]">hotel_class</span>
+                  <span className="text-label-md font-label-md font-medium">No reviews yet</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -177,7 +192,7 @@ export default function PublicProfilePage() {
             {isOwnProfile ? (
               <button 
                 onClick={() => navigate('/profile')} 
-                className="w-full md:w-auto px-6 py-2.5 bg-surface-container-high hover:bg-surface-dim border border-outline-variant text-on-surface text-label-md font-label-md rounded-xl transition-all flex items-center justify-center gap-2"
+                className="w-full md:w-auto px-6 py-2.5 bg-surface-variant/40 dark:bg-black/20 hover:bg-surface-variant/60 dark:hover:bg-black/40 border border-outline-variant/30 text-on-surface text-label-md font-label-md rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow-md hover:-translate-y-0.5 backdrop-blur-sm active:scale-95 duration-300"
               >
                 <span className="material-symbols-outlined text-[18px]">edit</span>
                 Edit Profile
@@ -185,7 +200,7 @@ export default function PublicProfilePage() {
             ) : (
               <button 
                 onClick={() => navigate(`/chat?user=${user.uid}`)}
-                className="w-full md:w-auto px-6 py-2.5 bg-primary text-on-primary hover:bg-primary/95 text-label-md font-label-md rounded-xl transition-all shadow-sm flex items-center justify-center gap-2"
+                className="w-full md:w-auto px-6 py-2.5 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-on-primary text-label-md font-label-md rounded-xl transition-all shadow-[0_4px_12px_rgba(0,166,126,0.2)] hover:shadow-[0_8px_20px_rgba(0,166,126,0.3)] hover:-translate-y-0.5 flex items-center justify-center gap-2"
               >
                 <span className="material-symbols-outlined text-[18px]">chat</span>
                 Contact
@@ -208,9 +223,12 @@ export default function PublicProfilePage() {
             ))}
           </div>
         ) : (
-          <div className="py-16 flex flex-col items-center justify-center text-center bg-surface-container-lowest rounded-2xl border border-dashed border-outline-variant">
-            <span className="material-symbols-outlined text-4xl text-outline mb-2" style={{ fontVariationSettings: "'wght' 200" }}>shopping_basket</span>
-            <p className="text-body-md font-body-md text-on-surface-variant">This user hasn't posted any active listings yet.</p>
+          <div className="py-16 flex flex-col items-center justify-center text-center glass-panel border-dashed rounded-[32px] bg-gradient-to-br from-surface-container-low/50 to-primary/5 hover:shadow-md transition-all duration-300">
+            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <span className="material-symbols-outlined text-3xl text-primary" style={{ fontVariationSettings: "'wght' 300" }}>shopping_basket</span>
+            </div>
+            <h3 className="text-title-lg font-title-lg text-on-surface mb-2">No active listings</h3>
+            <p className="text-body-md font-body-md text-on-surface-variant max-w-xs">This user hasn't posted any items yet. Check back later!</p>
           </div>
         )}
       </section>

@@ -81,7 +81,7 @@ export default function RegisterPage() {
               <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-opacity-50">school</span>
               <input 
                 id="reg-email" 
-                className={`w-full pl-10 pr-4 py-2 bg-surface-container-lowest border ${errors.email ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-primary focus:ring-primary/20'} rounded-lg focus:outline-none focus:ring-4 text-body-md font-body-md transition-all shadow-sm`} 
+                className={`w-full pl-11 pr-4 py-3 bg-white/50 dark:bg-black/10 backdrop-blur-sm border ${errors.email ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant/60 focus:border-primary focus:ring-primary/20'} rounded-xl focus:outline-none focus:ring-4 text-body-md font-medium transition-all shadow-[0_2px_10px_rgba(0,0,0,0.02)]`} 
                 placeholder="student@university.edu" 
                 type="email"
                 {...register('email')}
@@ -96,7 +96,7 @@ export default function RegisterPage() {
               <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-opacity-50">lock</span>
               <input 
                 id="reg-password" 
-                className={`w-full pl-10 pr-4 py-2 bg-surface-container-lowest border ${errors.password ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-primary focus:ring-primary/20'} rounded-lg focus:outline-none focus:ring-4 text-body-md font-body-md transition-all shadow-sm`} 
+                className={`w-full pl-11 pr-4 py-3 bg-white/50 dark:bg-black/10 backdrop-blur-sm border ${errors.password ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant/60 focus:border-primary focus:ring-primary/20'} rounded-xl focus:outline-none focus:ring-4 text-body-md font-medium transition-all shadow-[0_2px_10px_rgba(0,0,0,0.02)]`} 
                 placeholder="Create a strong password" 
                 type="password"
                 {...register('password')}
@@ -111,7 +111,7 @@ export default function RegisterPage() {
               <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-opacity-50">lock_reset</span>
               <input 
                 id="reg-confirm-password" 
-                className={`w-full pl-10 pr-4 py-2 bg-surface-container-lowest border ${errors.confirmPassword ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-primary focus:ring-primary/20'} rounded-lg focus:outline-none focus:ring-4 text-body-md font-body-md transition-all shadow-sm`} 
+                className={`w-full pl-11 pr-4 py-3 bg-white/50 dark:bg-black/10 backdrop-blur-sm border ${errors.confirmPassword ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant/60 focus:border-primary focus:ring-primary/20'} rounded-xl focus:outline-none focus:ring-4 text-body-md font-medium transition-all shadow-[0_2px_10px_rgba(0,0,0,0.02)]`} 
                 placeholder="Repeat password" 
                 type="password"
                 {...register('confirmPassword')}
@@ -121,7 +121,7 @@ export default function RegisterPage() {
           </div>
 
           <button 
-            className="w-full py-2.5 px-4 bg-primary text-on-primary text-label-md font-label-md rounded-lg hover:bg-on-primary-fixed-variant active:bg-primary-fixed-dim focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all shadow-sm flex items-center justify-center gap-2 mt-stack-md disabled:opacity-70 disabled:cursor-not-allowed" 
+            className="w-full py-3.5 px-4 bg-gradient-to-r from-primary to-secondary text-white text-label-lg font-bold rounded-xl hover:shadow-[0_8px_20px_rgba(0,166,126,0.3)] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed hover:-translate-y-0.5 active:scale-95 mt-4" 
             type="submit"
             disabled={isLoading}
           >

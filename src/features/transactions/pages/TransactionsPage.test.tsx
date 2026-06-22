@@ -7,6 +7,16 @@ import { getUserTransactions } from '../../../services/transactionService';
 
 vi.mock('../../../store/useAuthStore');
 vi.mock('../../../services/transactionService');
+vi.mock('../../../services/reviewService', () => ({
+  getReviewsByReviewer: vi.fn().mockResolvedValue([]),
+  submitReview: vi.fn().mockResolvedValue(true)
+}));
+vi.mock('../../../services/listingService', () => ({
+  getListingById: vi.fn().mockResolvedValue({ listing: { id: 'listing_1', title: 'Laptop', price: 1000 } })
+}));
+vi.mock('../../../services/userService', () => ({
+  getUserById: vi.fn().mockResolvedValue({ uid: 'seller_123', displayName: 'Seller' })
+}));
 
 describe('TransactionsPage', () => {
   beforeEach(() => {

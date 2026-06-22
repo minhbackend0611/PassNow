@@ -7,7 +7,6 @@ import { updateProfile } from 'firebase/auth';
 import { auth, db } from '../../../lib/firebase';
 import { useNavigate } from 'react-router-dom';
 import { OverlayLoader } from '../../../components/ui/Loading';
-import { Button } from '../../../components/ui/button';
 import { Label } from '../../../components/ui/label';
 import { useAuthStore } from '../../../store/useAuthStore';
 
@@ -176,8 +175,15 @@ export default function SetupProfilePage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-surface items-center justify-center p-4">
-      <div className="w-full max-w-lg space-y-8 glass-panel p-8 rounded-2xl relative">
+    <div className="bg-surface-container-lowest text-on-surface font-body-md min-h-screen flex items-center justify-center relative overflow-hidden p-4">
+      {/* Abstract Animated Mesh Gradient Background */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-gradient-to-br from-primary/5 via-surface to-secondary/10">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary/20 blur-[100px] animate-pulse" style={{ animationDuration: '8s' }}></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-secondary/20 blur-[120px] animate-pulse" style={{ animationDuration: '12s', animationDelay: '2s' }}></div>
+        <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] rounded-full bg-tertiary/15 blur-[80px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '5s' }}></div>
+      </div>
+      
+      <div className="w-full max-w-lg space-y-8 glass-panel p-8 rounded-2xl relative z-10">
         {isLoading && <OverlayLoader message="Saving Profile..." />}
         <div className="text-center">
           <h2 className="font-headline-lg text-primary mb-2">Complete Your Profile</h2>
@@ -195,7 +201,7 @@ export default function SetupProfilePage() {
             <Label htmlFor="displayName">Display Name <span className="text-error">*</span></Label>
             <input
               id="displayName"
-              className={`flex h-10 w-full rounded-md border ${errors.displayName ? 'border-error focus:border-error' : 'border-outline-variant focus:border-on-surface'} bg-surface-container-lowest px-3 py-2 text-sm focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:opacity-50`}
+              className={`w-full pl-4 pr-4 py-3 bg-white/50 dark:bg-black/10 backdrop-blur-sm border ${errors.displayName ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant/60 focus:border-primary focus:ring-primary/20'} rounded-xl focus:outline-none focus:ring-4 text-body-md font-medium transition-all shadow-[0_2px_10px_rgba(0,0,0,0.02)] disabled:cursor-not-allowed disabled:opacity-50`}
               placeholder="John Doe"
               {...register('displayName')}
             />
@@ -206,7 +212,7 @@ export default function SetupProfilePage() {
             <Label htmlFor="school">School / University <span className="text-error">*</span></Label>
             <select
               id="school"
-              className={`flex h-10 w-full rounded-md border ${errors.school ? 'border-error focus:border-error' : 'border-outline-variant focus:border-on-surface'} bg-surface-container-lowest px-3 py-2 text-sm focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:opacity-50`}
+              className={`w-full pl-4 pr-4 py-3 bg-white/50 dark:bg-black/10 backdrop-blur-sm border ${errors.school ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant/60 focus:border-primary focus:ring-primary/20'} rounded-xl focus:outline-none focus:ring-4 text-body-md font-medium transition-all shadow-[0_2px_10px_rgba(0,0,0,0.02)] disabled:cursor-not-allowed disabled:opacity-50 appearance-none`}
               {...register('school')}
               value={watch('school') || ""}
             >
@@ -221,10 +227,10 @@ export default function SetupProfilePage() {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="province">Province / City <span className="text-error">*</span></Label>
+              <Label htmlFor="province">Contact Province / City <span className="text-error">*</span></Label>
               <select
                 id="province"
-                className={`flex h-10 w-full rounded-md border ${errors.province ? 'border-error focus:border-error' : 'border-outline-variant focus:border-on-surface'} bg-surface-container-lowest px-3 py-2 text-sm focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:opacity-50`}
+                className={`w-full pl-4 pr-4 py-3 bg-white/50 dark:bg-black/10 backdrop-blur-sm border ${errors.province ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant/60 focus:border-primary focus:ring-primary/20'} rounded-xl focus:outline-none focus:ring-4 text-body-md font-medium transition-all shadow-[0_2px_10px_rgba(0,0,0,0.02)] disabled:cursor-not-allowed disabled:opacity-50 appearance-none`}
                 value={selectedProvinceName}
                 onChange={handleProvinceChange}
               >
@@ -237,10 +243,10 @@ export default function SetupProfilePage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="district">District / Area <span className="text-error">*</span></Label>
+              <Label htmlFor="district">Contact District / Area <span className="text-error">*</span></Label>
               <select
                 id="district"
-                className={`flex h-10 w-full rounded-md border ${errors.district ? 'border-error focus:border-error' : 'border-outline-variant focus:border-on-surface'} bg-surface-container-lowest px-3 py-2 text-sm focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:opacity-50`}
+                className={`w-full pl-4 pr-4 py-3 bg-white/50 dark:bg-black/10 backdrop-blur-sm border ${errors.district ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant/60 focus:border-primary focus:ring-primary/20'} rounded-xl focus:outline-none focus:ring-4 text-body-md font-medium transition-all shadow-[0_2px_10px_rgba(0,0,0,0.02)] disabled:cursor-not-allowed disabled:opacity-50 appearance-none`}
                 {...register('district')}
                 disabled={!selectedProvinceName || districts.length === 0}
               >
@@ -253,9 +259,13 @@ export default function SetupProfilePage() {
             </div>
           </div>
 
-          <Button type="submit" className="w-full mt-8" disabled={isLoading}>
+          <button 
+            type="submit" 
+            className="w-full py-3.5 px-4 bg-gradient-to-r from-primary to-secondary text-white text-label-lg font-bold rounded-xl hover:shadow-[0_8px_20px_rgba(0,166,126,0.3)] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed hover:-translate-y-0.5 active:scale-95 mt-8"
+            disabled={isLoading}
+          >
             {isLoading ? 'Saving...' : 'Complete Setup'}
-          </Button>
+          </button>
         </form>
       </div>
     </div>

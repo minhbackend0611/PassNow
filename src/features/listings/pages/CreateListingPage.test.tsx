@@ -10,7 +10,8 @@ vi.mock('../../../store/useAuthStore', () => ({
 }));
 
 vi.mock('../../../services/listingService', () => ({
-  createListing: vi.fn()
+  createListing: vi.fn(),
+  uploadListingImages: vi.fn().mockResolvedValue(['http://mock-image.com/test.png'])
 }));
 
 describe('CreateListingPage', () => {
@@ -82,10 +83,33 @@ describe('CreateListingPage', () => {
 
     // Fill form
     fireEvent.change(screen.getByPlaceholderText('e.g., Biology 101 Textbook, 4th Ed.'), { target: { value: 'Test Item' } });
-    fireEvent.change(screen.getByLabelText(/Category/i), { target: { value: 'Electronics' } });
-    fireEvent.change(screen.getByLabelText(/Condition/i), { target: { value: 'New' } });
+    fireEvent.change(screen.getByPlaceholderText(/Describe any wear and tear/i), { target: { value: 'This is a valid description with enough characters.' } });
+    
+    fireEvent.click(screen.getByText('Select Category'));
+    fireEvent.click(screen.getAllByText('Electronics')[0]);
+
+    fireEvent.click(screen.getByText('Select Condition'));
+    fireEvent.click(screen.getAllByText('New')[0]);
+
     fireEvent.change(screen.getByPlaceholderText('0'), { target: { value: '1000' } });
-    fireEvent.change(screen.getByPlaceholderText(/1 Dai Co Viet/i), { target: { value: 'Test Address' } });
+
+    // Fill required photo
+    const file = new File(['dummy content'], 'test.png', { type: 'image/png' });
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    fireEvent.change(fileInput, { target: { files: [file] } });
+    fireEvent.change(screen.getByPlaceholderText('0'), { target: { value: '1000' } });
+    // Mock fetch for "Use My University" button
+    global.fetch = vi.fn().mockResolvedValue({
+      json: () => Promise.resolve([{ display_name: '1 Dai Co Viet', lat: '10', lon: '10' }])
+    });
+
+    // Fill address using "Use My University"
+    fireEvent.click(screen.getByRole('button', { name: /Use My University/i }));
+
+    // Wait for address to populate
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText(/Search for an address/i)).toHaveValue('1 Dai Co Viet');
+    });
 
     // Submit
     fireEvent.click(screen.getByText('Post Listing'));
@@ -97,7 +121,14 @@ describe('CreateListingPage', () => {
         condition: 'New',
         price: 1000,
         isFree: false,
-        specificAddress: 'Test Address'
+        specificAddress: '1 Dai Co Viet',
+        description: 'This is a valid description with enough characters.',
+        images: ['http://mock-image.com/test.png'],
+        coordinates: { lat: 10, lng: 10 },
+        sellerId: '123',
+        school: 'Test Uni',
+        district: 'Test District',
+        province: 'Hanoi',
       }));
     });
   });

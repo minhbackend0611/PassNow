@@ -1,9 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../../store/useAuthStore';
 import { getListings } from '../../../services/listingService';
-import type { Listing, ListingFilter } from '../../../types';
+import type { Listing, ListingFilter, ItemCondition } from '../../../types';
 import ListingCard from '../components/ListingCard';
 import FeedSidebar from '../components/FeedSidebar';
+import HomeDiscoveryView from '../components/HomeDiscoveryView';
+import SearchResultsView from '../components/SearchResultsView';
 
 // Sort listings client-side by same school, then same district, then others
 const sortListingsByPreference = (listings: Listing[], school?: string | null, district?: string | null): Listing[] => {
@@ -40,15 +43,61 @@ export default function HomePage() {
   const { user } = useAuthStore();
   const [listings, setListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [filter, setFilter] = useState<ListingFilter>({});
-  const [activeTab, setActiveTab] = useState<'all' | 'free'>('all');
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchQuery = searchParams.get('q') || '';
+  const browseMode = searchParams.get('browse') === 'true';
+  const activeTab = searchParams.get('free') === 'true' ? 'free' : 'all';
+
+  const filter: ListingFilter = useMemo(() => {
+    return {
+      category: searchParams.get('category') || undefined,
+      condition: searchParams.get('condition') as ItemCondition || undefined,
+      minPrice: searchParams.has('minPrice') ? Number(searchParams.get('minPrice')) : undefined,
+      maxPrice: searchParams.has('maxPrice') ? Number(searchParams.get('maxPrice')) : undefined,
+      school: searchParams.get('school') || undefined,
+    };
+  }, [searchParams]);
+
+  const isDiscoveryMode = !searchQuery && 
+                          !filter.category && !filter.condition && filter.minPrice === undefined && filter.maxPrice === undefined && !filter.school && 
+                          activeTab === 'all' && 
+                          !browseMode;
+
+  const updateFiltersInURL = (newFilters: ListingFilter) => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev);
+      next.delete('category');
+      next.delete('condition');
+      next.delete('minPrice');
+      next.delete('maxPrice');
+      next.delete('school');
+
+      if (newFilters.category) next.set('category', newFilters.category);
+      if (newFilters.condition) next.set('condition', newFilters.condition);
+      if (newFilters.minPrice !== undefined) next.set('minPrice', newFilters.minPrice.toString());
+      if (newFilters.maxPrice !== undefined) next.set('maxPrice', newFilters.maxPrice.toString());
+      if (newFilters.school) next.set('school', newFilters.school);
+
+      return next;
+    });
+  };
+
+  const handleSetActiveTab = (tab: 'all' | 'free') => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev);
+      if (tab === 'free') next.set('free', 'true');
+      else next.delete('free');
+      return next;
+    });
+  };
 
   useEffect(() => {
     const fetchListings = async () => {
       setIsLoading(true);
       const data = await getListings({
         ...filter,
+        searchQuery: searchQuery,
         isFree: activeTab === 'free' ? true : undefined
       });
       
@@ -59,96 +108,67 @@ export default function HomePage() {
     };
 
     fetchListings();
-  }, [filter, activeTab, user]);
+  }, [filter, activeTab, user, searchQuery]);
 
   return (
-    <div className="flex-1 flex w-full relative">
-      {/* Desktop Sidebar */}
-      <div className="hidden lg:block">
-        <FeedSidebar 
-          key={JSON.stringify(filter)}
-          initialFilters={filter}
-          onFilterChange={(newFilters) => setFilter(newFilters)} 
-        />
-      </div>
-      
-      <main className="flex-1 overflow-y-auto bg-surface px-margin-mobile md:px-gutter py-stack-lg min-h-0">
-        {/* Campus Context Header */}
-        <div className="mb-stack-lg flex flex-col md:flex-row md:items-end justify-between gap-stack-md bg-surface-container-low p-stack-md rounded-2xl border border-outline-variant/50">
-          <div>
-            <h1 className="text-headline-xl-mobile md:text-headline-xl font-headline-xl-mobile md:font-headline-xl text-on-surface mb-1">Campus Feed</h1>
-            <div className="flex items-center gap-2 text-body-sm font-body-sm text-on-surface-variant">
-              <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>account_circle</span>
-              <span>{user?.displayName || 'Student'}</span>
-              <span className="w-1 h-1 rounded-full bg-outline"></span>
-              <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
-              <span className="font-medium text-primary">{user?.school || 'All Schools'}</span>
-            </div>
-          </div>
-          <div className="flex bg-surface-container rounded-lg p-1 border border-outline-variant w-fit">
-            <button 
-              onClick={() => setActiveTab('all')}
-              className={`px-4 py-1.5 rounded text-label-md font-label-md transition-all cursor-pointer ${
-                activeTab === 'all' 
-                  ? 'bg-surface shadow-sm text-primary font-bold' 
-                  : 'text-on-surface-variant hover:text-on-surface'
-              }`}
-            >
-              All Items
-            </button>
-            <button 
-              onClick={() => setActiveTab('free')}
-              className={`px-4 py-1.5 rounded text-label-md font-label-md transition-all cursor-pointer ${
-                activeTab === 'free' 
-                  ? 'bg-surface shadow-sm text-primary font-bold' 
-                  : 'text-on-surface-variant hover:text-on-surface'
-              }`}
-            >
-              Free Only
-            </button>
-          </div>
+    <div className="flex-1 flex w-full relative bg-surface">
+      {/* Desktop Sidebar - Hidden in Discovery Mode */}
+      {!isDiscoveryMode && (
+        <div className="hidden lg:block">
+          <FeedSidebar 
+            key={JSON.stringify(filter)}
+            initialFilters={filter}
+            onFilterChange={updateFiltersInURL} 
+          />
         </div>
-
-        {/* Bento Grid / Listing Cards */}
-        {isLoading ? (
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-          </div>
-        ) : listings.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-stack-md md:gap-gutter">
-            {listings.map(listing => (
-              <ListingCard key={listing.id} listing={listing} />
-            ))}
-          </div>
-        ) : (
-          <div className="mt-stack-lg py-12 flex flex-col items-center justify-center text-center bg-surface-container-low rounded-2xl border border-dashed border-outline-variant px-4">
-            <span className="material-symbols-outlined text-4xl text-outline mb-2" style={{ fontVariationSettings: "'wght' 200" }}>shopping_basket</span>
-            <h3 className="text-headline-md font-headline-md text-on-surface mb-1">No results found</h3>
-            <p className="text-body-sm font-body-sm text-on-surface-variant mb-4 max-w-xs">No listings match your selected filters.</p>
-            <button 
-              onClick={() => setFilter({})}
-              className="px-4 py-2 bg-primary text-on-primary rounded-lg text-label-md font-label-md hover:bg-surface-tint transition-colors cursor-pointer"
-            >
-              Clear filters
-            </button>
-          </div>
-        )}
-      </main>
+      )}
+      
+      {isDiscoveryMode ? (
+        <HomeDiscoveryView 
+          listings={listings} 
+          user={user} 
+          onNavigateToSearch={(filters) => {
+            setSearchParams(prev => {
+              const next = new URLSearchParams(prev);
+              next.set('browse', 'true');
+              if (filters.category) next.set('category', filters.category);
+              if (filters.condition) next.set('condition', filters.condition);
+              if (filters.minPrice !== undefined) next.set('minPrice', filters.minPrice.toString());
+              if (filters.maxPrice !== undefined) next.set('maxPrice', filters.maxPrice.toString());
+              if (filters.school) next.set('school', filters.school);
+              return next;
+            });
+          }} 
+        />
+      ) : (
+        <main className="flex-1 overflow-y-auto px-margin-mobile md:px-8 lg:px-10 py-8 min-h-0">
+          <SearchResultsView 
+            listings={listings}
+            isLoading={isLoading}
+            searchQuery={searchQuery}
+            activeTab={activeTab}
+            setActiveTab={handleSetActiveTab}
+            setFilter={updateFiltersInURL}
+          />
+        </main>
+      )}
 
       {/* Floating Mobile Filter Button */}
-      <div className="lg:hidden fixed bottom-20 right-6 z-40">
-        <button 
-          onClick={() => setShowMobileFilters(true)}
-          className="flex items-center gap-2 bg-primary text-on-primary px-5 py-3 rounded-full shadow-lg text-label-md font-label-md hover:bg-surface-tint active:scale-95 transition-all cursor-pointer"
-        >
-          <span className="material-symbols-outlined text-[20px]">tune</span>
-          Filter Results
-        </button>
-      </div>
+      {!isDiscoveryMode && (
+        <div className="lg:hidden fixed bottom-20 right-6 z-40">
+          <button 
+            onClick={() => setShowMobileFilters(true)}
+            className="flex items-center gap-2 bg-primary text-on-primary px-5 py-3 rounded-full shadow-lg text-label-md font-label-md hover:bg-surface-tint active:scale-95 transition-all cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-[20px]">tune</span>
+            Filter Results
+          </button>
+        </div>
+      )}
 
       {/* Mobile Filters Drawer Overlay */}
       {showMobileFilters && (
-        <div className="fixed inset-0 z-50 bg-black/40 flex justify-end lg:hidden">
+        <div className="fixed inset-0 z-[100] bg-black/40 flex justify-end lg:hidden">
           <div className="w-80 max-w-[85vw] h-full bg-surface-container-low shadow-2xl flex flex-col animate-slide-in relative">
             <div className="p-stack-md border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
               <span className="font-headline-md text-headline-md text-on-surface">Filter Results</span>
@@ -164,7 +184,7 @@ export default function HomePage() {
                 key={JSON.stringify(filter)}
                 initialFilters={filter} 
                 onFilterChange={(newFilters) => {
-                  setFilter(newFilters);
+                  updateFiltersInURL(newFilters);
                   setShowMobileFilters(false);
                 }} 
               />

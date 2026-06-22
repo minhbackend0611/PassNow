@@ -6,6 +6,7 @@ import { doc, setDoc } from 'firebase/firestore';
 import { updateProfile } from 'firebase/auth';
 import { auth, db } from '../../../lib/firebase';
 import { useAuthStore } from '../../../store/useAuthStore';
+import { CustomSelect } from '../../../components/ui/CustomSelect';
 
 interface Province {
   code: number;
@@ -127,10 +128,9 @@ export default function ProfilePage() {
     }
   }, [districts, authUser, setValue, watch]);
 
-  const handleProvinceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const pName = e.target.value;
-    setValue('province', pName, { shouldDirty: true });
-    setValue('district', '', { shouldDirty: true }); // Reset district
+  const handleProvinceChange = (pName: string) => {
+    setValue('province', pName, { shouldDirty: true, shouldValidate: true });
+    setValue('district', '', { shouldDirty: true, shouldValidate: true }); // Reset district
     
     const p = provinces.find(prov => prov.name === pName);
     if (p) {
@@ -189,20 +189,25 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="flex-1 flex w-full max-w-container-max mx-auto px-margin-mobile md:px-gutter py-stack-lg gap-gutter">
+    <div className="flex-1 flex w-full max-w-container-max mx-auto px-margin-mobile md:px-gutter py-stack-lg gap-gutter relative">
+      {/* Animated abstract background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-[100px] animate-pulse" style={{ animationDuration: '8s' }}></div>
+        <div className="absolute bottom-[20%] right-[10%] w-[30%] h-[40%] rounded-full bg-secondary/10 blur-[120px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '2s' }}></div>
+      </div>
       {/* Sidebar Navigation (Settings specific) */}
       <aside className="hidden md:flex flex-col w-64 flex-shrink-0 gap-stack-sm">
         <h2 className="text-headline-md font-headline-md text-on-surface mb-stack-sm px-stack-sm">Settings</h2>
-        <nav className="flex flex-col gap-1">
-          <a className="flex items-center gap-stack-sm bg-primary-container text-on-primary-container rounded-lg p-stack-sm transition-opacity" href="#">
+        <nav className="flex flex-col gap-2 glass-panel p-3 rounded-[32px]">
+          <a className="flex items-center gap-stack-sm bg-gradient-to-r from-primary/10 to-primary/5 text-primary rounded-2xl p-stack-sm transition-all duration-300 shadow-sm font-semibold hover:-translate-y-0.5 hover:shadow-md" href="#">
             <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>person</span>
             <span className="text-label-md font-label-md">Account Settings</span>
           </a>
-          <a className="flex items-center gap-stack-sm text-on-surface-variant p-stack-sm hover:bg-surface-container-high transition-all rounded-lg" href="#">
+          <a className="flex items-center gap-stack-sm text-on-surface-variant p-stack-sm hover:bg-surface-container hover:text-primary transition-all duration-300 rounded-2xl hover:translate-x-1" href="#">
             <span className="material-symbols-outlined">security</span>
             <span className="text-label-md font-label-md">Security</span>
           </a>
-          <a className="flex items-center gap-stack-sm text-on-surface-variant p-stack-sm hover:bg-surface-container-high transition-all rounded-lg" href="#">
+          <a className="flex items-center gap-stack-sm text-on-surface-variant p-stack-sm hover:bg-surface-container hover:text-primary transition-all duration-300 rounded-2xl hover:translate-x-1" href="#">
             <span className="material-symbols-outlined">notifications</span>
             <span className="text-label-md font-label-md">Notifications</span>
           </a>
@@ -230,113 +235,104 @@ export default function ProfilePage() {
         )}
 
         {/* Profile Card */}
-        <div className="bg-surface-container-lowest rounded-2xl shadow-[0_2px_4px_rgba(0,0,0,0.04)] border border-outline-variant p-stack-lg mb-stack-lg">
-          <h3 className="text-headline-md font-headline-md mb-stack-md border-b border-outline-variant pb-stack-sm">Public Profile</h3>
+        <div className="glass-panel p-stack-lg mb-stack-lg rounded-[32px] hover:shadow-lg transition-all duration-500 border border-white/20 dark:border-white/5 bg-gradient-to-br from-surface-container-low/80 to-primary/5">
+          <h3 className="text-headline-md font-headline-md mb-stack-md border-b border-outline-variant/50 pb-stack-sm flex items-center gap-2">
+            <span className="material-symbols-outlined text-primary">badge</span>
+            Public Profile
+          </h3>
           
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col md:flex-row gap-stack-lg items-start">
               {/* Avatar Upload */}
               <div className="flex flex-col items-center gap-stack-sm flex-shrink-0">
-                <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-primary-container relative group cursor-pointer bg-surface-container-high flex items-center justify-center">
+                <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-surface-container-high hover:border-primary/50 relative group cursor-pointer bg-surface-container-high flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-lg">
                   {authUser?.photoURL ? (
                     <img className="w-full h-full object-cover" alt="Avatar" src={authUser.photoURL} />
                   ) : (
-                    <span className="text-4xl text-on-surface-variant">{authUser?.displayName?.charAt(0)?.toUpperCase() || 'U'}</span>
+                    <span className="text-4xl text-on-surface-variant group-hover:scale-110 transition-transform duration-300">{authUser?.displayName?.charAt(0)?.toUpperCase() || 'U'}</span>
                   )}
-                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="material-symbols-outlined text-white">photo_camera</span>
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
+                    <span className="material-symbols-outlined text-white transform scale-75 group-hover:scale-100 transition-transform duration-300">photo_camera</span>
                   </div>
                 </div>
-                <button type="button" className="text-label-sm font-label-sm text-primary hover:underline">Change Picture</button>
+                <button type="button" className="text-label-sm font-label-sm text-primary hover:text-primary-dark transition-colors font-semibold hover:underline decoration-2 underline-offset-4">Change Picture</button>
               </div>
 
               {/* Form Fields */}
               <div className="flex-1 w-full space-y-stack-md">
-                <div>
-                  <label htmlFor="displayName" className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Display Name</label>
+                <div className="group/input">
+                  <label htmlFor="displayName" className="block text-label-sm font-label-sm text-on-surface-variant mb-1 font-semibold group-hover/input:text-primary transition-colors">Display Name</label>
                   <input 
                     id="displayName"
-                    className={`w-full bg-surface rounded-lg border ${errors.displayName ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-primary focus:ring-primary/20'} px-3 py-2 text-body-md font-body-md focus:outline-none focus:ring-4 transition-all shadow-sm`} 
+                    className={`w-full bg-surface/50 dark:bg-black/20 backdrop-blur-md rounded-2xl border ${errors.displayName ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant/50 focus:border-primary hover:border-primary/50 focus:ring-primary/20'} px-4 py-3 text-body-md font-body-md focus:outline-none focus:ring-4 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 focus:-translate-y-1 focus:shadow-lg`} 
                     type="text" 
                     {...register('displayName')}
                   />
-                  {errors.displayName && <p className="text-error text-sm mt-1">{errors.displayName.message}</p>}
+                  {errors.displayName && <p className="text-error text-sm mt-1 animate-pulse">{errors.displayName.message}</p>}
                 </div>
 
-                <div>
-                  <label htmlFor="email" className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Email Address</label>
-                  <div className="flex gap-2">
+                <div className="group/input">
+                  <label htmlFor="email" className="block text-label-sm font-label-sm text-on-surface-variant mb-1 font-semibold">Email Address</label>
+                  <div className="flex gap-2 items-center">
                     <input 
                       id="email"
-                      className="w-full bg-surface-container-low text-on-surface-variant rounded-lg border border-outline-variant px-3 py-2 text-body-md font-body-md cursor-not-allowed" 
+                      className="w-full bg-surface-variant/30 text-on-surface-variant rounded-2xl border border-outline-variant/30 px-4 py-3 text-body-md font-body-md cursor-not-allowed shadow-inner transition-all" 
                       disabled 
                       type="email" 
                       value={authUser?.email || ''}
                     />
-                    <button type="button" className="text-primary text-label-sm font-label-sm whitespace-nowrap hover:underline px-2">Change</button>
+                    <button type="button" className="text-primary text-label-sm font-label-sm whitespace-nowrap hover:bg-primary/10 hover:-translate-y-0.5 hover:shadow-sm px-4 py-2 rounded-xl transition-all duration-300 font-semibold active:scale-95">Change</button>
                   </div>
                 </div>
 
-                <div>
-                  <label htmlFor="school" className="block text-label-sm font-label-sm text-on-surface-variant mb-1">University / School</label>
-                  <div className="relative">
-                    <select 
-                      id="school"
-                      className={`w-full bg-surface rounded-lg border ${errors.school ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-primary focus:ring-primary/20'} px-3 py-2 text-body-md font-body-md focus:outline-none focus:ring-4 transition-all shadow-sm pl-10 appearance-none`}
-                      {...register('school')}
+                <div className="group/input">
+                  <label htmlFor="school" className="block text-label-sm font-label-sm text-on-surface-variant mb-1 font-semibold group-hover/input:text-primary transition-colors">University / School</label>
+                  <div className="relative group/select z-30">
+                    <CustomSelect
                       value={watch('school') || ""}
-                    >
-                      <option value="" disabled>Select your University</option>
-                      <option value="Not a student / Khác" className="font-semibold text-primary">Not a student / Khác</option>
-                      {universities.map((uni, idx) => (
-                        <option key={idx} value={uni.name}>{uni.name}</option>
-                      ))}
-                    </select>
-                    <span className="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-[20px] pointer-events-none">school</span>
-                    <span className="material-symbols-outlined absolute right-3 top-2.5 text-on-surface-variant text-[20px] pointer-events-none">expand_more</span>
+                      onChange={(val) => setValue('school', val, { shouldValidate: true, shouldDirty: true })}
+                      options={[
+                        { value: 'Not a student / Khác', label: 'Not a student / Khác' },
+                        ...universities.map((uni) => ({ value: uni.name, label: uni.name }))
+                      ]}
+                      placeholder="Select your University"
+                      icon="school"
+                      error={!!errors.school}
+                    />
                   </div>
-                  {errors.school && <p className="text-error text-sm mt-1">{errors.school.message}</p>}
+                  {errors.school && <p className="text-error text-sm mt-1 animate-pulse">{errors.school.message}</p>}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
-                  <div>
-                    <label htmlFor="province" className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Province / City</label>
-                    <div className="relative">
-                      <select 
-                        id="province"
-                        className={`w-full bg-surface rounded-lg border ${errors.province ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-primary focus:ring-primary/20'} px-3 py-2 text-body-md font-body-md focus:outline-none focus:ring-4 transition-all shadow-sm pl-10 appearance-none`}
+                  <div className="group/input">
+                    <label htmlFor="province" className="block text-label-sm font-label-sm text-on-surface-variant mb-1 font-semibold group-hover/input:text-primary transition-colors">Province / City</label>
+                    <div className="relative group/select z-20">
+                      <CustomSelect
                         value={selectedProvinceName}
                         onChange={handleProvinceChange}
-                      >
-                        <option value="" disabled>Select Province</option>
-                        {provinces.map((prov) => (
-                          <option key={prov.code} value={prov.name}>{prov.name}</option>
-                        ))}
-                      </select>
-                      <span className="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-[20px] pointer-events-none">map</span>
-                      <span className="material-symbols-outlined absolute right-3 top-2.5 text-on-surface-variant text-[20px] pointer-events-none">expand_more</span>
+                        options={provinces.map((prov) => ({ value: prov.name, label: prov.name }))}
+                        placeholder="Select Province"
+                        icon="map"
+                        error={!!errors.province}
+                      />
                     </div>
-                    {errors.province && <p className="text-error text-sm mt-1">{errors.province.message}</p>}
+                    {errors.province && <p className="text-error text-sm mt-1 animate-pulse">{errors.province.message}</p>}
                   </div>
 
-                  <div>
-                    <label htmlFor="district" className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Campus District</label>
-                    <div className="relative">
-                      <select 
-                        id="district"
-                        className={`w-full bg-surface rounded-lg border ${errors.district ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-primary focus:ring-primary/20'} px-3 py-2 text-body-md font-body-md focus:outline-none focus:ring-4 transition-all shadow-sm pl-10 appearance-none`}
-                        {...register('district')}
+                  <div className="group/input">
+                    <label htmlFor="district" className="block text-label-sm font-label-sm text-on-surface-variant mb-1 font-semibold group-hover/input:text-primary transition-colors">Campus District</label>
+                    <div className="relative group/select z-10">
+                      <CustomSelect
+                        value={watch('district') || ""}
+                        onChange={(val) => setValue('district', val, { shouldValidate: true, shouldDirty: true })}
+                        options={districts.map((dist) => ({ value: dist.name, label: dist.name }))}
+                        placeholder="Select District"
+                        icon="location_on"
+                        error={!!errors.district}
                         disabled={!selectedProvinceName || districts.length === 0}
-                      >
-                        <option value="" disabled>Select District</option>
-                        {districts.map((dist) => (
-                          <option key={dist.code} value={dist.name}>{dist.name}</option>
-                        ))}
-                      </select>
-                      <span className="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-[20px] pointer-events-none">location_on</span>
-                      <span className="material-symbols-outlined absolute right-3 top-2.5 text-on-surface-variant text-[20px] pointer-events-none">expand_more</span>
+                      />
                     </div>
-                    {errors.district && <p className="text-error text-sm mt-1">{errors.district.message}</p>}
+                    {errors.district && <p className="text-error text-sm mt-1 animate-pulse">{errors.district.message}</p>}
                   </div>
                 </div>
 
@@ -346,20 +342,20 @@ export default function ProfilePage() {
                     type="button" 
                     onClick={() => reset()}
                     disabled={!isDirty || isLoading}
-                    className="px-6 py-2 rounded-lg text-label-md font-label-md text-on-surface-variant border border-outline-variant hover:bg-surface-container-low transition-colors disabled:opacity-50"
+                    className="px-6 py-2.5 rounded-2xl text-label-md font-label-md text-on-surface-variant bg-surface/60 hover:bg-surface-container border border-outline-variant/30 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95 disabled:opacity-50 disabled:hover:translate-y-0 disabled:active:scale-100"
                   >
                     Cancel
                   </button>
                   <button 
                     type="submit"
                     disabled={!isDirty || isLoading}
-                    className="px-6 py-2 rounded-lg text-label-md font-label-md bg-primary text-on-primary shadow-sm hover:bg-on-primary-fixed-variant transition-colors flex items-center gap-2 disabled:opacity-50"
+                    className="px-6 py-2.5 rounded-2xl text-label-md font-label-md bg-gradient-to-r from-primary to-primary/90 text-on-primary shadow-[0_4px_12px_rgba(0,166,126,0.2)] hover:shadow-[0_8px_20px_rgba(0,166,126,0.4)] hover:-translate-y-1 active:scale-95 transition-all duration-300 flex items-center gap-2 disabled:opacity-50 disabled:hover:translate-y-0 disabled:active:scale-100 disabled:shadow-none"
                   >
                     {isLoading ? (
-                      'Saving...'
+                      <span className="animate-pulse">Saving...</span>
                     ) : (
                       <>
-                        <span className="material-symbols-outlined text-[18px]">save</span>
+                        <span className="material-symbols-outlined text-[18px] group-hover:scale-110 transition-transform">save</span>
                         Save Changes
                       </>
                     )}
@@ -371,12 +367,15 @@ export default function ProfilePage() {
         </div>
 
         {/* Linked Accounts / Verification */}
-        <div className="bg-surface-container-lowest rounded-2xl shadow-[0_2px_4px_rgba(0,0,0,0.04)] border border-outline-variant p-stack-lg mb-stack-lg">
-          <h3 className="text-headline-md font-headline-md mb-stack-md border-b border-outline-variant pb-stack-sm">Verified Credentials</h3>
+        <div className="glass-panel p-stack-lg mb-stack-lg rounded-[32px] hover:shadow-lg transition-all duration-500 border border-white/20 dark:border-white/5 bg-gradient-to-br from-surface-container-low/80 to-secondary/5">
+          <h3 className="text-headline-md font-headline-md mb-stack-md border-b border-outline-variant/50 pb-stack-sm flex items-center gap-2">
+            <span className="material-symbols-outlined text-secondary">verified</span>
+            Verified Credentials
+          </h3>
           <div className="space-y-stack-md">
-            <div className="flex items-center justify-between p-stack-md bg-surface-container rounded-lg border border-outline-variant">
+            <div className="group/cred flex items-center justify-between p-stack-md bg-surface-container/50 hover:bg-surface-container rounded-[24px] border border-outline-variant/50 hover:border-primary/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-md cursor-default">
               <div className="flex items-center gap-stack-md">
-                <div className="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center group-hover/cred:scale-110 transition-transform duration-300 shadow-sm">
                   <span className="material-symbols-outlined">verified_user</span>
                 </div>
                 <div>
@@ -384,14 +383,14 @@ export default function ProfilePage() {
                   <p className="text-label-sm font-label-sm text-on-surface-variant">Verified via {authUser?.email}</p>
                 </div>
               </div>
-              <span className="text-primary text-label-sm font-label-sm flex items-center gap-1 bg-surface-container-high px-2 py-1 rounded-full border border-primary/20">
+              <span className="text-primary text-label-sm font-label-sm flex items-center gap-1 bg-primary/10 px-3 py-1.5 rounded-full border border-primary/20 shadow-sm group-hover/cred:bg-primary group-hover/cred:text-white transition-colors duration-300">
                 <span className="material-symbols-outlined text-[16px]">check_circle</span> Verified
               </span>
             </div>
 
-            <div className="flex items-center justify-between p-stack-md bg-surface-container rounded-lg border border-outline-variant">
+            <div className="group/cred flex items-center justify-between p-stack-md bg-surface-container/50 hover:bg-surface-container rounded-[24px] border border-outline-variant/50 hover:border-secondary/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-md cursor-default">
               <div className="flex items-center gap-stack-md">
-                <div className="w-10 h-10 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center group-hover/cred:scale-110 group-hover/cred:bg-secondary-container group-hover/cred:text-on-secondary-container transition-all duration-300 shadow-sm">
                   <span className="material-symbols-outlined">phone_iphone</span>
                 </div>
                 <div>
@@ -399,7 +398,7 @@ export default function ProfilePage() {
                   <p className="text-label-sm font-label-sm text-on-surface-variant">Add a number for SMS alerts</p>
                 </div>
               </div>
-              <button className="text-on-surface-variant text-label-sm font-label-sm hover:text-primary transition-colors">Connect</button>
+              <button className="text-on-surface-variant text-label-sm font-label-sm hover:bg-secondary/10 hover:text-secondary hover:-translate-y-0.5 hover:shadow-sm px-4 py-2 rounded-xl transition-all duration-300 font-semibold active:scale-95">Connect</button>
             </div>
           </div>
         </div>

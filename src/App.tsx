@@ -13,6 +13,11 @@ import CreateListingPage from './features/listings/pages/CreateListingPage';
 import ProfilePage from './features/profile/pages/ProfilePage';
 import PublicProfilePage from './features/profile/pages/PublicProfilePage';
 import TransactionsPage from './features/transactions/pages/TransactionsPage';
+import ChatListPage from './features/chat/pages/ChatListPage';
+import ChatDetailPage from './features/chat/pages/ChatDetailPage';
+import HowItWorksPage from './features/misc/pages/HowItWorksPage';
+import AboutPage from './features/misc/pages/AboutPage';
+import { ToastContainer } from './components/ui/ToastContainer';
 
 function App() {
   const { initializeAuthListener, isLoading } = useAuthStore();
@@ -27,9 +32,11 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
+    <>
+      <ToastContainer />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         
         {/* Must be logged in, but might not be verified or profiled */}
@@ -46,17 +53,22 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/browse" element={<HomePage />} />
             <Route path="/listings/:id" element={<ListingDetailPage />} />
+            <Route path="/listings/:id/edit" element={<CreateListingPage />} />
             <Route path="/list" element={<CreateListingPage />} />
+            <Route path="/how-it-works" element={<HowItWorksPage />} />
+            <Route path="/about" element={<AboutPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/profile/:userId" element={<PublicProfilePage />} />
             <Route path="/transactions" element={<TransactionsPage />} />
-            {/* Future routes: /chats */}
+            <Route path="/chat" element={<ChatListPage />} />
+            <Route path="/chat/:id" element={<ChatDetailPage />} />
           </Route>
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
+    </>
   );
 }
 

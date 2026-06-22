@@ -1,37 +1,45 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import FeedSidebar from './FeedSidebar';
 
+vi.mock('react-router-dom', () => ({
+  useNavigate: () => vi.fn()
+}));
+
+global.fetch = vi.fn().mockResolvedValue({
+  json: () => Promise.resolve([
+    { country: 'Viet Nam', name: 'BK University' },
+    { country: 'Viet Nam', name: 'Other Uni' },
+    { country: 'USA', name: 'MIT' }
+  ])
+});
+
 describe('FeedSidebar', () => {
-  it('renders all filter fields correctly', () => {
+  it('renders all filter fields correctly', async () => {
     render(<FeedSidebar />);
     
-    expect(screen.getByLabelText(/Keyword Search/i)).toBeInTheDocument();
-    expect(screen.getByText('Books & Documents')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Min')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Max')).toBeInTheDocument();
-    expect(screen.getByRole('combobox')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/School \(e\.g\. Bách Khoa\)/i)).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/District \(e\.g\. Cầu Giấy\)/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Textbooks & Books')).toBeInTheDocument();
+      expect(screen.getByLabelText('100,000 ₫ - 500,000 ₫')).toBeInTheDocument();
+      expect(screen.getByText('All Universities')).toBeInTheDocument();
+    });
   });
 
-  it('triggers onFilterChange with form values when clicking Apply Filters', () => {
+  it('triggers onFilterChange with form values when clicking Apply Filters', async () => {
     const handleFilterChange = vi.fn();
     render(<FeedSidebar onFilterChange={handleFilterChange} />);
 
-    // Type search keyword
-    const searchInput = screen.getByLabelText(/Keyword Search/i);
-    fireEvent.change(searchInput, { target: { value: 'laptop' } });
+    // Wait for initial render and fetch to settle
+    await waitFor(() => {
+      expect(screen.getByText('Textbooks & Books')).toBeInTheDocument();
+    });
 
-    // Set price range
-    const minInput = screen.getByPlaceholderText('Min');
-    fireEvent.change(minInput, { target: { value: '100' } });
-    
-    const maxInput = screen.getByPlaceholderText('Max');
-    fireEvent.change(maxInput, { target: { value: '500' } });
+    // Select price range
+    const priceRadio = screen.getByLabelText('100,000 ₫ - 500,000 ₫');
+    fireEvent.click(priceRadio);
 
     // Click Category checkbox
-    const bookCategoryCheckbox = screen.getByLabelText(/Books & Documents/i);
+    const bookCategoryCheckbox = screen.getByLabelText(/Textbooks & Books/i);
     fireEvent.click(bookCategoryCheckbox);
 
     // Apply
@@ -39,28 +47,29 @@ describe('FeedSidebar', () => {
     fireEvent.click(applyBtn);
 
     expect(handleFilterChange).toHaveBeenCalledWith(expect.objectContaining({
-      searchQuery: 'laptop',
-      minPrice: 100,
-      maxPrice: 500,
-      category: 'books'
+      minPrice: 100000,
+      maxPrice: 500000,
+      category: 'Books'
     }));
   });
 
-  it('resets values and triggers onFilterChange when clicking Reset All', () => {
+  it('resets values and triggers onFilterChange when clicking Reset All', async () => {
     const handleFilterChange = vi.fn();
     render(
       <FeedSidebar 
         onFilterChange={handleFilterChange} 
-        initialFilters={{ searchQuery: 'book', category: 'books' }} 
+        initialFilters={{ category: 'Books' }} 
       />
     );
 
-    expect(screen.getByLabelText(/Keyword Search/i)).toHaveValue('book');
+    // Wait for initial render and fetch to settle
+    await waitFor(() => {
+      expect(screen.getByText('Textbooks & Books')).toBeInTheDocument();
+    });
 
     const resetBtn = screen.getByRole('button', { name: /Reset All/i });
     fireEvent.click(resetBtn);
 
-    expect(screen.getByLabelText(/Keyword Search/i)).toHaveValue('');
     expect(handleFilterChange).toHaveBeenCalledWith({});
   });
 });

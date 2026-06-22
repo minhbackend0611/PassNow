@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { ListingFilter, ItemCondition } from '../../../types';
+import { CustomSelect } from '../../../components/ui/CustomSelect';
 
 interface FeedSidebarProps {
   onFilterChange?: (filters: ListingFilter) => void;
@@ -7,193 +8,176 @@ interface FeedSidebarProps {
 }
 
 const CATEGORIES = [
-  { id: 'books', name: 'Books & Documents', icon: 'book' },
-  { id: 'electronics', name: 'Electronics', icon: 'devices' },
-  { id: 'furniture', name: 'Furniture & Appliances', icon: 'chair' },
-  { id: 'clothing', name: 'Clothing & Accessories', icon: 'apparel' },
-  { id: 'vehicles', name: 'Vehicles', icon: 'directions_car' },
-  { id: 'other', name: 'Other', icon: 'more_horiz' },
+  { id: 'Books', name: 'Textbooks & Books', icon: 'book' },
+  { id: 'Electronics', name: 'Electronics', icon: 'devices' },
+  { id: 'Furniture', name: 'Furniture', icon: 'chair' },
+  { id: 'Clothing', name: 'Clothing', icon: 'apparel' },
+  { id: 'Other', name: 'Other', icon: 'more_horiz' },
 ];
 
 const CONDITIONS: ItemCondition[] = ['New', 'Like New', 'Used', 'Fair'];
 
+const PRICE_RANGES = [
+  { id: 'any', label: 'Any Price', min: undefined, max: undefined },
+  { id: 'under_100k', label: 'Under 100,000 ₫', min: 0, max: 100000 },
+  { id: '100k_500k', label: '100,000 ₫ - 500,000 ₫', min: 100000, max: 500000 },
+  { id: '500k_1m', label: '500,000 ₫ - 1,000,000 ₫', min: 500000, max: 1000000 },
+  { id: 'over_1m', label: 'Over 1,000,000 ₫', min: 1000000, max: undefined },
+];
+
 export default function FeedSidebar({ onFilterChange, initialFilters = {} }: FeedSidebarProps) {
-  const [searchQuery, setSearchQuery] = useState(initialFilters.searchQuery || '');
   const [selectedCategory, setSelectedCategory] = useState(initialFilters.category || '');
   const [selectedCondition, setSelectedCondition] = useState<ItemCondition | ''>(initialFilters.condition || '');
-  const [minPrice, setMinPrice] = useState<string>(initialFilters.minPrice !== undefined ? initialFilters.minPrice.toString() : '');
-  const [maxPrice, setMaxPrice] = useState<string>(initialFilters.maxPrice !== undefined ? initialFilters.maxPrice.toString() : '');
+  
+  // Find initial price range
+  const initPriceRange = PRICE_RANGES.find(pr => pr.min === initialFilters.minPrice && pr.max === initialFilters.maxPrice)?.id || 'any';
+  const [selectedPriceRange, setSelectedPriceRange] = useState<string>(initPriceRange);
+  
   const [school, setSchool] = useState(initialFilters.school || '');
-  const [district, setDistrict] = useState(initialFilters.district || '');
+  const [schoolsList, setSchoolsList] = useState<string[]>([]);
 
-  // Propagate filters up when states change
+  useEffect(() => {
+    fetch('https://raw.githubusercontent.com/Hipo/university-domains-list/master/world_universities_and_domains.json')
+      .then(res => res.json())
+      .then((data: { country: string, name: string }[]) => {
+        const vnUnis = data.filter(u => u.country === "Viet Nam").map(u => u.name);
+        setSchoolsList(Array.from(new Set(vnUnis)).sort((a, b) => a.localeCompare(b)));
+      })
+      .catch(err => console.error("Failed to fetch universities", err));
+  }, []);
+
   const handleApplyFilters = () => {
     if (!onFilterChange) return;
 
     const filters: ListingFilter = {};
-    if (searchQuery.trim()) filters.searchQuery = searchQuery;
     if (selectedCategory) filters.category = selectedCategory;
     if (selectedCondition) filters.condition = selectedCondition;
-    if (minPrice && !isNaN(Number(minPrice))) filters.minPrice = Number(minPrice);
-    if (maxPrice && !isNaN(Number(maxPrice))) filters.maxPrice = Number(maxPrice);
+    
+    const range = PRICE_RANGES.find(r => r.id === selectedPriceRange);
+    if (range) {
+      if (range.min !== undefined) filters.minPrice = range.min;
+      if (range.max !== undefined) filters.maxPrice = range.max;
+    }
+    
     if (school.trim()) filters.school = school;
-    if (district.trim()) filters.district = district;
 
     onFilterChange(filters);
   };
 
   const handleClearFilters = () => {
-    setSearchQuery('');
     setSelectedCategory('');
     setSelectedCondition('');
-    setMinPrice('');
-    setMaxPrice('');
+    setSelectedPriceRange('any');
     setSchool('');
-    setDistrict('');
     if (onFilterChange) {
       onFilterChange({});
     }
   };
 
-
-
   return (
-    <aside className="h-screen w-64 hidden lg:flex flex-col bg-surface-container-low border-r border-outline-variant flex-shrink-0 sticky top-16">
-      <div className="p-stack-md border-b border-outline-variant">
-        <div className="flex items-center gap-stack-sm mb-1">
-          <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>tune</span>
-          <h2 className="text-headline-md font-headline-md text-on-surface">Filters</h2>
+    <aside className="h-full w-full lg:h-[calc(100vh-4.5rem)] lg:w-[260px] flex flex-col flex-shrink-0 lg:sticky lg:top-[4.5rem] py-4 lg:py-6 lg:border-r border-outline-variant/30 bg-surface">
+      <div className="px-6 pb-4 border-b border-outline-variant/30">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="material-symbols-outlined text-primary text-[22px]" style={{ fontVariationSettings: "'FILL' 1" }}>tune</span>
+          <h2 className="text-title-lg font-bold text-on-surface tracking-tight">Filters</h2>
         </div>
-        <div className="flex justify-between items-center">
-          <p className="text-body-sm font-body-sm text-on-surface-variant">Narrow your search</p>
-          <button onClick={handleClearFilters} className="text-label-sm font-label-sm text-primary hover:underline">Reset All</button>
+        <div className="flex justify-between items-center mt-3">
+          <p className="text-body-sm text-on-surface-variant font-medium">Narrow your search</p>
+          <button onClick={handleClearFilters} className="text-label-sm text-error hover:bg-error/10 hover:shadow-sm hover:-translate-y-0.5 px-3 py-1.5 rounded-lg transition-all duration-300 font-medium active:scale-95">Clear Filters</button>
         </div>
       </div>
 
-      <nav className="flex flex-col h-full gap-stack-md p-stack-md overflow-y-auto">
-        {/* Search Input */}
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="search" className="text-label-sm font-label-sm text-on-surface-variant">Keyword Search</label>
-          <div className="relative">
-            <input 
-              id="search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleApplyFilters()}
-              className="w-full bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-0 px-3 py-2 pl-9 text-body-sm font-body-sm focus:outline-none transition-colors"
-              placeholder="Search items..."
-              type="text"
-            />
-            <span className="material-symbols-outlined absolute left-2.5 top-2 text-on-surface-variant text-[18px]">search</span>
-            {searchQuery && (
-              <button 
-                onClick={() => setSearchQuery('')}
-                className="absolute right-2 top-2 text-on-surface-variant hover:text-on-surface flex items-center justify-center"
-              >
-                <span className="material-symbols-outlined text-[18px]">close</span>
-              </button>
-            )}
-          </div>
-        </div>
-
+      <nav className="flex-1 flex flex-col gap-1 px-4 py-4 overflow-y-auto custom-scrollbar">
+        
         {/* Categories Section */}
-        <div className="flex items-center gap-stack-sm bg-primary-container text-on-primary-container rounded-lg p-stack-sm opacity-80 transition-opacity">
-          <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>category</span>
-          <span className="text-label-md font-label-md">Categories</span>
+        <div className="flex items-center gap-2 text-on-surface-variant px-3 py-2 mt-1">
+          <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 0" }}>category</span>
+          <span className="text-label-md font-bold uppercase tracking-wider">Categories</span>
         </div>
         <div className="pl-8 flex flex-col gap-2 mb-2">
           {CATEGORIES.map(cat => {
             const isActive = selectedCategory === cat.id;
             return (
-              <label key={cat.id} className="flex items-center gap-2 text-body-sm font-body-sm text-on-surface hover:text-primary cursor-pointer">
-                <input 
-                  type="checkbox" 
-                  checked={isActive} 
-                  onChange={() => setSelectedCategory(isActive ? '' : cat.id)} 
-                  className="rounded border-outline-variant text-primary focus:ring-primary bg-surface"
-                /> {cat.name}
+              <label key={cat.id} className="flex items-center gap-3 text-body-sm font-medium text-on-surface hover:text-primary cursor-pointer group py-1 hover:translate-x-1 transition-transform">
+                <div className="relative flex items-center justify-center">
+                  <input 
+                    type="checkbox" 
+                    checked={isActive} 
+                    onChange={() => setSelectedCategory(isActive ? '' : cat.id)} 
+                    className="appearance-none w-5 h-5 rounded-full border border-outline-variant checked:border-[6px] checked:border-primary hover:border-primary transition-all cursor-pointer"
+                  />
+                </div>
+                <span className="group-hover:translate-x-1 transition-transform">{cat.name}</span>
               </label>
             );
           })}
         </div>
 
-        {/* Price Range */}
-        <div className="flex items-center gap-stack-sm text-on-surface-variant p-stack-sm hover:bg-surface-container-high transition-all rounded-lg">
-          <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>payments</span>
-          <span className="text-label-md font-label-md">Price Range (kVND)</span>
+        {/* Price Range Section */}
+        <div className="flex items-center gap-2 text-on-surface-variant px-3 py-2 mt-4">
+          <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 0" }}>payments</span>
+          <span className="text-label-md font-bold uppercase tracking-wider">Price Range</span>
         </div>
-        <div className="pl-8 flex items-center gap-2">
-          <input
-            type="number"
-            value={minPrice}
-            onChange={(e) => setMinPrice(e.target.value)}
-            placeholder="Min"
-            className="w-full bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-0 px-2 py-1.5 text-body-sm font-body-sm focus:outline-none"
-          />
-          <span className="text-outline-variant">—</span>
-          <input
-            type="number"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
-            placeholder="Max"
-            className="w-full bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-0 px-2 py-1.5 text-body-sm font-body-sm focus:outline-none"
-          />
+        <div className="pl-8 flex flex-col gap-2">
+          {PRICE_RANGES.map(range => (
+            <label key={range.id} className="flex items-center gap-3 text-body-sm font-medium text-on-surface hover:text-primary cursor-pointer group py-1">
+              <input
+                type="radio"
+                name="priceRange"
+                value={range.id}
+                checked={selectedPriceRange === range.id}
+                onChange={(e) => setSelectedPriceRange(e.target.value)}
+                className="appearance-none w-5 h-5 rounded-full border border-outline-variant checked:border-[6px] checked:border-primary hover:border-primary transition-all cursor-pointer"
+              />
+              <span className="group-hover:translate-x-1 transition-transform">{range.label}</span>
+            </label>
+          ))}
         </div>
 
         {/* Condition Section */}
-        <div className="flex items-center gap-stack-sm text-on-surface-variant p-stack-sm hover:bg-surface-container-high transition-all rounded-lg">
-          <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>verified</span>
-          <span className="text-label-md font-label-md">Condition</span>
+        <div className="flex items-center gap-2 text-on-surface-variant px-3 py-2 mt-4">
+          <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 0" }}>verified</span>
+          <span className="text-label-md font-bold uppercase tracking-wider">Condition</span>
         </div>
         <div className="pl-8 relative">
-          <select
-            id="condition"
+          <CustomSelect
             value={selectedCondition}
-            onChange={(e) => setSelectedCondition(e.target.value as ItemCondition | '')}
-            className="w-full bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-0 px-3 py-2 pr-8 text-body-sm font-body-sm focus:outline-none appearance-none"
-          >
-            <option value="">Any Condition</option>
-            {CONDITIONS.map(cond => (
-              <option key={cond} value={cond}>{cond}</option>
-            ))}
-          </select>
-          <span className="material-symbols-outlined absolute right-2.5 top-2.5 text-on-surface-variant text-[20px] pointer-events-none">expand_more</span>
+            onChange={(val) => setSelectedCondition(val as ItemCondition | '')}
+            options={[
+              { value: '', label: 'Any Condition' },
+              ...CONDITIONS.map(c => ({ value: c, label: c }))
+            ]}
+          />
         </div>
 
-        {/* Location Section */}
-        <div className="flex items-center gap-stack-sm text-on-surface-variant p-stack-sm hover:bg-surface-container-high transition-all rounded-lg">
-          <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>school</span>
-          <span className="text-label-md font-label-md">Location</span>
+        {/* University Section */}
+        <div className="flex items-center gap-2 text-on-surface-variant px-3 py-2 mt-4">
+          <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 0" }}>school</span>
+          <span className="text-label-md font-bold uppercase tracking-wider">University</span>
         </div>
-        <div className="pl-8 flex flex-col gap-3">
-          <input
-            id="school"
-            type="text"
+        <div className="pl-8 relative pb-4">
+          <CustomSelect
             value={school}
-            onChange={(e) => setSchool(e.target.value)}
-            placeholder="School (e.g. Bách Khoa)"
-            className="w-full bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-0 px-3 py-2 text-body-sm font-body-sm focus:outline-none"
+            onChange={setSchool}
+            options={[
+              { value: '', label: 'All Universities' },
+              ...schoolsList.map(s => ({ value: s, label: s }))
+            ]}
           />
-          <input
-            id="district"
-            type="text"
-            value={district}
-            onChange={(e) => setDistrict(e.target.value)}
-            placeholder="District (e.g. Cầu Giấy)"
-            className="w-full bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-0 px-3 py-2 text-body-sm font-body-sm focus:outline-none"
-          />
-        </div>
-
-        {/* Apply Button */}
-        <div className="mt-auto pt-4">
-          <button
-            onClick={handleApplyFilters}
-            className="w-full bg-surface-container-high text-on-surface text-label-md font-label-md py-2 rounded-lg hover:bg-surface-dim transition-colors border border-outline-variant"
-          >
-            Apply Filters
-          </button>
         </div>
       </nav>
+
+      {/* Apply Button */}
+      <div className="px-6 pt-4 mt-auto border-t border-outline-variant/30 relative z-10 pb-4">
+        <button
+          onClick={handleApplyFilters}
+          className="group relative w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white text-label-md font-bold py-3.5 rounded-xl shadow-[0_4px_12px_rgba(0,166,126,0.25)] hover:shadow-[0_8px_24px_rgba(0,166,126,0.4)] transition-all duration-300 hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-2 overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
+          <span className="material-symbols-outlined text-[20px] relative z-10 group-hover:rotate-180 transition-transform duration-500">tune</span>
+          <span className="relative z-10">Apply Filters</span>
+        </button>
+      </div>
     </aside>
   );
 }

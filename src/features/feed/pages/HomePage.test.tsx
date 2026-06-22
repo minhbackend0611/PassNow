@@ -7,7 +7,17 @@ import { getListings } from '../../../services/listingService';
 import type { Listing } from '../../../types';
 
 vi.mock('../../../store/useAuthStore');
-vi.mock('../../../services/listingService');
+vi.mock('../../../services/listingService', () => ({
+  getListings: vi.fn()
+}));
+
+global.fetch = vi.fn().mockResolvedValue({
+  json: () => Promise.resolve([
+    { country: 'Viet Nam', name: 'BK University' },
+    { country: 'Viet Nam', name: 'Other Uni' },
+    { country: 'USA', name: 'MIT' }
+  ])
+});
 
 const mockUser = {
   uid: 'user1',
@@ -28,8 +38,9 @@ const mockRawListings: Listing[] = [
     isFree: false,
     condition: 'Used',
     images: [],
-    category: 'other',
+    category: 'Other',
     school: 'Other University',
+    province: 'Hà Nội',
     district: 'Hoàn Kiếm',
     sellerId: 'user_other',
     status: 'available',
@@ -44,8 +55,9 @@ const mockRawListings: Listing[] = [
     isFree: false,
     condition: 'New',
     images: [],
-    category: 'books',
+    category: 'Books',
     school: 'BK University',
+    province: 'Hà Nội',
     district: 'Cầu Giấy',
     sellerId: 'user_bk',
     status: 'available',
@@ -60,7 +72,7 @@ const mockRawListings: Listing[] = [
     isFree: false,
     condition: 'Like New',
     images: [],
-    category: 'clothing',
+    category: 'Clothing',
     school: 'Other BK',
     district: 'Cầu Giấy',
     sellerId: 'user_other_cg',

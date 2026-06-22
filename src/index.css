@@ -3,11 +3,18 @@
 
 @layer utilities {
   .glass-panel {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    @apply bg-surface/60 border border-white/30 shadow-sm backdrop-blur-[24px];
+  }
+
+  .glass-card {
+    @apply bg-gradient-to-br from-surface/90 to-surface/60 border border-white/30 shadow-sm backdrop-blur-[16px];
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite linear;
+  }
+  @keyframes shimmer {
+    100% { transform: translateX(100%); }
   }
 
   .fade-in {
@@ -27,6 +34,21 @@
 
   .hidden-view {
     display: none !important;
+  }
+
+  /* Custom Scrollbar Styles */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-outline-variant/50 rounded-full transition-colors;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-outline-variant/80;
   }
 }
 

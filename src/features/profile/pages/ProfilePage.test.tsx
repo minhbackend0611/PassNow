@@ -113,7 +113,7 @@ describe('ProfilePage', () => {
     await waitFor(() => {
       expect(screen.getByLabelText(/Display Name/i)).toHaveValue('Test User');
       expect(screen.getByLabelText(/Email Address/i)).toHaveValue('test@example.com');
-      expect(screen.getByLabelText(/University \/ School/i)).toHaveValue('Test University');
+      expect(screen.getByText('Test University')).toBeInTheDocument();
     });
   });
 

@@ -37,7 +37,7 @@ describe('ListingCard', () => {
     
     expect(screen.getByText('Calculus Textbook')).toBeInTheDocument();
     expect(screen.getByText('Used')).toBeInTheDocument();
-    expect(screen.getByText('250k')).toBeInTheDocument();
+    expect(screen.getByText('250 ₫')).toBeInTheDocument();
     expect(screen.getByText('Test Uni')).toBeInTheDocument();
   });
 
@@ -46,6 +46,6 @@ describe('ListingCard', () => {
     
     expect(screen.getByText('Free Desk')).toBeInTheDocument();
     expect(screen.getByText('FREE')).toBeInTheDocument();
-    expect(screen.getByText('0k')).toBeInTheDocument();
+    expect(screen.getByText('0 ₫')).toBeInTheDocument();
   });
 });
