@@ -37,7 +37,7 @@ vi.mock('../../../lib/firebase', () => ({
 
 // Mock fetch for APIs
 const mockFetch = vi.fn();
-global.fetch = mockFetch;
+globalThis.fetch = mockFetch;
 
 const mockUser = {
   uid: 'user123',

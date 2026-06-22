@@ -19,7 +19,7 @@ export default function SearchResultsView({
   setActiveTab,
   setFilter,
 }: SearchResultsViewProps) {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
 
   return (
     <div className="flex-1 flex flex-col min-h-0">

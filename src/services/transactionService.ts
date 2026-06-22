@@ -47,8 +47,7 @@ export const requestTransaction = async (
 };
 
 export const cancelTransaction = async (
-  transactionId: string,
-  listingId: string
+  transactionId: string
 ): Promise<boolean> => {
   try {
     const batch = writeBatch(db);

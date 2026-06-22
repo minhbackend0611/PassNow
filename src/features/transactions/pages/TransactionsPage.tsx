@@ -357,7 +357,7 @@ export default function TransactionsPage() {
         setConfirmConfig(prev => ({ ...prev, isOpen: false }));
         setProcessingId(tx.id);
         try {
-          await cancelTransaction(tx.id, tx.listingId);
+          await cancelTransaction(tx.id);
         } finally {
           setProcessingId(null);
         }

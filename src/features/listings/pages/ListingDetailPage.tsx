@@ -90,7 +90,7 @@ export default function ListingDetailPage() {
   const handleCancelRequest = async () => {
     if (!transaction || !listing) return;
     setIsProcessingTransaction(true);
-    const success = await cancelTransaction(transaction.id, listing.id);
+    const success = await cancelTransaction(transaction.id);
     if (success) {
       setTransaction(null);
     }

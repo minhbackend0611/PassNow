@@ -99,7 +99,7 @@ describe('CreateListingPage', () => {
     fireEvent.change(fileInput, { target: { files: [file] } });
     fireEvent.change(screen.getByPlaceholderText('0'), { target: { value: '1000' } });
     // Mock fetch for "Use My University" button
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       json: () => Promise.resolve([{ display_name: '1 Dai Co Viet', lat: '10', lon: '10' }])
     });
 

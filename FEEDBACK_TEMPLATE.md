@@ -1,40 +1,38 @@
 ---
-name: "PassNow Feedback / Bug Report"
-description: "Sử dụng mẫu này để báo lỗi hoặc đề xuất tính năng mới cho dự án PassNow."
-labels: ["feedback", "bug", "enhancement"]
+name: Feature Feedback / Bug Report
+description: Template for team members to report issues or provide feedback on PassNow features
+title: "[Feedback]: <Short description>"
+labels: ["feedback", "needs-review"]
 assignees: []
 ---
 
-## 📌 1. Loại Feedback (Type of Feedback)
-*(Đánh dấu `[x]` vào ô phù hợp)*
-- [ ] 🐞 Bug (Lỗi hệ thống, lỗi hiển thị UI, lỗi thao tác)
-- [ ] 💡 Feature Request (Đề xuất tính năng mới, cải tiến trải nghiệm UX)
-- [ ] ❓ Khác: 
+## 📝 Loại phản hồi (Type of feedback)
+*(Đánh dấu [x] vào một hoặc nhiều ô tương ứng)*
+- [ ] 🐛 Báo lỗi (Bug Report)
+- [ ] 💡 Góp ý tính năng (Feature Request)
+- [ ] 🎨 Đóng góp giao diện/UX (UI/UX Improvement)
+- [ ] ❓ Câu hỏi (Question)
+- [ ] 📄 Khác (Other)
 
-## 📝 2. Tiêu đề (Title)
-*(Mô tả vấn đề trong 1 câu ngắn gọn. Ví dụ: "Chấm đỏ thông báo không biến mất sau khi bấm Confirm")*
+## 📌 Mô tả chi tiết (Description)
+*(Mô tả rõ ràng vấn đề hoặc ý tưởng phản hồi)*
 > 
 
-## 🖥️ 3. Môi trường kiểm thử (Environment)
-*(Hãy cung cấp thông tin thiết bị đang sử dụng)*
-- **Thiết bị:** (VD: Laptop Windows, MacBook, iPhone 14...)
-- **Trình duyệt:** (VD: Chrome, Safari, Edge...)
-- **Độ phân giải / Chế độ xem:** (VD: Toàn màn hình, Chia đôi màn hình, Mobile Web...)
+## 🔄 Các bước thực hiện để ra vấn đề (Steps to Reproduce - Nếu là lỗi)
+*(Liệt kê các bước cụ thể để tái hiện lỗi, nếu có)*
+1. Đi tới '...'
+2. Nhấn vào '...'
+3. Kéo xuống '...'
+4. Thấy lỗi: '...'
 
-## 🔍 4. Mô tả chi tiết vấn đề (What's the issue?)
-**Kết quả thực tế đang xảy ra (Actual Result):**
-> *(Mô tả chi tiết những gì đang nhìn thấy hoặc không nhìn thấy)*
+## 🖼️ Ảnh chụp màn hình / Video (Screenshots / Video)
+*(Đính kèm hình ảnh hoặc video để minh họa nếu có)*
 
-**Kết quả mong muốn (Expected Result):**
-> *(Kỳ vọng hệ thống phải hoạt động như thế nào)*
+## 📱 Thông tin môi trường (Environment Info)
+- **Thiết bị:** [VD: iPhone 13, Laptop Windows, ...]
+- **Trình duyệt / Ứng dụng:** [VD: Chrome, Safari, ...]
+- **Tài khoản đang dùng (nếu có):** [VD: passnow-test@email.com]
 
-## 👣 5. Các bước để tái hiện lỗi (Steps to reproduce)
-*(Vui lòng liệt kê từng bước cụ thể. Đây là phần quan trọng nhất để đội ngũ dev có thể tìm ra lỗi)*
-1. Đăng nhập bằng tài khoản (Người Mua/Người Bán)...
-2. Bấm vào nút / Chuyển đến trang...
-3. Nhập dữ liệu...
-4. Quan sát thấy...
-
-## 📎 6. Tài liệu đính kèm (Attachments)
-*(Đính kèm link ảnh chụp màn hình, video quay màn hình, hoặc copy lỗi chữ đỏ trong F12 Console vào đây)*
-> 
+## 💡 Đề xuất giải pháp (Suggested Solution - Không bắt buộc)
+*(Có ý tưởng gì để khắc phục hoặc làm nó tốt hơn không?)*
+>

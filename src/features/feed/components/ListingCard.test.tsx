@@ -19,7 +19,10 @@ describe('ListingCard', () => {
     images: ['test.jpg'],
     category: 'Books',
     school: 'Test Uni',
-    district: 'Test District',
+    district: 'Hai Ba Trung',
+    province: 'Ha Noi',
+    status: 'available' as const,
+    updatedAt: new Date().toISOString(),
     sellerId: 'user1',
     createdAt: Date.now()
   };

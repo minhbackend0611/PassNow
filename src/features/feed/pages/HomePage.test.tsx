@@ -11,7 +11,7 @@ vi.mock('../../../services/listingService', () => ({
   getListings: vi.fn()
 }));
 
-global.fetch = vi.fn().mockResolvedValue({
+globalThis.fetch = vi.fn().mockResolvedValue({
   json: () => Promise.resolve([
     { country: 'Viet Nam', name: 'BK University' },
     { country: 'Viet Nam', name: 'Other Uni' },
@@ -40,7 +40,7 @@ const mockRawListings: Listing[] = [
     images: [],
     category: 'Other',
     school: 'Other University',
-    province: 'Hà Nội',
+    province: 'Ha Noi',
     district: 'Hoàn Kiếm',
     sellerId: 'user_other',
     status: 'available',
@@ -57,7 +57,7 @@ const mockRawListings: Listing[] = [
     images: [],
     category: 'Books',
     school: 'BK University',
-    province: 'Hà Nội',
+    province: 'Ha Noi',
     district: 'Cầu Giấy',
     sellerId: 'user_bk',
     status: 'available',
@@ -75,6 +75,7 @@ const mockRawListings: Listing[] = [
     category: 'Clothing',
     school: 'Other BK',
     district: 'Cầu Giấy',
+    province: 'Ha Noi',
     sellerId: 'user_other_cg',
     status: 'available',
     createdAt: '2026-06-19T08:00:00.000Z',

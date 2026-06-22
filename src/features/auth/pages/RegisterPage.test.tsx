@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
 import RegisterPage from './RegisterPage';
 import { useAuthStore } from '../../../store/useAuthStore';
-import { createUserWithEmailAndPassword, sendEmailVerification, UserCredential } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification, type UserCredential } from 'firebase/auth';
 
 vi.mock('../../../store/useAuthStore');
 vi.mock('firebase/auth', async (importOriginal) => {

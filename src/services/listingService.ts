@@ -1,4 +1,4 @@
-import { collection, addDoc, doc, getDoc, getDocs, query, where, updateDoc, deleteDoc, writeBatch } from 'firebase/firestore';
+import { collection, addDoc, doc, getDoc, getDocs, query, where, updateDoc, writeBatch } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { sendSystemMessage } from './chatService';
 import type { Listing, ListingFilter, User } from '../types';
@@ -111,7 +111,7 @@ export const getListingById = async (id: string): Promise<{ listing: Listing, se
 };
 
 export const createListing = async (
-  listingData: Omit<Listing, 'id' | 'createdAt' | 'status'>
+  listingData: Omit<Listing, 'id' | 'createdAt' | 'status' | 'updatedAt'>
 ): Promise<string | null> => {
   try {
     const docRef = await addDoc(collection(db, LISTINGS_COLLECTION), {

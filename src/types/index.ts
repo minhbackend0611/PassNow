@@ -52,7 +52,7 @@ export interface ListingFilter {
   sellerId?: string;
 }
 
-export type TransactionStatus = 'pending' | 'completed';
+export type TransactionStatus = 'pending' | 'completed' | 'cancelled';
 
 export interface Transaction {
   id: string;

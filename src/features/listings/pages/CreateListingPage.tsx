@@ -49,7 +49,7 @@ export default function CreateListingPage() {
     formState: { errors },
 
   } = useForm<CreateListingValues>({
-    resolver: zodResolver(createListingSchema),
+    resolver: zodResolver(createListingSchema) as any,
     defaultValues: {
       listingType: 'sell',
       description: '',
@@ -71,7 +71,7 @@ export default function CreateListingPage() {
   const [suggestions, setSuggestions] = useState<OSMSuggestion[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const searchTimeout = useRef<NodeJS.Timeout | null>(null);
+  const searchTimeout = useRef<number | null>(null);
   
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -154,7 +154,7 @@ export default function CreateListingPage() {
     setIsSearching(true);
     if (searchTimeout.current) clearTimeout(searchTimeout.current);
     
-    searchTimeout.current = setTimeout(async () => {
+    searchTimeout.current = window.setTimeout(async () => {
       try {
         const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}&countrycodes=vn&limit=5`);
         const data = await res.json();
@@ -531,7 +531,7 @@ export default function CreateListingPage() {
                   {/* Background hint for Tab */}
                   <div className="absolute inset-0 pl-10 pr-4 flex items-center pointer-events-none z-20 overflow-hidden text-body-md font-body-md whitespace-pre">
                     <span className="text-transparent">{formatCurrency(watch('price'))}</span>
-                    {watch('price') !== undefined && watch('price') !== null && watch('price').toString().length > 0 && !watch('price').toString().endsWith('000') && (
+                    {watch('price') !== undefined && watch('price') !== null && String(watch('price')).length > 0 && !String(watch('price')).endsWith('000') && (
                       <span className="text-on-surface-variant/40 flex items-center gap-1 animate-fade-in">
                         .000 <kbd className="text-[10px] bg-surface-variant text-on-surface-variant px-1 rounded ml-1 font-sans">Tab ⇥</kbd>
                       </span>

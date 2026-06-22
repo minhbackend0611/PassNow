@@ -6,7 +6,7 @@ vi.mock('react-router-dom', () => ({
   useNavigate: () => vi.fn()
 }));
 
-global.fetch = vi.fn().mockResolvedValue({
+globalThis.fetch = vi.fn().mockResolvedValue({
   json: () => Promise.resolve([
     { country: 'Viet Nam', name: 'BK University' },
     { country: 'Viet Nam', name: 'Other Uni' },

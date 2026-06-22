@@ -1,12 +1,11 @@
 import { useMemo } from 'react';
 import type { Listing, User } from '../../../types';
 import ListingCard from './ListingCard';
-import { useNavigate } from 'react-router-dom';
 
 interface HomeDiscoveryViewProps {
   listings: Listing[];
   user: User | null;
-  onNavigateToSearch: (filters: ListingFilter) => void;
+  onNavigateToSearch: (filters: any) => void;
 }
 
 const CATEGORIES = [
@@ -18,7 +17,6 @@ const CATEGORIES = [
 ];
 
 export default function HomeDiscoveryView({ listings, user, onNavigateToSearch }: HomeDiscoveryViewProps) {
-  const navigate = useNavigate();
 
   // Partition listings for discovery sections
   const { hotDeals, recentlyAdded, freeItems, suggestedItems } = useMemo(() => {

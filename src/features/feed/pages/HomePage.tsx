@@ -1,9 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../../../store/useAuthStore';
 import { getListings } from '../../../services/listingService';
 import type { Listing, ListingFilter, ItemCondition } from '../../../types';
-import ListingCard from '../components/ListingCard';
 import FeedSidebar from '../components/FeedSidebar';
 import HomeDiscoveryView from '../components/HomeDiscoveryView';
 import SearchResultsView from '../components/SearchResultsView';
