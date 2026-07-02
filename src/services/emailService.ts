@@ -50,7 +50,8 @@ const getAppBaseUrl = () => {
 export const sendTransactionRequestedEmail = async (
   sellerId: string, 
   buyerName: string, 
-  listingTitle: string
+  listingTitle: string,
+  transactionId: string
 ) => {
   const subject = `[PassNow] New Request for ${listingTitle}`;
   const htmlContent = `
@@ -60,7 +61,7 @@ export const sendTransactionRequestedEmail = async (
       <p>Great news! <strong>${buyerName || 'A user'}</strong> has requested to buy your item: <strong>${listingTitle}</strong>.</p>
       <p>Please check your Transactions page to review and confirm this request.</p>
       <div style="margin: 30px 0;">
-        <a href="${getAppBaseUrl()}/transactions" style="background-color: #00A67E; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Transaction</a>
+        <a href="${getAppBaseUrl()}/transactions?id=${transactionId}" style="background-color: #00A67E; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Transaction</a>
       </div>
       <p style="color: #666; font-size: 12px;">Thank you for using PassNow!</p>
     </div>
@@ -71,7 +72,8 @@ export const sendTransactionRequestedEmail = async (
 export const sendSellerConfirmedEmail = async (
   buyerId: string, 
   sellerName: string, 
-  listingTitle: string
+  listingTitle: string,
+  transactionId: string
 ) => {
   const subject = `[PassNow] Request Accepted: ${listingTitle}`;
   const htmlContent = `
@@ -81,7 +83,7 @@ export const sendSellerConfirmedEmail = async (
       <p><strong>${sellerName || 'The seller'}</strong> has confirmed your request for: <strong>${listingTitle}</strong>.</p>
       <p>If you haven't already, please go to your Transactions page and confirm the transaction on your end to complete the process.</p>
       <div style="margin: 30px 0;">
-        <a href="${getAppBaseUrl()}/transactions" style="background-color: #00A67E; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Transaction</a>
+        <a href="${getAppBaseUrl()}/transactions?id=${transactionId}" style="background-color: #00A67E; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Transaction</a>
       </div>
       <p style="color: #666; font-size: 12px;">Thank you for using PassNow!</p>
     </div>
@@ -92,7 +94,8 @@ export const sendSellerConfirmedEmail = async (
 export const sendBuyerConfirmedEmail = async (
   sellerId: string, 
   buyerName: string, 
-  listingTitle: string
+  listingTitle: string,
+  transactionId: string
 ) => {
   const subject = `[PassNow] Buyer Confirmed: ${listingTitle}`;
   const htmlContent = `
@@ -102,7 +105,7 @@ export const sendBuyerConfirmedEmail = async (
       <p><strong>${buyerName || 'The buyer'}</strong> has confirmed their end of the transaction for: <strong>${listingTitle}</strong>.</p>
       <p>If you haven't already, please go to your Transactions page and confirm the transaction on your end to mark it as fully completed.</p>
       <div style="margin: 30px 0;">
-        <a href="${getAppBaseUrl()}/transactions" style="background-color: #00A67E; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Transaction</a>
+        <a href="${getAppBaseUrl()}/transactions?id=${transactionId}" style="background-color: #00A67E; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Transaction</a>
       </div>
       <p style="color: #666; font-size: 12px;">Thank you for using PassNow!</p>
     </div>
@@ -112,7 +115,8 @@ export const sendBuyerConfirmedEmail = async (
 
 export const sendTransactionCompletedEmail = async (
   userId: string,
-  listingTitle: string
+  listingTitle: string,
+  transactionId: string
 ) => {
   const subject = `[PassNow] Transaction Completed: ${listingTitle}`;
   const htmlContent = `
@@ -122,7 +126,7 @@ export const sendTransactionCompletedEmail = async (
       <p>The transaction for <strong>${listingTitle}</strong> has been successfully completed by both parties!</p>
       <p>You can now leave a review for the other party to help build trust in our community.</p>
       <div style="margin: 30px 0;">
-        <a href="${getAppBaseUrl()}/transactions" style="background-color: #00A67E; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Details</a>
+        <a href="${getAppBaseUrl()}/transactions?id=${transactionId}" style="background-color: #00A67E; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Details</a>
       </div>
       <p style="color: #666; font-size: 12px;">Thank you for using PassNow!</p>
     </div>

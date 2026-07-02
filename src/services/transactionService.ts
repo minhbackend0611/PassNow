@@ -48,7 +48,7 @@ export const requestTransaction = async (
 
     // Send email to seller
     getUserById(buyerId).then(buyer => {
-      sendTransactionRequestedEmail(sellerId, buyer?.displayName || 'A user', listingTitle);
+      sendTransactionRequestedEmail(sellerId, buyer?.displayName || 'A user', listingTitle, transactionRef.id);
     });
 
     return transactionRef.id;
@@ -135,12 +135,12 @@ export const sellerConfirmTransaction = async (
     if (transactionData.buyerConfirmed) {
       await sendSystemMessage(listingId, transactionData.sellerId, transactionData.buyerId, '🎉 Transaction completed! Thank you for using PassNow.');
       // Send email to both
-      sendTransactionCompletedEmail(transactionData.sellerId, transactionData.listingTitle);
-      sendTransactionCompletedEmail(transactionData.buyerId, transactionData.listingTitle);
+      sendTransactionCompletedEmail(transactionData.sellerId, transactionData.listingTitle, transactionId);
+      sendTransactionCompletedEmail(transactionData.buyerId, transactionData.listingTitle, transactionId);
     } else {
       // Send email to buyer saying seller confirmed
       getUserById(transactionData.sellerId).then(seller => {
-        sendSellerConfirmedEmail(transactionData.buyerId, seller?.displayName || 'The seller', transactionData.listingTitle);
+        sendSellerConfirmedEmail(transactionData.buyerId, seller?.displayName || 'The seller', transactionData.listingTitle, transactionId);
       });
     }
 
@@ -211,12 +211,12 @@ export const buyerConfirmTransaction = async (
     if (transactionData.sellerConfirmed) {
       await sendSystemMessage(listingId, transactionData.sellerId, transactionData.buyerId, '🎉 Transaction completed! Thank you for using PassNow.');
       // Send email to both
-      sendTransactionCompletedEmail(transactionData.sellerId, transactionData.listingTitle);
-      sendTransactionCompletedEmail(transactionData.buyerId, transactionData.listingTitle);
+      sendTransactionCompletedEmail(transactionData.sellerId, transactionData.listingTitle, transactionId);
+      sendTransactionCompletedEmail(transactionData.buyerId, transactionData.listingTitle, transactionId);
     } else {
       // Send email to seller saying buyer confirmed
       getUserById(transactionData.buyerId).then(buyer => {
-        sendBuyerConfirmedEmail(transactionData.sellerId, buyer?.displayName || 'The buyer', transactionData.listingTitle);
+        sendBuyerConfirmedEmail(transactionData.sellerId, buyer?.displayName || 'The buyer', transactionData.listingTitle, transactionId);
       });
     }
 

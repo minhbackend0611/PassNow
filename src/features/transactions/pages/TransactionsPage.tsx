@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../../../store/useAuthStore';
 import { 
   sellerConfirmTransaction, 
@@ -56,7 +56,7 @@ function TransactionItem({
   };
 
   return (
-    <div className="glass-panel bg-surface-container-lowest/80 backdrop-blur-xl border border-white/60 rounded-[32px] p-6 md:p-8 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-1 flex flex-col gap-6 group">
+    <div id={`tx-${tx.id}`} className="glass-panel bg-surface-container-lowest/80 backdrop-blur-xl border border-white/60 rounded-[32px] p-6 md:p-8 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-1 flex flex-col gap-6 group">
       
       {/* Header & Title */}
       <div className="flex flex-col md:flex-row justify-between items-start gap-4">
@@ -300,6 +300,8 @@ export default function TransactionsPage() {
   const { user } = useAuthStore();
   const { addToast } = useToastStore();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const targetTxId = searchParams.get('id');
   const { transactions, buyingActionRequiredCount, sellingActionRequiredCount } = useTransactionStore();
   
   const [activeTab, setActiveTab] = useState<'buying' | 'selling'>('buying');
@@ -336,6 +338,34 @@ export default function TransactionsPage() {
 
     fetchReviews();
   }, [user]);
+
+  // Handle auto-scroll and highlight for target transaction from URL
+  useEffect(() => {
+    if (targetTxId && !isLoading && transactions.length > 0) {
+      const tx = transactions.find(t => t.id === targetTxId);
+      if (tx) {
+        // Auto switch tab if necessary
+        if (tx.sellerId === user?.uid && activeTab !== 'selling') {
+          setActiveTab('selling');
+        } else if (tx.buyerId === user?.uid && activeTab !== 'buying') {
+          setActiveTab('buying');
+        }
+
+        // Wait for render then scroll & highlight
+        setTimeout(() => {
+          const el = document.getElementById(`tx-${targetTxId}`);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Add highlight class briefly
+            el.classList.add('ring-4', 'ring-primary', 'ring-offset-4');
+            setTimeout(() => {
+              el.classList.remove('ring-4', 'ring-primary', 'ring-offset-4');
+            }, 3000);
+          }
+        }, 500);
+      }
+    }
+  }, [targetTxId, isLoading, transactions, user, activeTab]);
 
   if (!user) {
     return (
