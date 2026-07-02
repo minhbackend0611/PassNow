@@ -235,7 +235,58 @@ function TransactionItem({
   );
 }
 
-function ListingQueueHeader({ listingId, txs }: { listingId: string, txs: Transaction[] }) {
+function CancelledTransactionItem({ tx, isBuyer }: { tx: any, isBuyer: boolean }) {
+  const [partnerName, setPartnerName] = useState<string>('Loading...');
+  useEffect(() => {
+    const partnerId = isBuyer ? tx.sellerId : tx.buyerId;
+    getUserById(partnerId).then(p => {
+      if (p) setPartnerName(p.displayName);
+    });
+  }, [tx, isBuyer]);
+
+  return (
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-surface-container-lowest/50 p-4 rounded-2xl border border-error/10 hover:border-error/20 transition-colors">
+      <div className="flex items-center gap-3">
+         <div className="w-10 h-10 rounded-full bg-error/10 text-error flex items-center justify-center font-bold text-sm border border-error/20">
+            <span className="material-symbols-outlined text-[18px]">person_off</span>
+         </div>
+         <div className="flex flex-col">
+           <span className="text-label-md text-on-surface line-through opacity-70">{partnerName}</span>
+           <span className="text-label-sm text-error/80 font-bold">Failed / Cancelled</span>
+         </div>
+      </div>
+      <span className="text-label-sm text-on-surface-variant bg-surface-variant/40 px-3 py-1 rounded-full self-start sm:self-auto border border-outline-variant/20">{new Date(tx.createdAt).toLocaleDateString()}</span>
+    </div>
+  );
+}
+
+function CancelledRequestsList({ txs, isBuyer }: { txs: any[], isBuyer: boolean }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  if (txs.length === 0) return null;
+
+  return (
+    <div className="mt-4 pt-4 border-t border-outline-variant/20">
+      <button 
+        onClick={() => setIsExpanded(!isExpanded)} 
+        className="flex items-center gap-2 text-label-sm font-bold text-on-surface-variant hover:text-on-surface transition-colors w-fit px-3 py-1.5 rounded-lg hover:bg-surface-variant/30"
+      >
+        <span className="material-symbols-outlined text-[18px]">history</span>
+        {txs.length} Cancelled Request{txs.length > 1 ? 's' : ''}
+        <span className="material-symbols-outlined text-[18px] transition-transform duration-300" style={{ transform: isExpanded ? 'rotate(180deg)' : 'none' }}>expand_more</span>
+      </button>
+      
+      {isExpanded && (
+        <div className="flex flex-col gap-3 mt-4 animate-in slide-in-from-top-2 fade-in duration-300">
+          {txs.map(tx => (
+            <CancelledTransactionItem key={tx.id} tx={tx} isBuyer={isBuyer} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ListingQueueHeader({ listingId, firstTx, activeCount }: { listingId: string, firstTx: any, activeCount: number }) {
   const [listing, setListing] = useState<any>(null);
 
   useEffect(() => {
@@ -258,8 +309,8 @@ function ListingQueueHeader({ listingId, txs }: { listingId: string, txs: Transa
         )}
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center gap-2">
-            <h2 className="text-title-lg font-bold text-on-surface truncate max-w-[200px] md:max-w-md" title={txs[0].listingTitle}>
-              {txs[0].listingTitle}
+            <h2 className="text-title-lg font-bold text-on-surface truncate max-w-[200px] md:max-w-md" title={firstTx.listingTitle}>
+              {firstTx.listingTitle}
             </h2>
           </div>
           {listing && (
@@ -274,7 +325,7 @@ function ListingQueueHeader({ listingId, txs }: { listingId: string, txs: Transa
               <div className="flex flex-wrap items-center gap-3 text-label-sm text-on-surface-variant font-medium mt-1">
                 <span className="flex items-center gap-1.5 bg-surface-variant/40 px-2 py-0.5 rounded-md">
                   <span className="material-symbols-outlined text-[16px]">people</span>
-                  {txs.length} request{txs.length !== 1 && 's'}
+                  {activeCount} active request{activeCount !== 1 && 's'}
                 </span>
                 <span className="w-1.5 h-1.5 rounded-full bg-outline-variant/40"></span>
                 <span className="flex items-center gap-1.5 text-tertiary bg-tertiary/10 px-2 py-0.5 rounded-md border border-tertiary/20">
@@ -289,7 +340,7 @@ function ListingQueueHeader({ listingId, txs }: { listingId: string, txs: Transa
       
       {!listing && (
         <span className="bg-primary/10 text-primary px-4 py-1.5 rounded-full text-label-sm font-bold border border-primary/20 shadow-sm self-start md:self-auto">
-          {txs.length} in queue
+          {activeCount} in queue
         </span>
       )}
     </div>
@@ -477,21 +528,29 @@ export default function TransactionsPage() {
   const buyingTxs = filteredTransactions.filter(t => t.buyerId === user?.uid);
   const sellingTxs = filteredTransactions.filter(t => t.sellerId === user?.uid);
 
+  const activeBuyingTxs = buyingTxs.filter(t => t.status !== 'cancelled');
+  const cancelledBuyingTxs = buyingTxs.filter(t => t.status === 'cancelled');
+
   const activeActionCount = activeTab === 'buying' ? buyingActionRequiredCount : sellingActionRequiredCount;
 
   // Group selling transactions by listing to show queues
   const groupedSellingTxs = sellingTxs.reduce((acc, tx) => {
-    if (!acc[tx.listingId]) acc[tx.listingId] = [];
-    acc[tx.listingId].push(tx);
+    if (!acc[tx.listingId]) acc[tx.listingId] = { active: [], cancelled: [] };
+    if (tx.status === 'cancelled') {
+      acc[tx.listingId].cancelled.push(tx);
+    } else {
+      acc[tx.listingId].active.push(tx);
+    }
     return acc;
-  }, {} as Record<string, Transaction[]>);
+  }, {} as Record<string, { active: Transaction[], cancelled: Transaction[] }>);
 
   // Sort each group ascending (oldest first = highest priority in queue)
   Object.values(groupedSellingTxs).forEach(group => {
-    group.sort((a, b) => a.createdAt - b.createdAt);
+    group.active.sort((a, b) => a.createdAt - b.createdAt);
+    group.cancelled.sort((a, b) => b.createdAt - a.createdAt); // newest cancelled first
   });
 
-  const displayTxs = activeTab === 'buying' ? buyingTxs : sellingTxs;
+  const displayTxsLength = activeTab === 'buying' ? buyingTxs.length : sellingTxs.length;
 
   return (
     <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-gutter py-stack-lg pb-24 md:pb-stack-lg flex flex-col gap-stack-lg relative">
@@ -569,7 +628,7 @@ export default function TransactionsPage() {
           <div className="flex justify-center py-10">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
           </div>
-        ) : displayTxs.length === 0 ? (
+        ) : displayTxsLength === 0 ? (
           <div className="glass-panel bg-surface-container-lowest/50 backdrop-blur-xl rounded-[32px] p-12 text-center border border-white/60 shadow-sm flex flex-col items-center justify-center min-h-[400px]">
             <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mb-6 shadow-inner border border-primary/20">
               <span className="material-symbols-outlined text-[48px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
@@ -595,47 +654,62 @@ export default function TransactionsPage() {
             </button>
           </div>
         ) : activeTab === 'selling' ? (
-          Object.entries(groupedSellingTxs).map(([listingId, txs]) => (
-            <div key={listingId} className="flex flex-col gap-4 mb-4 bg-surface-container-lowest/30 p-6 rounded-[32px] border border-outline-variant/30 shadow-inner">
-              <ListingQueueHeader listingId={listingId} txs={txs} />
-              <div className="flex flex-col gap-4 mt-2">
-                {txs.map((tx, index) => {
-                  const isBuyer = tx.buyerId === user.uid;
-                  return (
-                    <div key={tx.id} className="relative group/queue">
-                      {/* Badge for queue position */}
-                      <div className="absolute -left-3 -top-3 w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center font-bold shadow-[0_2px_10px_rgba(0,166,126,0.3)] z-10 border-2 border-surface transition-transform group-hover/queue:scale-110">
-                        #{index + 1}
-                      </div>
-                      <TransactionItem
-                        tx={tx}
-                        user={user}
-                        isBuyer={isBuyer}
-                        navigate={navigate}
-                        processingId={processingId}
-                        reviewedTxIds={reviewedTxIds}
-                        handleCancel={handleCancel}
-                        handleBuyerConfirm={handleBuyerConfirm}
-                        handleSellerConfirm={handleSellerConfirm}
-                        setReviewModalTx={setReviewModalTx}
-                        hideListingInfo={true}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          ))
-        ) : (
-          displayTxs.map(tx => {
-            const isBuyer = tx.buyerId === user.uid;
-            
+          Object.entries(groupedSellingTxs).map(([listingId, group]) => {
+            const firstTx = group.active[0] || group.cancelled[0];
+            if (!firstTx) return null;
             return (
+              <div key={listingId} className="flex flex-col gap-4 mb-4 bg-surface-container-lowest/30 p-6 rounded-[32px] border border-outline-variant/30 shadow-inner">
+                <ListingQueueHeader listingId={listingId} firstTx={firstTx} activeCount={group.active.length} />
+                
+                <div className="flex flex-col gap-4 mt-2">
+                  {group.active.length === 0 ? (
+                    <p className="text-body-md text-on-surface-variant italic py-4 text-center bg-surface-variant/20 rounded-2xl">
+                      No active requests for this listing.
+                    </p>
+                  ) : (
+                    group.active.map((tx, index) => {
+                      const isBuyer = tx.buyerId === user.uid;
+                      return (
+                        <div key={tx.id} className="relative group/queue">
+                          <div className="absolute -left-3 -top-3 w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center font-bold shadow-[0_2px_10px_rgba(0,166,126,0.3)] z-10 border-2 border-surface transition-transform group-hover/queue:scale-110">
+                            #{index + 1}
+                          </div>
+                          <TransactionItem
+                            tx={tx}
+                            user={user}
+                            isBuyer={isBuyer}
+                            navigate={navigate}
+                            processingId={processingId}
+                            reviewedTxIds={reviewedTxIds}
+                            handleCancel={handleCancel}
+                            handleBuyerConfirm={handleBuyerConfirm}
+                            handleSellerConfirm={handleSellerConfirm}
+                            setReviewModalTx={setReviewModalTx}
+                            hideListingInfo={true}
+                          />
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+
+                <CancelledRequestsList txs={group.cancelled} isBuyer={false} />
+              </div>
+            );
+          })
+        ) : (
+          <div className="flex flex-col gap-4">
+            {activeBuyingTxs.length === 0 && cancelledBuyingTxs.length > 0 && (
+               <p className="text-body-md text-on-surface-variant italic py-10 text-center bg-surface-variant/20 rounded-[32px] border border-outline-variant/20">
+                 You have no active purchases.
+               </p>
+            )}
+            {activeBuyingTxs.map(tx => (
               <TransactionItem
                 key={tx.id}
                 tx={tx}
                 user={user}
-                isBuyer={isBuyer}
+                isBuyer={true}
                 navigate={navigate}
                 processingId={processingId}
                 reviewedTxIds={reviewedTxIds}
@@ -644,8 +718,22 @@ export default function TransactionsPage() {
                 handleSellerConfirm={handleSellerConfirm}
                 setReviewModalTx={setReviewModalTx}
               />
-            );
-          })
+            ))}
+            
+            {cancelledBuyingTxs.length > 0 && (
+              <div className="mt-8 bg-surface-container-lowest/30 p-6 rounded-[32px] border border-outline-variant/30 shadow-sm">
+                 <h3 className="text-title-md font-bold text-on-surface-variant mb-4 flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[20px]">history</span>
+                    Cancelled / Failed Purchases
+                 </h3>
+                 <div className="flex flex-col gap-3">
+                   {cancelledBuyingTxs.map(tx => (
+                     <CancelledTransactionItem key={tx.id} tx={tx} isBuyer={true} />
+                   ))}
+                 </div>
+              </div>
+            )}
+          </div>
         )}
       </div>
 
