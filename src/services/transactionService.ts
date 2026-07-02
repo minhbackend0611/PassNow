@@ -1,6 +1,13 @@
 import { collection, doc, query, where, getDocs, writeBatch, getDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { sendSystemMessage } from './chatService';
+import { 
+  sendTransactionRequestedEmail, 
+  sendSellerConfirmedEmail, 
+  sendBuyerConfirmedEmail, 
+  sendTransactionCompletedEmail 
+} from './emailService';
+import { getUserById } from './userService';
 import type { Transaction } from '../types';
 
 const TRANSACTIONS_COLLECTION = 'transactions';
@@ -38,6 +45,11 @@ export const requestTransaction = async (
       buyerId, 
       '👋 A buyer has requested to buy this item! Please check your Transactions page to manage requests.'
     );
+
+    // Send email to seller
+    getUserById(buyerId).then(buyer => {
+      sendTransactionRequestedEmail(sellerId, buyer?.displayName || 'A user', listingTitle);
+    });
 
     return transactionRef.id;
   } catch (error) {
@@ -122,6 +134,14 @@ export const sellerConfirmTransaction = async (
 
     if (transactionData.buyerConfirmed) {
       await sendSystemMessage(listingId, transactionData.sellerId, transactionData.buyerId, '🎉 Transaction completed! Thank you for using PassNow.');
+      // Send email to both
+      sendTransactionCompletedEmail(transactionData.sellerId, transactionData.listingTitle);
+      sendTransactionCompletedEmail(transactionData.buyerId, transactionData.listingTitle);
+    } else {
+      // Send email to buyer saying seller confirmed
+      getUserById(transactionData.sellerId).then(seller => {
+        sendSellerConfirmedEmail(transactionData.buyerId, seller?.displayName || 'The seller', transactionData.listingTitle);
+      });
     }
 
     return true;
@@ -190,6 +210,14 @@ export const buyerConfirmTransaction = async (
 
     if (transactionData.sellerConfirmed) {
       await sendSystemMessage(listingId, transactionData.sellerId, transactionData.buyerId, '🎉 Transaction completed! Thank you for using PassNow.');
+      // Send email to both
+      sendTransactionCompletedEmail(transactionData.sellerId, transactionData.listingTitle);
+      sendTransactionCompletedEmail(transactionData.buyerId, transactionData.listingTitle);
+    } else {
+      // Send email to seller saying buyer confirmed
+      getUserById(transactionData.buyerId).then(buyer => {
+        sendBuyerConfirmedEmail(transactionData.sellerId, buyer?.displayName || 'The buyer', transactionData.listingTitle);
+      });
     }
 
     return true;
