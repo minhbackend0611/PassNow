@@ -53,15 +53,6 @@ export default function VerifyEmailPage() {
     }
   };
 
-  const handleSignOut = async () => {
-    try {
-      await auth.signOut();
-      navigate('/login');
-    } catch (err) {
-      console.error('Error signing out', err);
-    }
-  };
-
   return (
     <AuthLayout>
       <div className="fade-in text-center">
