@@ -58,14 +58,35 @@ export default function TopNavBar() {
     navigate('/');
   };
 
+  const isBrowseMode = location.pathname === '/' && (
+    searchParams.has('q') || 
+    searchParams.has('category') || 
+    searchParams.has('condition') || 
+    searchParams.has('minPrice') || 
+    searchParams.has('maxPrice') || 
+    searchParams.has('school') ||
+    searchParams.has('radiusKm') ||
+    searchParams.get('browse') === 'true'
+  );
+
+  const showBackButton = location.pathname !== '/' || isBrowseMode;
+
+  const handleBack = () => {
+    if (location.pathname === '/' && isBrowseMode) {
+      navigate('/');
+    } else {
+      navigate(-1);
+    }
+  };
+
   return (
     <header className="sticky top-0 z-50 flex flex-col w-full bg-surface/70 backdrop-blur-xl border-b border-outline-variant/30 shadow-[0_4px_30px_rgba(0,0,0,0.03)] transition-all duration-300">
       <div className="flex items-center justify-between px-gutter py-stack-sm w-full">
         <div className="flex items-center gap-stack-lg">
           <div className="flex items-center gap-2">
-            {location.pathname !== '/' && location.pathname !== '/browse' && (
+            {showBackButton && (
               <button 
-                onClick={() => navigate(-1)}
+                onClick={handleBack}
                 className="p-2 -ml-2 rounded-full hover:bg-surface-variant/50 transition-colors flex items-center justify-center text-on-surface-variant hover:text-primary"
                 title="Go Back"
               >

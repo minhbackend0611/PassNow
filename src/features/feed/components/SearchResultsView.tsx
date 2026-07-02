@@ -27,21 +27,6 @@ export default function SearchResultsView({
 
   return (
     <div className="flex-1 flex flex-col min-h-0">
-      {/* Back Button */}
-      <div className="mb-4">
-        <button
-          onClick={() => {
-            setSearchParams({});
-            setFilter({});
-            setActiveTab('all');
-          }}
-          className="flex items-center gap-2 text-label-md font-bold text-on-surface-variant hover:text-primary transition-colors cursor-pointer w-fit"
-        >
-          <span className="material-symbols-outlined text-[20px]">arrow_back</span>
-          Back to Explore
-        </button>
-      </div>
-
       {/* Search Header Context */}
       <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
