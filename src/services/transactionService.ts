@@ -20,6 +20,13 @@ export const requestTransaction = async (
   buyerId: string
 ): Promise<string | null> => {
   try {
+    // Check if buyer already has an active request for this listing
+    const existing = await getTransactionByListingAndBuyer(listingId, buyerId);
+    if (existing) {
+      console.warn("User already has an active transaction for this listing");
+      return null;
+    }
+
     const batch = writeBatch(db);
     
     // Create new transaction doc
@@ -65,7 +72,7 @@ export const cancelTransaction = async (
     const batch = writeBatch(db);
     
     const transactionRef = doc(db, TRANSACTIONS_COLLECTION, transactionId);
-    batch.delete(transactionRef);
+    batch.update(transactionRef, { status: 'cancelled' });
 
     await batch.commit();
     return true;
