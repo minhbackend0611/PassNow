@@ -240,7 +240,7 @@ function CancelledTransactionItem({ tx, isBuyer }: { tx: any, isBuyer: boolean }
   useEffect(() => {
     const partnerId = isBuyer ? tx.sellerId : tx.buyerId;
     getUserById(partnerId).then(p => {
-      if (p) setPartnerName(p.displayName);
+      if (p) setPartnerName(p.displayName || 'Unknown');
     });
   }, [tx, isBuyer]);
 
