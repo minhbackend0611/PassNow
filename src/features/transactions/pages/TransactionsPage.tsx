@@ -413,10 +413,13 @@ export default function TransactionsPage() {
               el.classList.remove('ring-4', 'ring-primary', 'ring-offset-4');
             }, 3000);
           }
+          
+          // Remove the ?id= parameter from the URL to keep it clean
+          navigate('/transactions', { replace: true });
         }, 500);
       }
     }
-  }, [targetTxId, isLoading, transactions, user, activeTab]);
+  }, [targetTxId, isLoading, transactions, user, activeTab, navigate]);
 
   if (!user) {
     return (
