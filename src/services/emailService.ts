@@ -133,3 +133,24 @@ export const sendTransactionCompletedEmail = async (
   `;
   return sendEmailNotification(userId, subject, htmlContent);
 };
+
+export const sendTransactionCancelledEmail = async (
+  sellerId: string,
+  buyerName: string,
+  listingTitle: string
+) => {
+  const subject = `[PassNow] Request Cancelled: ${listingTitle}`;
+  const htmlContent = `
+    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
+      <h2 style="color: #E53935;">PassNow - Request Cancelled</h2>
+      <p>Hello,</p>
+      <p>We wanted to let you know that <strong>${buyerName || 'The buyer'}</strong> has cancelled their request to buy your item: <strong>${listingTitle}</strong>.</p>
+      <p>You don't need to take any action. Your item is still listed and available for other buyers.</p>
+      <div style="margin: 30px 0;">
+        <a href="${getAppBaseUrl()}/transactions" style="background-color: #E53935; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Transactions</a>
+      </div>
+      <p style="color: #666; font-size: 12px;">Thank you for using PassNow!</p>
+    </div>
+  `;
+  return sendEmailNotification(sellerId, subject, htmlContent);
+};

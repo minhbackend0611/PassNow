@@ -5,7 +5,8 @@ import {
   sendTransactionRequestedEmail, 
   sendSellerConfirmedEmail, 
   sendBuyerConfirmedEmail, 
-  sendTransactionCompletedEmail 
+  sendTransactionCompletedEmail,
+  sendTransactionCancelledEmail
 } from './emailService';
 import { getUserById } from './userService';
 import type { Transaction } from '../types';
@@ -69,12 +70,26 @@ export const cancelTransaction = async (
   transactionId: string
 ): Promise<boolean> => {
   try {
-    const batch = writeBatch(db);
-    
     const transactionRef = doc(db, TRANSACTIONS_COLLECTION, transactionId);
+    const transactionSnap = await getDoc(transactionRef);
+    
+    if (!transactionSnap.exists()) return false;
+    const transactionData = transactionSnap.data() as Transaction;
+
+    const batch = writeBatch(db);
     batch.update(transactionRef, { status: 'cancelled' });
 
     await batch.commit();
+
+    // Send email to seller about the cancellation
+    getUserById(transactionData.buyerId).then(buyer => {
+      sendTransactionCancelledEmail(
+        transactionData.sellerId, 
+        buyer?.displayName || 'The buyer', 
+        transactionData.listingTitle
+      );
+    });
+
     return true;
   } catch (error) {
     console.error("Error canceling transaction:", error);
