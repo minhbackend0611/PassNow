@@ -50,6 +50,9 @@ export interface ListingFilter {
   minPrice?: number;
   maxPrice?: number;
   sellerId?: string;
+  radiusKm?: number;
+  userLat?: number;
+  userLng?: number;
 }
 
 export type TransactionStatus = 'pending' | 'completed' | 'cancelled';

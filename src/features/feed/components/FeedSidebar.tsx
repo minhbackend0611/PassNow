@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { ListingFilter, ItemCondition } from '../../../types';
 import { CustomSelect } from '../../../components/ui/CustomSelect';
+import { useToastStore } from '../../../store/useToastStore';
 
 interface FeedSidebarProps {
   onFilterChange?: (filters: ListingFilter) => void;
@@ -25,7 +26,16 @@ const PRICE_RANGES = [
   { id: 'over_1m', label: 'Over 1,000,000 ₫', min: 1000000, max: undefined },
 ];
 
+const DISTANCE_OPTIONS = [
+  { id: 'any', label: 'Any Distance', value: undefined },
+  { id: '1km', label: '< 1 km', value: 1 },
+  { id: '5km', label: '< 5 km', value: 5 },
+  { id: '10km', label: '< 10 km', value: 10 },
+  { id: '20km', label: '< 20 km', value: 20 },
+];
+
 export default function FeedSidebar({ onFilterChange, initialFilters = {} }: FeedSidebarProps) {
+  const { addToast } = useToastStore();
   const [selectedCategory, setSelectedCategory] = useState(initialFilters.category || '');
   const [selectedCondition, setSelectedCondition] = useState<ItemCondition | ''>(initialFilters.condition || '');
   
@@ -35,6 +45,10 @@ export default function FeedSidebar({ onFilterChange, initialFilters = {} }: Fee
   
   const [school, setSchool] = useState(initialFilters.school || '');
   const [schoolsList, setSchoolsList] = useState<string[]>([]);
+  
+  const [selectedRadius, setSelectedRadius] = useState<number | undefined>(initialFilters.radiusKm);
+  const [userLat, setUserLat] = useState<number | undefined>(initialFilters.userLat);
+  const [userLng, setUserLng] = useState<number | undefined>(initialFilters.userLng);
 
   useEffect(() => {
     fetch('https://raw.githubusercontent.com/Hipo/university-domains-list/master/world_universities_and_domains.json')
@@ -60,8 +74,42 @@ export default function FeedSidebar({ onFilterChange, initialFilters = {} }: Fee
     }
     
     if (school.trim()) filters.school = school;
+    if (selectedRadius) {
+      filters.radiusKm = selectedRadius;
+      filters.userLat = userLat;
+      filters.userLng = userLng;
+    }
 
     onFilterChange(filters);
+  };
+
+  const handleDistanceChange = (radius: number | undefined) => {
+    if (radius === undefined) {
+      setSelectedRadius(undefined);
+      setUserLat(undefined);
+      setUserLng(undefined);
+      return;
+    }
+
+    if (!navigator.geolocation) {
+      addToast("Geolocation is not supported by your browser.", "error");
+      return;
+    }
+
+    addToast("Requesting location access...", "info");
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLat(position.coords.latitude);
+        setUserLng(position.coords.longitude);
+        setSelectedRadius(radius);
+        addToast(`Location accessed.`, "success");
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        addToast("Please allow location access to use distance filter.", "error");
+        setSelectedRadius(undefined);
+      }
+    );
   };
 
   const handleClearFilters = () => {
@@ -69,6 +117,9 @@ export default function FeedSidebar({ onFilterChange, initialFilters = {} }: Fee
     setSelectedCondition('');
     setSelectedPriceRange('any');
     setSchool('');
+    setSelectedRadius(undefined);
+    setUserLat(undefined);
+    setUserLng(undefined);
     if (onFilterChange) {
       onFilterChange({});
     }
@@ -164,6 +215,27 @@ export default function FeedSidebar({ onFilterChange, initialFilters = {} }: Fee
               ...schoolsList.map(s => ({ value: s, label: s }))
             ]}
           />
+        </div>
+
+        {/* Distance Section */}
+        <div className="flex items-center gap-2 text-on-surface-variant px-3 py-2 mt-4">
+          <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 0" }}>my_location</span>
+          <span className="text-label-md font-bold uppercase tracking-wider">Distance</span>
+        </div>
+        <div className="pl-8 flex flex-col gap-2 relative pb-4">
+          {DISTANCE_OPTIONS.map(dist => (
+            <label key={dist.id} className="flex items-center gap-3 text-body-sm font-medium text-on-surface hover:text-primary cursor-pointer group py-1">
+              <input
+                type="radio"
+                name="distanceRange"
+                value={dist.id}
+                checked={selectedRadius === dist.value}
+                onChange={() => handleDistanceChange(dist.value)}
+                className="appearance-none w-5 h-5 rounded-full border border-outline-variant checked:border-[6px] checked:border-primary hover:border-primary transition-all cursor-pointer"
+              />
+              <span className="group-hover:translate-x-1 transition-transform">{dist.label}</span>
+            </label>
+          ))}
         </div>
       </nav>
 

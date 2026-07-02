@@ -2,13 +2,31 @@ import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../../../store/useAuthStore';
 import { getListings } from '../../../services/listingService';
+import { calculateDistanceKm } from '../../../utils/geo';
 import type { Listing, ListingFilter, ItemCondition } from '../../../types';
 import FeedSidebar from '../components/FeedSidebar';
 import HomeDiscoveryView from '../components/HomeDiscoveryView';
 import SearchResultsView from '../components/SearchResultsView';
 
-// Sort listings client-side by same school, then same district, then others
-const sortListingsByPreference = (listings: Listing[], school?: string | null, district?: string | null): Listing[] => {
+// Sort listings client-side by preference or distance
+const sortListingsByPreference = (listings: Listing[], school?: string | null, district?: string | null, userLat?: number, userLng?: number, radiusKm?: number): Listing[] => {
+  // If distance filter is active, filter and sort by distance
+  if (radiusKm && userLat !== undefined && userLng !== undefined) {
+    const withDistance = listings
+      .filter(item => item.coordinates)
+      .map(item => {
+        const distance = calculateDistanceKm(userLat, userLng, item.coordinates!.lat, item.coordinates!.lng);
+        return { ...item, _tempDistance: distance };
+      })
+      .filter(item => item._tempDistance <= radiusKm);
+      
+    // Sort by closest distance
+    return withDistance.sort((a, b) => a._tempDistance - b._tempDistance).map(item => {
+      const { _tempDistance, ...rest } = item;
+      return rest as Listing;
+    });
+  }
+
   if (!school && !district) return listings;
   
   const sameSchool: Listing[] = [];
@@ -55,6 +73,9 @@ export default function HomePage() {
       minPrice: searchParams.has('minPrice') ? Number(searchParams.get('minPrice')) : undefined,
       maxPrice: searchParams.has('maxPrice') ? Number(searchParams.get('maxPrice')) : undefined,
       school: searchParams.get('school') || undefined,
+      radiusKm: searchParams.has('radiusKm') ? Number(searchParams.get('radiusKm')) : undefined,
+      userLat: searchParams.has('userLat') ? Number(searchParams.get('userLat')) : undefined,
+      userLng: searchParams.has('userLng') ? Number(searchParams.get('userLng')) : undefined,
     };
   }, [searchParams]);
 
@@ -71,12 +92,18 @@ export default function HomePage() {
       next.delete('minPrice');
       next.delete('maxPrice');
       next.delete('school');
+      next.delete('radiusKm');
+      next.delete('userLat');
+      next.delete('userLng');
 
       if (newFilters.category) next.set('category', newFilters.category);
       if (newFilters.condition) next.set('condition', newFilters.condition);
       if (newFilters.minPrice !== undefined) next.set('minPrice', newFilters.minPrice.toString());
       if (newFilters.maxPrice !== undefined) next.set('maxPrice', newFilters.maxPrice.toString());
       if (newFilters.school) next.set('school', newFilters.school);
+      if (newFilters.radiusKm !== undefined) next.set('radiusKm', newFilters.radiusKm.toString());
+      if (newFilters.userLat !== undefined) next.set('userLat', newFilters.userLat.toString());
+      if (newFilters.userLng !== undefined) next.set('userLng', newFilters.userLng.toString());
 
       return next;
     });
@@ -101,7 +128,7 @@ export default function HomePage() {
       });
       
       // Apply location-preference sorting
-      const sorted = sortListingsByPreference(data, user?.school, user?.district);
+      const sorted = sortListingsByPreference(data, user?.school, user?.district, filter.userLat, filter.userLng, filter.radiusKm);
       setListings(sorted);
       setIsLoading(false);
     };
@@ -148,6 +175,8 @@ export default function HomePage() {
             activeTab={activeTab}
             setActiveTab={handleSetActiveTab}
             setFilter={updateFiltersInURL}
+            userLat={filter.userLat}
+            userLng={filter.userLng}
           />
         </main>
       )}

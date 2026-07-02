@@ -1,11 +1,14 @@
 import type { Listing } from '../../../types';
 import { useNavigate } from 'react-router-dom';
+import { calculateDistanceKm } from '../../../utils/geo';
 
 interface ListingCardProps {
   listing: Listing;
+  userLat?: number;
+  userLng?: number;
 }
 
-export default function ListingCard({ listing }: ListingCardProps) {
+export default function ListingCard({ listing, userLat, userLng }: ListingCardProps) {
   const navigate = useNavigate();
   
   const handleClick = () => {
@@ -14,6 +17,13 @@ export default function ListingCard({ listing }: ListingCardProps) {
 
   const isFree = listing.isFree || listing.price === 0;
   const formattedPrice = Number(listing.price || 0).toLocaleString('vi-VN');
+  
+  let distanceDisplay = null;
+  if (userLat !== undefined && userLng !== undefined && listing.coordinates) {
+    // If we already sorted by distance, we might have _tempDistance, but we can safely recalculate for display.
+    const dist = calculateDistanceKm(userLat, userLng, listing.coordinates.lat, listing.coordinates.lng);
+    distanceDisplay = dist < 1 ? '< 1 km away' : `${dist.toFixed(1)} km away`;
+  }
 
   return (
     <div 
@@ -53,6 +63,12 @@ export default function ListingCard({ listing }: ListingCardProps) {
 
           {/* Right Badges */}
           <div className="flex flex-col gap-1.5 items-end">
+            {distanceDisplay && (
+              <span className="bg-surface/90 text-on-surface text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm backdrop-blur-md border border-outline-variant/30 flex items-center gap-1">
+                <span className="material-symbols-outlined text-[12px] text-primary">location_on</span>
+                {distanceDisplay}
+              </span>
+            )}
             <span className={`text-[10px] font-bold px-3 py-1 rounded-full shadow-md uppercase tracking-wider backdrop-blur-sm border ${
               listing.condition === 'New' || listing.condition === 'Like New'
                 ? 'bg-secondary/95 text-on-secondary border-secondary-container/20'

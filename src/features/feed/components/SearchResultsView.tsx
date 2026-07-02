@@ -9,6 +9,8 @@ interface SearchResultsViewProps {
   activeTab: 'all' | 'free';
   setActiveTab: (tab: 'all' | 'free') => void;
   setFilter: (filter: ListingFilter) => void;
+  userLat?: number;
+  userLng?: number;
 }
 
 export default function SearchResultsView({
@@ -18,6 +20,8 @@ export default function SearchResultsView({
   activeTab,
   setActiveTab,
   setFilter,
+  userLat,
+  userLng,
 }: SearchResultsViewProps) {
   const [, setSearchParams] = useSearchParams();
 
@@ -71,7 +75,7 @@ export default function SearchResultsView({
       ) : listings.length > 0 ? (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-stack-md md:gap-gutter pb-8">
           {listings.map(listing => (
-            <ListingCard key={listing.id} listing={listing} />
+            <ListingCard key={listing.id} listing={listing} userLat={userLat} userLng={userLng} />
           ))}
         </div>
       ) : (
