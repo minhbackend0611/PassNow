@@ -95,13 +95,6 @@ export default function ChatDetailPage() {
         
         {/* Header */}
         <div className="bg-surface-container-lowest border-b border-outline-variant/30 p-stack-sm md:p-stack-md flex items-center gap-stack-md shrink-0">
-          <button 
-            onClick={() => navigate('/chat')}
-            className="p-2 -ml-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-full transition-colors"
-          >
-            <span className="material-symbols-outlined">arrow_back</span>
-          </button>
-          
           <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 bg-surface-container-high flex items-center justify-center">
             {otherUser?.avatarUrl ? (
               <img src={otherUser.avatarUrl} alt="avatar" className="w-full h-full object-cover" />

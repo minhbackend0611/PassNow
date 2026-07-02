@@ -62,10 +62,21 @@ export default function TopNavBar() {
     <header className="sticky top-0 z-50 flex flex-col w-full bg-surface/70 backdrop-blur-xl border-b border-outline-variant/30 shadow-[0_4px_30px_rgba(0,0,0,0.03)] transition-all duration-300">
       <div className="flex items-center justify-between px-gutter py-stack-sm w-full">
         <div className="flex items-center gap-stack-lg">
-          <Link to="/" className="text-headline-lg font-headline-lg font-black tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent hover:opacity-80 transition-opacity flex items-center gap-1.5">
-            <span className="material-symbols-outlined text-[28px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>eco</span>
-            PassNow
-          </Link>
+          <div className="flex items-center gap-2">
+            {location.pathname !== '/' && location.pathname !== '/browse' && (
+              <button 
+                onClick={() => navigate(-1)}
+                className="p-2 -ml-2 rounded-full hover:bg-surface-variant/50 transition-colors flex items-center justify-center text-on-surface-variant hover:text-primary"
+                title="Go Back"
+              >
+                <span className="material-symbols-outlined text-[24px]">arrow_back</span>
+              </button>
+            )}
+            <Link to="/" className="text-headline-lg font-headline-lg font-black tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent hover:opacity-80 transition-opacity flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-[28px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>eco</span>
+              PassNow
+            </Link>
+          </div>
         <nav className="hidden lg:flex items-center gap-stack-md">
           <Link 
             to="/" 
@@ -133,7 +144,7 @@ export default function TopNavBar() {
                 }
               }
             }}
-            className="pl-11 pr-8 py-2.5 bg-surface-variant/30 backdrop-blur-sm rounded-full border border-outline-variant/50 hover:border-primary/50 hover:shadow-md hover:-translate-y-0.5 focus:border-primary focus:ring-4 focus:ring-primary/20 text-body-md font-body-md w-64 focus:w-80 transition-all duration-300 outline-none shadow-sm" 
+            className="pl-11 pr-8 py-2.5 bg-surface-variant/30 backdrop-blur-sm rounded-full border border-outline-variant/50 hover:border-primary/50 hover:shadow-md hover:-translate-y-0.5 focus:border-primary focus:ring-4 focus:ring-primary/20 text-body-md font-body-md w-64 focus:w-80 transition-all duration-300 outline-none shadow-sm text-left" 
             placeholder="Search items, categories..." 
             type="text" 
           />
@@ -221,8 +232,8 @@ export default function TopNavBar() {
                 }
               }
             }}
-            className="pl-11 pr-8 py-2.5 bg-surface-variant/30 backdrop-blur-sm rounded-full border border-outline-variant/50 focus:border-primary focus:ring-4 focus:ring-primary/20 text-body-md font-body-md w-full transition-all duration-300 outline-none shadow-sm" 
-            placeholder="Search items, categories..." 
+            className="pl-11 pr-8 py-2.5 bg-surface-variant/30 backdrop-blur-sm rounded-full border border-outline-variant/50 focus:border-primary focus:ring-4 focus:ring-primary/20 text-body-md font-body-md w-full transition-all duration-300 outline-none shadow-sm text-left" 
+            placeholder="Search..." 
             type="text" 
           />
           {localQuery && (

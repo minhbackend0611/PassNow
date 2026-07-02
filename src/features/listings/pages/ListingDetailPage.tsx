@@ -223,8 +223,8 @@ export default function ListingDetailPage() {
             </div>
           )}
 
-          {/* Description Card (Moved to Left Column) */}
-          <div className="glass-panel bg-surface-container-lowest/80 backdrop-blur-xl border border-white/60 rounded-[32px] p-6 md:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:border-primary/30 transition-all duration-500 hover:-translate-y-1 flex flex-col gap-stack-sm group mt-2">
+          {/* Description Card (Desktop Only - Left Column) */}
+          <div className="hidden lg:flex glass-panel bg-surface-container-lowest/80 backdrop-blur-xl border border-white/60 rounded-[32px] p-6 md:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:border-primary/30 transition-all duration-500 hover:-translate-y-1 flex-col gap-stack-sm group mt-2">
             <h3 className="text-headline-md font-headline-md text-on-surface flex items-center gap-2">
               <span className="material-symbols-outlined text-primary bg-primary/10 p-1.5 rounded-xl group-hover:scale-110 transition-transform duration-300">description</span>
               Description
@@ -265,6 +265,17 @@ export default function ListingDetailPage() {
             <div className="text-[40px] md:text-[48px] font-black tracking-tighter leading-none bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mt-4 mb-2 inline-block drop-shadow-sm">
               {listing.isFree ? 'FREE' : `${listing.price.toLocaleString('vi-VN')} ₫`}
             </div>
+          </div>
+
+          {/* Description Card (Mobile Only) */}
+          <div className="lg:hidden glass-panel bg-surface-container-lowest/80 backdrop-blur-xl border border-white/60 rounded-[32px] p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] flex flex-col gap-stack-sm">
+            <h3 className="text-headline-sm font-headline-sm text-on-surface flex items-center gap-2">
+              <span className="material-symbols-outlined text-primary bg-primary/10 p-1.5 rounded-xl">description</span>
+              Description
+            </h3>
+            <p className="text-body-md font-body-md text-on-surface-variant leading-relaxed whitespace-pre-wrap">
+              {listing.description}
+            </p>
           </div>
 
           {/* Location & Logistics Card */}

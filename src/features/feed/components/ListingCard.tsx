@@ -18,7 +18,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
   return (
     <div 
       onClick={handleClick}
-      className="group relative bg-gradient-to-br from-surface-container-low/80 to-primary/5 dark:bg-surface-container-lowest/40 backdrop-blur-xl rounded-[32px] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-surface-variant/50 hover:border-primary/20 dark:border-outline-variant/40 hover:shadow-[0_20px_40px_-15px_rgba(0,166,126,0.15)] hover:-translate-y-1 transition-all duration-400 cursor-pointer flex flex-col"
+      className="group relative h-full bg-gradient-to-br from-surface-container-low/80 to-primary/5 dark:bg-surface-container-lowest/40 backdrop-blur-xl rounded-[32px] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-surface-variant/50 hover:border-primary/20 dark:border-outline-variant/40 hover:shadow-[0_20px_40px_-15px_rgba(0,166,126,0.15)] hover:-translate-y-1 transition-all duration-400 cursor-pointer flex flex-col"
     >
       {/* Image Section */}
       <div className="relative aspect-[4/3] sm:aspect-square w-full overflow-hidden bg-surface-variant/30">
@@ -87,7 +87,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
           <span className="truncate">{listing.category || 'Item'}</span>
         </div>
         
-        <h3 className="text-body-lg font-bold text-on-surface line-clamp-2 leading-snug group-hover:text-primary transition-colors duration-300 drop-shadow-sm">
+        <h3 className="text-body-lg font-bold text-on-surface line-clamp-2 min-h-[3rem] leading-snug group-hover:text-primary transition-colors duration-300 drop-shadow-sm">
           {listing.title}
         </h3>
         
