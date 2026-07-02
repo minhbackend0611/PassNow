@@ -1,10 +1,27 @@
 import type { ReactNode } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { auth } from '../../../lib/firebase';
 
 interface AuthLayoutProps {
   children: ReactNode;
 }
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const showBackButton = location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/verify-email' || location.pathname === '/forgot-password';
+
+  const handleBack = async () => {
+    if (location.pathname === '/verify-email') {
+      try {
+        await auth.signOut();
+      } catch (err) {
+        console.error('Error signing out', err);
+      }
+    }
+    navigate(-1);
+  };
+
   return (
     <div className="bg-surface-container-lowest text-on-surface font-body-md min-h-screen flex items-center justify-center relative overflow-hidden">
       {/* Abstract Animated Mesh Gradient Background */}
@@ -13,6 +30,16 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
         <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-secondary/20 blur-[120px] animate-pulse" style={{ animationDuration: '12s', animationDelay: '2s' }}></div>
         <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] rounded-full bg-tertiary/15 blur-[80px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '5s' }}></div>
       </div>
+
+      {showBackButton && (
+        <button 
+          onClick={handleBack}
+          className="absolute top-4 left-4 z-20 flex items-center gap-1 px-3 py-1.5 rounded-full bg-surface-container/50 hover:bg-surface-container text-on-surface-variant hover:text-primary transition-all backdrop-blur-md border border-outline-variant/30 text-sm font-medium"
+        >
+          <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+          Back
+        </button>
+      )}
 
       {/* Main Container */}
       <main className="w-full max-w-[1000px] mx-auto px-margin-mobile md:px-gutter z-10 grid md:grid-cols-2 gap-stack-lg items-center relative">

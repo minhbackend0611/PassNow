@@ -5,6 +5,7 @@ import LoginPage from './features/auth/pages/LoginPage';
 import RegisterPage from './features/auth/pages/RegisterPage';
 import SetupProfilePage from './features/auth/pages/SetupProfilePage';
 import VerifyEmailPage from './features/auth/pages/VerifyEmailPage';
+import ForgotPasswordPage from './features/auth/pages/ForgotPasswordPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import MainLayout from './components/layout/MainLayout';
 import HomePage from './features/feed/pages/HomePage';
@@ -38,6 +39,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         
         {/* Must be logged in, but might not be verified or profiled */}
         <Route element={<ProtectedRoute requireCompleteProfile={false} requireEmailVerification={false} />}>
