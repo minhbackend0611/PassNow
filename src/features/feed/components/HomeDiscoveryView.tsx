@@ -1,6 +1,8 @@
-import { useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import type { Listing, User } from '../../../types';
 import ListingCard from './ListingCard';
+import { calculateDistanceKm } from '../../../utils/geo';
+import { useToastStore } from '../../../store/useToastStore';
 
 interface HomeDiscoveryViewProps {
   listings: Listing[];
@@ -17,6 +19,11 @@ const CATEGORIES = [
 ];
 
 export default function HomeDiscoveryView({ listings, user, onNavigateToSearch }: HomeDiscoveryViewProps) {
+  const { addToast } = useToastStore();
+  const [nearbyListings, setNearbyListings] = useState<Listing[] | null>(null);
+  const [isLocating, setIsLocating] = useState(false);
+  const [userLat, setUserLat] = useState<number | undefined>();
+  const [userLng, setUserLng] = useState<number | undefined>();
 
   // Partition listings for discovery sections
   const { hotDeals, recentlyAdded, freeItems, suggestedItems } = useMemo(() => {
@@ -72,15 +79,23 @@ export default function HomeDiscoveryView({ listings, user, onNavigateToSearch }
           <p className="text-body-lg text-white/90 mb-6 max-w-lg font-medium">
             Join thousands of students buying and selling safely within the university network.
           </p>
-          <button 
-            onClick={() => {
-              const el = document.getElementById('recent-items');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }}
-            className="px-6 py-3 bg-white text-primary rounded-xl font-bold hover:bg-white/90 hover:shadow-[0_8px_24px_rgba(255,255,255,0.3)] hover:-translate-y-1 active:scale-95 transition-all duration-300 shadow-sm"
-          >
-            Start Exploring
-          </button>
+          <div className="flex flex-wrap items-center gap-3">
+            <button 
+              onClick={() => {
+                const el = document.getElementById('recent-items');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="px-6 py-3 bg-white text-primary rounded-xl font-bold hover:bg-white/90 hover:shadow-[0_8px_24px_rgba(255,255,255,0.3)] hover:-translate-y-1 active:scale-95 transition-all duration-300 shadow-sm"
+            >
+              Start Exploring
+            </button>
+            <button 
+              onClick={() => onNavigateToSearch({})}
+              className="px-6 py-3 bg-primary-container/30 backdrop-blur-md text-white border border-white/30 rounded-xl font-bold hover:bg-primary-container/50 hover:shadow-[0_8px_24px_rgba(255,255,255,0.2)] hover:-translate-y-1 active:scale-95 transition-all duration-300 shadow-sm"
+            >
+              Browse All Items
+            </button>
+          </div>
         </div>
         
         {/* Hero Decorative Image Overlay (Glassmorphism card) */}
@@ -120,7 +135,7 @@ export default function HomeDiscoveryView({ listings, user, onNavigateToSearch }
 
       {/* 3. Hot Deals Section */}
       {hotDeals.length > 0 && (
-        <section>
+        <section id="recent-items">
           <div className="flex items-center justify-between mb-4 px-2">
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-error text-[28px]" style={{ fontVariationSettings: "'FILL' 1" }}>local_fire_department</span>
@@ -139,6 +154,96 @@ export default function HomeDiscoveryView({ listings, user, onNavigateToSearch }
           </div>
         </section>
       )}
+
+      {/* 3.5 Nearby Items Section */}
+      <section>
+        <div className="flex items-center justify-between mb-4 px-2">
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-primary text-[28px]" style={{ fontVariationSettings: "'FILL' 1" }}>my_location</span>
+            <h2 className="text-headline-sm font-bold text-on-surface">Nearby Items</h2>
+          </div>
+          {nearbyListings && (
+            <button onClick={() => onNavigateToSearch({ radiusKm: 5, userLat, userLng })} className="text-label-md font-bold text-primary hover:text-primary/80 transition-colors flex items-center gap-1">
+              See all <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </button>
+          )}
+        </div>
+        
+        {!nearbyListings ? (
+          <div className="bg-surface-container-low/50 rounded-3xl p-8 border border-outline-variant/30 flex flex-col items-center justify-center text-center shadow-sm">
+            <div className="w-16 h-16 bg-primary-container text-primary rounded-full flex items-center justify-center mb-4 shadow-sm animate-pulse-soft">
+              <span className="material-symbols-outlined text-[32px]">share_location</span>
+            </div>
+            <h3 className="text-title-md font-bold text-on-surface mb-2">Find items close to you</h3>
+            <p className="text-body-sm text-on-surface-variant max-w-md mb-6">
+              Discover amazing deals right in your neighborhood or campus. Allow location access to find items within a 5km radius.
+            </p>
+            <button 
+              onClick={() => {
+                if (!navigator.geolocation) {
+                  addToast("Geolocation is not supported by your browser.", "error");
+                  return;
+                }
+                setIsLocating(true);
+                navigator.geolocation.getCurrentPosition(
+                  (position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    setUserLat(lat);
+                    setUserLng(lng);
+                    
+                    const nearby = listings
+                      .filter(item => item.coordinates)
+                      .map(item => {
+                        const distance = calculateDistanceKm(lat, lng, item.coordinates!.lat, item.coordinates!.lng);
+                        return { ...item, _tempDistance: distance };
+                      })
+                      .filter(item => item._tempDistance <= 5)
+                      .sort((a, b) => a._tempDistance - b._tempDistance)
+                      .slice(0, 8);
+                    
+                    setNearbyListings(nearby);
+                    setIsLocating(false);
+                  },
+                  (error) => {
+                    console.error("Geolocation error:", error);
+                    addToast("Please allow location access to see nearby items.", "error");
+                    setIsLocating(false);
+                  }
+                );
+              }}
+              disabled={isLocating}
+              className="px-6 py-2.5 bg-primary text-on-primary rounded-xl text-label-md font-bold hover:bg-primary/90 hover:shadow-md transition-all active:scale-95 flex items-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-wait"
+            >
+              {isLocating ? (
+                <>
+                  <div className="animate-spin w-4 h-4 border-2 border-white/30 border-t-white rounded-full"></div>
+                  Locating...
+                </>
+              ) : (
+                <>
+                  <span className="material-symbols-outlined text-[18px]">location_on</span>
+                  Show Nearby Items (&lt; 5km)
+                </>
+              )}
+            </button>
+          </div>
+        ) : nearbyListings.length === 0 ? (
+          <div className="bg-surface-container-low/50 rounded-3xl p-8 border border-outline-variant/30 flex flex-col items-center justify-center text-center shadow-sm">
+            <span className="material-symbols-outlined text-outline text-[40px] mb-2">location_off</span>
+            <h3 className="text-title-md font-bold text-on-surface mb-1">No items found nearby</h3>
+            <p className="text-body-sm text-on-surface-variant">There are currently no items listed within 5km of your location.</p>
+          </div>
+        ) : (
+          <div className="flex gap-stack-md md:gap-gutter overflow-x-auto snap-x pb-6 custom-scrollbar px-2 -mx-2">
+            {nearbyListings.map(listing => (
+              <div key={listing.id} className="snap-start w-[160px] md:w-[220px] flex-shrink-0">
+                <ListingCard listing={listing} userLat={userLat} userLng={userLng} />
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
 
       {/* 4. Suggested for You */}
       {suggestedItems.length > 0 && (
