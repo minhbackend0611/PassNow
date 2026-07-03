@@ -165,8 +165,8 @@ export default function TopNavBar() {
                 }
               }
             }}
-            className="pl-11 pr-8 py-2.5 bg-surface-variant/30 backdrop-blur-sm rounded-full border border-outline-variant/50 hover:border-primary/50 hover:shadow-md hover:-translate-y-0.5 focus:border-primary focus:ring-4 focus:ring-primary/20 text-body-md font-body-md w-64 focus:w-80 transition-all duration-300 outline-none shadow-sm text-left" 
-            placeholder="Search items, categories..." 
+            className="pl-11 pr-8 py-2.5 bg-surface-variant/30 backdrop-blur-sm rounded-full border border-outline-variant/50 hover:border-primary/50 hover:shadow-md hover:-translate-y-0.5 focus:border-primary focus:ring-4 focus:ring-primary/20 text-body-md font-body-md w-64 focus:w-80 transition-all duration-300 outline-none shadow-sm text-left text-ellipsis" 
+            placeholder="Search items..." 
             type="text" 
           />
           {localQuery && (
