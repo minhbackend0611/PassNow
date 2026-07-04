@@ -16,7 +16,7 @@ describe('useChatStore', () => {
     const mockUnsubscribe = vi.fn();
     let callback: any = null;
 
-    vi.mocked(chatService.subscribeToConversations).mockImplementation((userId, cb) => {
+    vi.mocked(chatService.subscribeToConversations).mockImplementation((_userId, cb) => {
       callback = cb;
       return mockUnsubscribe;
     });

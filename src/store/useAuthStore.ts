@@ -13,6 +13,7 @@ interface UserProfile {
   photoURL?: string | null;
   isProfileComplete: boolean;
   emailVerified: boolean;
+  coordinates?: { lat: number; lng: number };
 }
 
 interface AuthState {
@@ -49,6 +50,7 @@ export const useAuthStore = create<AuthState>((set) => ({
                 school: userData.school || null,
                 province: userData.province || null,
                 district: userData.district || null,
+                coordinates: userData.coordinates,
                 isProfileComplete: !!(userData.school && userData.province && userData.district),
                 emailVerified: firebaseUser.emailVerified,
               },
