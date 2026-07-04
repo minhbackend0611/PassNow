@@ -34,6 +34,7 @@ export default function TopNavBar() {
 
   // Update URL when user types (debounced)
   useEffect(() => {
+    if (debouncedQuery !== localQuery) return;
     if (debouncedQuery === (searchParams.get('q') || '')) return;
 
     if (debouncedQuery.trim()) {
@@ -51,7 +52,7 @@ export default function TopNavBar() {
         setSearchParams(newParams);
       }
     }
-  }, [debouncedQuery, location.pathname, navigate, searchParams, setSearchParams]);
+  }, [debouncedQuery, localQuery, location.pathname, navigate, searchParams, setSearchParams]);
 
   const handleSignOut = () => {
     auth.signOut();
