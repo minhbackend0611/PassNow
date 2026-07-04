@@ -5,7 +5,7 @@ export function formatRelativeTime(timestamp: string | number | undefined): stri
   const now = new Date();
   const diffInMs = now.getTime() - date.getTime();
   
-  if (diffInMs < 0) return 'Vừa xong';
+  if (diffInMs < 0) return 'Just now';
 
   const diffInSeconds = Math.floor(diffInMs / 1000);
   const diffInMinutes = Math.floor(diffInSeconds / 60);
@@ -14,11 +14,11 @@ export function formatRelativeTime(timestamp: string | number | undefined): stri
   const diffInMonths = Math.floor(diffInDays / 30);
   const diffInYears = Math.floor(diffInDays / 365);
 
-  if (diffInSeconds < 60) return 'Vừa xong';
-  if (diffInMinutes < 60) return `${diffInMinutes} phút trước`;
-  if (diffInHours < 24) return `${diffInHours} giờ trước`;
-  if (diffInDays < 30) return `${diffInDays} ngày trước`;
-  if (diffInMonths < 12) return `${diffInMonths} tháng trước`;
+  if (diffInSeconds < 60) return 'Just now';
+  if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+  if (diffInHours < 24) return `${diffInHours}h ago`;
+  if (diffInDays < 30) return `${diffInDays}d ago`;
+  if (diffInMonths < 12) return `${diffInMonths}mo ago`;
   
-  return `${diffInYears} năm trước`;
+  return `${diffInYears}y ago`;
 }

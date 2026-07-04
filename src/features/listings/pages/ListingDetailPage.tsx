@@ -274,7 +274,7 @@ export default function ListingDetailPage() {
             </div>
             <div className="flex items-center gap-1.5 text-on-surface-variant text-body-sm font-medium">
               <span className="material-symbols-outlined text-[18px]">schedule</span>
-              Đăng {formatRelativeTime(listing.createdAt)}
+              Posted {formatRelativeTime(listing.createdAt)}
             </div>
           </div>
 

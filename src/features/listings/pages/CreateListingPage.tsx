@@ -459,19 +459,19 @@ export default function CreateListingPage() {
               </div>
 
               <div>
-                <label className="block text-label-md font-label-md text-on-surface mb-stack-xs" htmlFor="usageTime">Thời gian sử dụng</label>
+                <label className="block text-label-md font-label-md text-on-surface mb-stack-xs" htmlFor="usageTime">Usage time</label>
                 <div className="relative z-10">
                   <CustomSelect
                     value={watch('usageTime') || ""}
                     onChange={(val) => setValue('usageTime', val, { shouldValidate: true, shouldDirty: true })}
                     options={[
-                      { value: 'Dưới 1 tháng', label: 'Dưới 1 tháng' },
-                      { value: '1 - 6 tháng', label: '1 - 6 tháng' },
-                      { value: '6 - 12 tháng', label: '6 - 12 tháng' },
-                      { value: 'Trên 1 năm', label: 'Trên 1 năm' },
-                      { value: 'Chưa sử dụng', label: 'Chưa sử dụng' },
+                      { value: 'Under 1 month', label: 'Under 1 month' },
+                      { value: '1 - 6 months', label: '1 - 6 months' },
+                      { value: '6 - 12 months', label: '6 - 12 months' },
+                      { value: 'Over 1 year', label: 'Over 1 year' },
+                      { value: 'Never used', label: 'Never used' },
                     ]}
-                    placeholder="Không bắt buộc"
+                    placeholder="Optional"
                     error={!!errors.usageTime}
                   />
                 </div>
