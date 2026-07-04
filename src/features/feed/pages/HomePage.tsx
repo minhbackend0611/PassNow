@@ -10,18 +10,24 @@ import SearchResultsView from '../components/SearchResultsView';
 
 // Sort listings client-side by preference or distance
 const sortListingsByPreference = (listings: Listing[], school?: string | null, district?: string | null, userLat?: number, userLng?: number, radiusKm?: number): Listing[] => {
-  // If distance filter is active, filter and sort by distance
-  if (radiusKm && userLat !== undefined && userLng !== undefined) {
-    const withDistance = listings
-      .filter(item => item.coordinates)
-      .map(item => {
-        const distance = calculateDistanceKm(userLat, userLng, item.coordinates!.lat, item.coordinates!.lng);
+  // If user location is available, prioritize sorting by distance
+  if (userLat !== undefined && userLng !== undefined) {
+    const withDistance = listings.map(item => {
+      if (item.coordinates) {
+        const distance = calculateDistanceKm(userLat, userLng, item.coordinates.lat, item.coordinates.lng);
         return { ...item, _tempDistance: distance };
-      })
-      .filter(item => item._tempDistance <= radiusKm);
+      }
+      return { ...item, _tempDistance: Infinity }; // No coordinates = very far
+    });
+
+    // If radius is provided, filter out items outside the radius
+    let filtered = withDistance;
+    if (radiusKm !== undefined) {
+      filtered = withDistance.filter(item => item._tempDistance <= radiusKm);
+    }
       
     // Sort by closest distance
-    return withDistance.sort((a, b) => a._tempDistance - b._tempDistance).map(item => {
+    return filtered.sort((a, b) => a._tempDistance - b._tempDistance).map(item => {
       const { _tempDistance, ...rest } = item;
       return rest as Listing;
     });
@@ -61,6 +67,7 @@ export default function HomePage() {
   const [listings, setListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [autoLocation, setAutoLocation] = useState<{lat: number, lng: number} | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
   const browseMode = searchParams.get('browse') === 'true';
@@ -119,6 +126,22 @@ export default function HomePage() {
   };
 
   useEffect(() => {
+    // Automatically fetch location if permission was already granted
+    if (filter.userLat === undefined && filter.userLng === undefined) {
+      if (navigator.permissions && navigator.permissions.query) {
+        navigator.permissions.query({ name: 'geolocation' }).then(result => {
+          if (result.state === 'granted') {
+            navigator.geolocation.getCurrentPosition(
+              pos => setAutoLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+              err => console.error("Auto location error:", err)
+            );
+          }
+        }).catch(() => { /* ignore */ });
+      }
+    }
+  }, [filter.userLat, filter.userLng]);
+
+  useEffect(() => {
     const fetchListings = async () => {
       setIsLoading(true);
       const data = await getListings({
@@ -127,14 +150,28 @@ export default function HomePage() {
         isFree: activeTab === 'free' ? true : undefined
       });
       
+      const finalLat = filter.userLat ?? autoLocation?.lat;
+      const finalLng = filter.userLng ?? autoLocation?.lng;
+
       // Apply location-preference sorting
-      const sorted = sortListingsByPreference(data, user?.school, user?.district, filter.userLat, filter.userLng, filter.radiusKm);
+      const sorted = sortListingsByPreference(data, user?.school, user?.district, finalLat, finalLng, filter.radiusKm);
       setListings(sorted);
       setIsLoading(false);
     };
 
     fetchListings();
-  }, [filter, activeTab, user, searchQuery]);
+  }, [filter, searchQuery, activeTab, user?.school, user?.district]); // Intentionally omitting autoLocation to avoid refetching
+
+  // Re-sort in place if autoLocation arrives after fetch
+  useEffect(() => {
+    if (autoLocation && filter.userLat === undefined) {
+      setListings(prev => {
+        // Only resort if there are items to sort
+        if (prev.length === 0) return prev;
+        return sortListingsByPreference(prev, user?.school, user?.district, autoLocation.lat, autoLocation.lng, filter.radiusKm);
+      });
+    }
+  }, [autoLocation, user?.school, user?.district, filter.radiusKm, filter.userLat]);
 
   return (
     <div className="flex-1 flex w-full relative bg-surface">
@@ -178,8 +215,8 @@ export default function HomePage() {
             activeTab={activeTab}
             setActiveTab={handleSetActiveTab}
             setFilter={updateFiltersInURL}
-            userLat={filter.userLat}
-            userLng={filter.userLng}
+            userLat={filter.userLat ?? autoLocation?.lat}
+            userLng={filter.userLng ?? autoLocation?.lng}
           />
         </main>
       )}
