@@ -67,7 +67,7 @@ export default function HomePage() {
   const [listings, setListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
-  const [autoLocation, setAutoLocation] = useState<{lat: number, lng: number} | null>(null);
+  const [autoLocation, setAutoLocation] = useState<{lat: number, lng: number} | null>(user?.coordinates || null);
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
   const browseMode = searchParams.get('browse') === 'true';
@@ -126,13 +126,28 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    // Automatically fetch location if permission was already granted
+    // If user's profile location becomes available later, use it as fallback
+    if (user?.coordinates && !autoLocation) {
+      setAutoLocation(user.coordinates);
+    }
+  }, [user?.coordinates, autoLocation]);
+
+  useEffect(() => {
+    // Automatically fetch live location if permission was already granted
     if (filter.userLat === undefined && filter.userLng === undefined) {
       if (navigator.permissions && navigator.permissions.query) {
         navigator.permissions.query({ name: 'geolocation' }).then(result => {
           if (result.state === 'granted') {
             navigator.geolocation.getCurrentPosition(
-              pos => setAutoLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+              pos => {
+                const newLoc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+                // Only update if it's significantly different to avoid unnecessary flickers
+                setAutoLocation(prev => {
+                  if (!prev) return newLoc;
+                  const dist = calculateDistanceKm(prev.lat, prev.lng, newLoc.lat, newLoc.lng);
+                  return dist > 0.5 ? newLoc : prev; // Only update if > 500m difference
+                });
+              },
               err => console.error("Auto location error:", err)
             );
           }
