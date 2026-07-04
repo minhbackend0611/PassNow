@@ -5,6 +5,8 @@ import { useChatStore } from '../../store/useChatStore';
 import { useTransactionStore } from '../../store/useTransactionStore';
 import { auth } from '../../lib/firebase';
 import { useDebounce } from '../../hooks/useDebounce';
+import { getListings } from '../../services/listingService';
+import type { Listing } from '../../types';
 
 export default function TopNavBar() {
   const { user } = useAuthStore();
@@ -32,27 +34,67 @@ export default function TopNavBar() {
     }
   }, [queryParam]);
 
-  // Update URL when user types (debounced)
-  useEffect(() => {
-    if (debouncedQuery !== localQuery) return;
-    if (debouncedQuery === (searchParams.get('q') || '')) return;
+  const [liveResults, setLiveResults] = useState<Listing[]>([]);
+  const [showLiveDropdown, setShowLiveDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Fetch live search results
+  useEffect(() => {
     if (debouncedQuery.trim()) {
-      if (location.pathname !== '/') {
-        navigate(`/?q=${encodeURIComponent(debouncedQuery)}`);
-      } else {
-        const newParams = new URLSearchParams(searchParams);
-        newParams.set('q', debouncedQuery);
-        setSearchParams(newParams);
-      }
+      getListings({ searchQuery: debouncedQuery }).then(results => {
+        setLiveResults(results.slice(0, 5));
+        setShowLiveDropdown(true);
+      });
     } else {
-      if (location.pathname === '/') {
-        const newParams = new URLSearchParams(searchParams);
-        newParams.delete('q');
-        setSearchParams(newParams);
-      }
+      setLiveResults([]);
+      setShowLiveDropdown(false);
     }
-  }, [debouncedQuery, localQuery, location.pathname, navigate, searchParams, setSearchParams]);
+  }, [debouncedQuery]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // Need to handle closing, but we might click inside the input.
+      // So we attach ref to a wrapper or handle it differently.
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowLiveDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const renderLiveSearchDropdown = () => {
+    if (!showLiveDropdown || liveResults.length === 0) return null;
+    return (
+      <div ref={dropdownRef} className="absolute top-full left-0 right-0 mt-2 bg-surface/95 backdrop-blur-xl border border-outline-variant/30 shadow-[0_8px_30px_rgba(0,0,0,0.12)] rounded-2xl overflow-hidden z-[100] flex flex-col max-h-[60vh] overflow-y-auto">
+        {liveResults.map(item => (
+          <div 
+            key={item.id} 
+            onClick={() => {
+              navigate(`/listings/${item.id}`);
+              setShowLiveDropdown(false);
+              setLocalQuery('');
+            }} 
+            className="flex items-center gap-3 p-3 hover:bg-surface-variant/50 cursor-pointer transition-colors border-b border-outline-variant/10 last:border-0"
+          >
+            <div className="w-10 h-10 rounded-lg bg-surface-variant/30 flex-shrink-0 overflow-hidden">
+              {item.images?.[0] ? (
+                <img src={item.images[0]} alt="" className="w-full h-full object-cover" />
+              ) : (
+                <span className="material-symbols-outlined w-full h-full flex items-center justify-center text-on-surface-variant/50 text-[20px]">image</span>
+              )}
+            </div>
+            <div className="flex-1 min-w-0 flex flex-col justify-center">
+              <h4 className="text-label-md font-bold text-on-surface truncate">{item.title}</h4>
+              <div className="text-label-sm text-primary font-bold">
+                {item.isFree ? 'Free' : `${item.price?.toLocaleString('vi-VN')} ₫`}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   const handleSignOut = () => {
     auth.signOut();
@@ -147,6 +189,7 @@ export default function TopNavBar() {
           className="relative hidden xl:block group"
           onSubmit={(e) => {
             e.preventDefault();
+            setShowLiveDropdown(false);
             if (localQuery.trim()) {
               if (location.pathname !== '/') {
                 navigate(`/?q=${encodeURIComponent(localQuery)}`);
@@ -165,7 +208,12 @@ export default function TopNavBar() {
           <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary group-hover:scale-110 group-hover:text-primary transition-all duration-300" style={{ fontVariationSettings: "'FILL' 0" }}>search</span>
           <input 
             value={localQuery}
-            onChange={(e) => setLocalQuery(e.target.value)}
+            onChange={(e) => {
+              setLocalQuery(e.target.value);
+              setShowLiveDropdown(true);
+            }}
+            onFocus={() => setShowLiveDropdown(true)}
+            onClick={(e) => e.stopPropagation()}
             className="pl-11 pr-8 py-2.5 bg-surface-variant/30 backdrop-blur-sm rounded-full border border-outline-variant/50 hover:border-primary/50 hover:shadow-md hover:-translate-y-0.5 focus:border-primary focus:ring-4 focus:ring-primary/20 text-body-md font-body-md w-64 focus:w-80 transition-all duration-300 outline-none shadow-sm text-left text-ellipsis" 
             placeholder="Search items..." 
             type="text" 
@@ -179,6 +227,7 @@ export default function TopNavBar() {
               <span className="material-symbols-outlined text-[18px]">close</span>
             </button>
           )}
+          {renderLiveSearchDropdown()}
         </form>
         
         <Link to="/list">
@@ -236,6 +285,7 @@ export default function TopNavBar() {
           className="relative group w-full"
           onSubmit={(e) => {
             e.preventDefault();
+            setShowLiveDropdown(false);
             if (localQuery.trim()) {
               if (location.pathname !== '/') {
                 navigate(`/?q=${encodeURIComponent(localQuery)}`);
@@ -254,7 +304,12 @@ export default function TopNavBar() {
           <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant" style={{ fontVariationSettings: "'FILL' 0" }}>search</span>
           <input 
             value={localQuery}
-            onChange={(e) => setLocalQuery(e.target.value)}
+            onChange={(e) => {
+              setLocalQuery(e.target.value);
+              setShowLiveDropdown(true);
+            }}
+            onFocus={() => setShowLiveDropdown(true)}
+            onClick={(e) => e.stopPropagation()}
             className="pl-11 pr-8 py-2.5 bg-surface-variant/30 backdrop-blur-sm rounded-full border border-outline-variant/50 focus:border-primary focus:ring-4 focus:ring-primary/20 text-body-md font-body-md w-full transition-all duration-300 outline-none shadow-sm text-left" 
             placeholder="Search..." 
             type="text" 
@@ -275,6 +330,7 @@ export default function TopNavBar() {
               <span className="material-symbols-outlined text-[18px]">close</span>
             </button>
           )}
+          {renderLiveSearchDropdown()}
         </form>
       </div>
     </header>
