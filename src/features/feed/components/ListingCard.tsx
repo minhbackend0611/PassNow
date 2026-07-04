@@ -103,7 +103,13 @@ export default function ListingCard({ listing, userLat, userLng }: ListingCardPr
       {/* Content Section */}
       <div className="p-4 sm:p-5 flex flex-col flex-1 gap-2">
         <div className="flex items-center gap-1.5 text-primary text-[10px] sm:text-[11px] font-bold uppercase tracking-widest">
-          <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>category</span> 
+          <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+            {listing.category === 'Books' ? 'book' :
+             listing.category === 'Electronics' ? 'devices' :
+             listing.category === 'Furniture' ? 'chair' :
+             listing.category === 'Clothing' ? 'apparel' :
+             listing.category === 'Other' ? 'more_horiz' : 'category'}
+          </span> 
           <span className="truncate">{listing.category || 'Item'}</span>
         </div>
         

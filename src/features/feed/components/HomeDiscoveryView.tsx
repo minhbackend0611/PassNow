@@ -7,6 +7,8 @@ import { useToastStore } from '../../../store/useToastStore';
 interface HomeDiscoveryViewProps {
   listings: Listing[];
   user: User | null;
+  userLat?: number;
+  userLng?: number;
   onNavigateToSearch: (filters: any) => void;
 }
 
@@ -18,12 +20,17 @@ const CATEGORIES = [
   { id: 'Other', name: 'Other', icon: 'more_horiz', color: 'from-gray-500 to-slate-500' },
 ];
 
-export default function HomeDiscoveryView({ listings, user, onNavigateToSearch }: HomeDiscoveryViewProps) {
+export default function HomeDiscoveryView({ listings, user, userLat, userLng, onNavigateToSearch }: HomeDiscoveryViewProps) {
   const { addToast } = useToastStore();
   const [nearbyListings, setNearbyListings] = useState<Listing[] | null>(null);
   const [isLocating, setIsLocating] = useState(false);
-  const [userLat, setUserLat] = useState<number | undefined>();
-  const [userLng, setUserLng] = useState<number | undefined>();
+  
+  // Use props if available, otherwise local state if manually fetched
+  const [localLat, setLocalLat] = useState<number | undefined>();
+  const [localLng, setLocalLng] = useState<number | undefined>();
+  
+  const displayLat = userLat ?? localLat;
+  const displayLng = userLng ?? localLng;
 
   // Partition listings for discovery sections
   const { hotDeals, recentlyAdded, freeItems, suggestedItems } = useMemo(() => {
@@ -148,7 +155,7 @@ export default function HomeDiscoveryView({ listings, user, onNavigateToSearch }
           <div className="flex gap-stack-md md:gap-gutter overflow-x-auto snap-x pb-6 custom-scrollbar px-2 -mx-2">
             {hotDeals.map(listing => (
               <div key={listing.id} className="snap-start w-[160px] md:w-[220px] flex-shrink-0">
-                <ListingCard listing={listing} />
+                <ListingCard listing={listing} userLat={displayLat} userLng={displayLng} />
               </div>
             ))}
           </div>
@@ -189,8 +196,8 @@ export default function HomeDiscoveryView({ listings, user, onNavigateToSearch }
                   (position) => {
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
-                    setUserLat(lat);
-                    setUserLng(lng);
+                    setLocalLat(lat);
+                    setLocalLng(lng);
                     
                     const nearby = listings
                       .filter(item => item.coordinates)
@@ -202,6 +209,8 @@ export default function HomeDiscoveryView({ listings, user, onNavigateToSearch }
                       .sort((a, b) => a._tempDistance - b._tempDistance)
                       .slice(0, 8);
                     
+                    setLocalLat(lat);
+                    setLocalLng(lng);
                     setNearbyListings(nearby);
                     setIsLocating(false);
                   },
@@ -238,7 +247,7 @@ export default function HomeDiscoveryView({ listings, user, onNavigateToSearch }
           <div className="flex gap-stack-md md:gap-gutter overflow-x-auto snap-x pb-6 custom-scrollbar px-2 -mx-2">
             {nearbyListings.map(listing => (
               <div key={listing.id} className="snap-start w-[160px] md:w-[220px] flex-shrink-0">
-                <ListingCard listing={listing} userLat={userLat} userLng={userLng} />
+                <ListingCard listing={listing} userLat={displayLat} userLng={displayLng} />
               </div>
             ))}
           </div>
@@ -256,7 +265,7 @@ export default function HomeDiscoveryView({ listings, user, onNavigateToSearch }
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-stack-md md:gap-gutter">
             {suggestedItems.slice(0, 4).map(listing => (
-              <ListingCard key={listing.id} listing={listing} />
+              <ListingCard key={listing.id} listing={listing} userLat={displayLat} userLng={displayLng} />
             ))}
           </div>
         </section>
@@ -273,7 +282,7 @@ export default function HomeDiscoveryView({ listings, user, onNavigateToSearch }
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-stack-md md:gap-gutter">
             {recentlyAdded.map(listing => (
-              <ListingCard key={listing.id} listing={listing} />
+              <ListingCard key={listing.id} listing={listing} userLat={displayLat} userLng={displayLng} />
             ))}
           </div>
         </section>
@@ -291,7 +300,7 @@ export default function HomeDiscoveryView({ listings, user, onNavigateToSearch }
           <div className="flex gap-stack-md md:gap-gutter overflow-x-auto snap-x pb-6 custom-scrollbar px-2 -mx-2">
             {freeItems.map(listing => (
               <div key={listing.id} className="snap-start w-[160px] md:w-[220px] flex-shrink-0">
-                <ListingCard listing={listing} />
+                <ListingCard listing={listing} userLat={displayLat} userLng={displayLng} />
               </div>
             ))}
           </div>
