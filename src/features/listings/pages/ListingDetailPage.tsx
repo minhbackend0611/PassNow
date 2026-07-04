@@ -253,7 +253,13 @@ export default function ListingDetailPage() {
               </span>
               {listing.usageTime && (
                 <span className="bg-secondary-container text-on-secondary-container text-label-sm font-bold px-3 py-1.5 rounded-full border border-secondary/20 shadow-sm">
-                  {listing.usageTime}
+                  {{
+                    'Dưới 1 tháng': 'Under 1 month',
+                    '1 - 6 tháng': '1 - 6 months',
+                    '6 - 12 tháng': '6 - 12 months',
+                    'Trên 1 năm': 'Over 1 year',
+                    'Chưa sử dụng': 'Never used'
+                  }[listing.usageTime] || listing.usageTime}
                 </span>
               )}
               <span className="text-on-surface-variant text-label-sm font-label-sm flex items-center gap-1 bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant/30">
