@@ -190,6 +190,8 @@ export default function HomePage() {
         <HomeDiscoveryView 
           listings={listings} 
           user={user} 
+          userLat={filter.userLat ?? autoLocation?.lat}
+          userLng={filter.userLng ?? autoLocation?.lng}
           onNavigateToSearch={(filters) => {
             setSearchParams(prev => {
               const next = new URLSearchParams(prev);
