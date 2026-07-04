@@ -5,6 +5,7 @@ import * as z from 'zod';
 import { doc, setDoc } from 'firebase/firestore';
 import { updateProfile } from 'firebase/auth';
 import { auth, db } from '../../../lib/firebase';
+import StudentBadge from '../../../components/ui/StudentBadge';
 import { useAuthStore } from '../../../store/useAuthStore';
 import { CustomSelect } from '../../../components/ui/CustomSelect';
 
@@ -217,7 +218,9 @@ export default function ProfilePage() {
       {/* Main Content Canvas */}
       <main className="flex-1 max-w-3xl">
         <div className="mb-stack-lg">
-          <h1 className="text-headline-xl-mobile md:text-headline-xl font-headline-xl-mobile md:font-headline-xl mb-stack-xs">Account Settings</h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-headline-xl-mobile md:text-headline-xl font-headline-xl-mobile md:font-headline-xl mb-stack-xs">Account Settings</h1>
+          </div>
           <p className="text-body-md font-body-md text-on-surface-variant">Manage your profile information and verified credentials.</p>
         </div>
 
@@ -272,7 +275,10 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="group/input">
-                  <label htmlFor="email" className="block text-label-sm font-label-sm text-on-surface-variant mb-1 font-semibold">Email Address</label>
+                  <div className="flex items-center gap-2 mb-1">
+                    <label htmlFor="email" className="block text-label-sm font-label-sm text-on-surface-variant font-semibold">Email Address</label>
+                    <StudentBadge email={authUser?.email} variant="full" />
+                  </div>
                   <div className="flex gap-2 items-center">
                     <input 
                       id="email"

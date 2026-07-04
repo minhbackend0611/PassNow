@@ -6,6 +6,7 @@ import { subscribeToMessages, getConversationMetadata, sendMessage, markAsRead }
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../lib/firebase';
 import type { Message, Conversation } from '../../../types';
+import StudentBadge from '../../../components/ui/StudentBadge';
 
 export default function ChatDetailPage() {
   const { id: conversationId } = useParams<{ id: string }>();
@@ -15,7 +16,7 @@ export default function ChatDetailPage() {
   
   const [messages, setMessages] = useState<Message[]>([]);
   const [metadata, setMetadata] = useState<Conversation['metadata'] | null>(null);
-  const [otherUser, setOtherUser] = useState<{ displayName: string; avatarUrl: string | null } | null>(null);
+  const [otherUser, setOtherUser] = useState<{ displayName: string; avatarUrl: string | null; email: string | null } | null>(null);
   const [listingData, setListingData] = useState<{ title: string; image: string | null } | null>(null);
   
   const [inputText, setInputText] = useState('');
@@ -38,7 +39,7 @@ export default function ChatDetailPage() {
       const userSnap = await getDoc(doc(db, 'users', otherUserId));
       if (userSnap.exists()) {
         const uData = userSnap.data();
-        setOtherUser({ displayName: uData.displayName, avatarUrl: uData.avatarUrl });
+        setOtherUser({ displayName: uData.displayName, avatarUrl: uData.avatarUrl, email: uData.email || null });
       }
 
       // Fetch listing
@@ -105,9 +106,12 @@ export default function ChatDetailPage() {
           
           <div className="flex-1 min-w-0 flex flex-col md:flex-row md:items-center justify-between gap-2">
             <div>
-              <h2 className="text-title-md font-title-md text-on-surface truncate">
-                {otherUser ? otherUser.displayName : 'Loading...'}
-              </h2>
+              <div className="flex items-center gap-2">
+                <h2 className="text-title-md font-title-md text-on-surface truncate">
+                  {otherUser ? otherUser.displayName : 'Loading...'}
+                </h2>
+                <StudentBadge email={otherUser?.email} variant="minimal" className="shadow-sm" />
+              </div>
             </div>
             {listingData && (
               <div 

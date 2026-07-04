@@ -1,6 +1,7 @@
 import type { Listing } from '../../../types';
 import { useNavigate } from 'react-router-dom';
 import { calculateDistanceKm } from '../../../utils/geo';
+import StudentBadge from '../../../components/ui/StudentBadge';
 
 interface ListingCardProps {
   listing: Listing;
@@ -58,6 +59,9 @@ export default function ListingCard({ listing, userLat, userLng }: ListingCardPr
               <span className="bg-primary/95 text-on-primary text-[10px] font-bold px-3 py-1 rounded-full shadow-md uppercase tracking-widest backdrop-blur-sm border border-primary-container/20 w-fit">
                 FREE
               </span>
+            )}
+            {listing.sellerEmail && (
+              <StudentBadge email={listing.sellerEmail} variant="minimal" className="shadow-lg backdrop-blur-sm" />
             )}
           </div>
 

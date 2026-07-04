@@ -5,6 +5,7 @@ import { subscribeToConversations } from '../../../services/chatService';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../lib/firebase';
 import type { Conversation } from '../../../types';
+import StudentBadge from '../../../components/ui/StudentBadge';
 
 interface ChatPreviewProps {
   conversation: Conversation;
@@ -13,7 +14,7 @@ interface ChatPreviewProps {
 
 const ChatPreview = ({ conversation, currentUserId }: ChatPreviewProps) => {
   const navigate = useNavigate();
-  const [otherUser, setOtherUser] = useState<{ displayName: string; avatarUrl: string | null } | null>(null);
+  const [otherUser, setOtherUser] = useState<{ displayName: string; avatarUrl: string | null; email: string | null } | null>(null);
   const [listingTitle, setListingTitle] = useState<string | null>(null);
   const [listingImage, setListingImage] = useState<string | null>(null);
 
@@ -28,6 +29,7 @@ const ChatPreview = ({ conversation, currentUserId }: ChatPreviewProps) => {
         setOtherUser({
           displayName: data.displayName || 'Unknown User',
           avatarUrl: data.avatarUrl || null,
+          email: data.email || null,
         });
       }
 
@@ -76,7 +78,10 @@ const ChatPreview = ({ conversation, currentUserId }: ChatPreviewProps) => {
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-center mb-1">
           <h3 className={`text-label-lg font-label-lg truncate flex items-center gap-2 ${unreadCount > 0 ? 'text-primary' : 'text-on-surface'}`}>
-            <span className="font-bold">{otherUser ? otherUser.displayName : 'Loading...'}</span>
+            <div className="flex items-center gap-1.5">
+              <span className="font-bold">{otherUser ? otherUser.displayName : 'Loading...'}</span>
+              <StudentBadge email={otherUser?.email} variant="minimal" />
+            </div>
             <span className="text-on-surface-variant/50 text-[10px]">●</span>
             <span className="text-body-sm font-normal text-on-surface-variant truncate">{listingTitle || 'Loading item...'}</span>
           </h3>

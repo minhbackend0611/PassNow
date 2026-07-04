@@ -8,6 +8,7 @@ import { startConversation } from '../../../services/chatService';
 import type { Listing, User, Transaction } from '../../../types';
 import { Button } from '../../../components/ui/button';
 import { useAuthStore } from '../../../store/useAuthStore';
+import StudentBadge from '../../../components/ui/StudentBadge';
 
 export default function ListingDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -314,7 +315,10 @@ export default function ListingDetailPage() {
                   )}
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-title-md font-title-md text-on-surface group-hover:text-primary transition-colors">{seller?.displayName || 'Unknown Seller'}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-title-md font-title-md text-on-surface group-hover:text-primary transition-colors">{seller?.displayName || 'Unknown Seller'}</span>
+                    <StudentBadge email={seller?.email} variant="full" />
+                  </div>
                   {seller?.school && (
                     <span className="text-body-sm font-medium text-on-surface-variant mt-1 flex items-center gap-1.5">
                       <span className="material-symbols-outlined text-[16px] text-primary">school</span>

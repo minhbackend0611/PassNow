@@ -5,6 +5,7 @@ import { getUserById } from '../../../services/userService';
 import { getListings } from '../../../services/listingService';
 import type { User, Listing } from '../../../types';
 import ListingCard from '../../feed/components/ListingCard';
+import StudentBadge from '../../../components/ui/StudentBadge';
 
 export default function PublicProfilePage() {
   const { userId } = useParams<{ userId: string }>();
@@ -133,7 +134,10 @@ export default function PublicProfilePage() {
           
           {/* User Meta */}
           <div className="flex flex-col gap-1 flex-1">
-            <h1 className="text-headline-xl-mobile md:text-headline-xl font-headline-xl-mobile md:font-headline-xl text-on-surface">{user.displayName || 'Student User'}</h1>
+            <div className="flex items-center gap-3">
+              <h1 className="text-headline-xl-mobile md:text-headline-xl font-headline-xl-mobile md:font-headline-xl text-on-surface">{user.displayName || 'Student User'}</h1>
+              <StudentBadge email={user.email} variant="full" />
+            </div>
             
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-body-md font-body-md text-on-surface-variant">
               <span className="flex items-center gap-1">

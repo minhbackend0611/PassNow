@@ -24,6 +24,7 @@ export interface Listing {
   condition: ItemCondition;
   images: string[];
   sellerId: string;
+  sellerEmail?: string; // Optional for backward compatibility, used for verification badges
   school: string; // Used for broad filtering
   province: string; // Used for broad filtering
   district: string; // Used for broad filtering

@@ -114,8 +114,18 @@ export const createListing = async (
   listingData: Omit<Listing, 'id' | 'createdAt' | 'status' | 'updatedAt'>
 ): Promise<string | null> => {
   try {
+    let sellerEmail = listingData.sellerEmail;
+    if (!sellerEmail) {
+      const sellerRef = doc(db, USERS_COLLECTION, listingData.sellerId);
+      const sellerSnap = await getDoc(sellerRef);
+      if (sellerSnap.exists()) {
+        sellerEmail = sellerSnap.data().email;
+      }
+    }
+
     const docRef = await addDoc(collection(db, LISTINGS_COLLECTION), {
       ...listingData,
+      sellerEmail: sellerEmail || null,
       status: 'available',
       createdAt: Date.now(),
       quantity: listingData.quantity ?? 1,
