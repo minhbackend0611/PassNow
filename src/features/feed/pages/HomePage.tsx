@@ -162,9 +162,12 @@ export default function HomePage() {
               if (filters.minPrice !== undefined) next.set('minPrice', filters.minPrice.toString());
               if (filters.maxPrice !== undefined) next.set('maxPrice', filters.maxPrice.toString());
               if (filters.school) next.set('school', filters.school);
+              if (filters.radiusKm !== undefined) next.set('radiusKm', filters.radiusKm.toString());
+              if (filters.userLat !== undefined) next.set('userLat', filters.userLat.toString());
+              if (filters.userLng !== undefined) next.set('userLng', filters.userLng.toString());
               return next;
             });
-          }} 
+          }}
         />
       ) : (
         <main className="flex-1 overflow-y-auto px-margin-mobile md:px-8 lg:px-10 py-8 min-h-0">
