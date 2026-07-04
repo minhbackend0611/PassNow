@@ -9,6 +9,7 @@ import type { Listing, User, Transaction } from '../../../types';
 import { Button } from '../../../components/ui/button';
 import { useAuthStore } from '../../../store/useAuthStore';
 import StudentBadge from '../../../components/ui/StudentBadge';
+import { formatRelativeTime } from '../../../utils/formatTime';
 
 export default function ListingDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -250,6 +251,11 @@ export default function ListingDetailPage() {
               <span className="bg-primary-container text-on-primary-container text-label-sm font-bold px-3 py-1.5 rounded-full border border-primary/20 shadow-sm">
                 {listing.condition}
               </span>
+              {listing.usageTime && (
+                <span className="bg-secondary-container text-on-secondary-container text-label-sm font-bold px-3 py-1.5 rounded-full border border-secondary/20 shadow-sm">
+                  {listing.usageTime}
+                </span>
+              )}
               <span className="text-on-surface-variant text-label-sm font-label-sm flex items-center gap-1 bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant/30">
                 <span className="material-symbols-outlined text-[16px]">category</span> {listing.category}
               </span>
@@ -265,6 +271,10 @@ export default function ListingDetailPage() {
             </h1>
             <div className="text-[40px] md:text-[48px] font-black tracking-tighter leading-none bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mt-4 mb-2 inline-block drop-shadow-sm">
               {listing.isFree ? 'FREE' : `${listing.price.toLocaleString('vi-VN')} ₫`}
+            </div>
+            <div className="flex items-center gap-1.5 text-on-surface-variant text-body-sm font-medium">
+              <span className="material-symbols-outlined text-[18px]">schedule</span>
+              Đăng {formatRelativeTime(listing.createdAt)}
             </div>
           </div>
 

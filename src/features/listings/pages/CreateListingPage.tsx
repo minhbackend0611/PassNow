@@ -14,6 +14,7 @@ const createListingSchema = z.object({
   title: z.string().min(1, { message: 'Title is required' }).max(100),
   category: z.string().min(1, { message: 'Category is required' }),
   condition: z.string().min(1, { message: 'Condition is required' }),
+  usageTime: z.string().optional(),
   description: z.string(),
   listingType: z.enum(['sell', 'free']),
   price: z.coerce.number().min(0).optional(),
@@ -53,6 +54,7 @@ export default function CreateListingPage() {
     defaultValues: {
       listingType: 'sell',
       description: '',
+      usageTime: '',
       specificAddress: '',
       quantity: 1,
     }
@@ -87,6 +89,7 @@ export default function CreateListingPage() {
             title: listing.title,
             category: listing.category,
             condition: listing.condition,
+            usageTime: listing.usageTime || '',
             description: listing.description,
             listingType: listing.isFree ? 'free' : 'sell',
             price: listing.isFree ? undefined : listing.price,
@@ -278,6 +281,7 @@ export default function CreateListingPage() {
           price: isFree ? 0 : (data.price || 0),
           isFree,
           condition: data.condition as ItemCondition,
+          usageTime: data.usageTime,
           category: data.category,
           quantity: data.quantity,
           images: finalImages,
@@ -298,6 +302,7 @@ export default function CreateListingPage() {
           price: isFree ? 0 : (data.price || 0),
           isFree,
           condition: data.condition as ItemCondition,
+          usageTime: data.usageTime,
           category: data.category,
           quantity: data.quantity,
           images: finalImages,
@@ -450,6 +455,25 @@ export default function CreateListingPage() {
                   />
                 </div>
                 {errors.condition && <span className="text-label-sm font-label-sm text-error mt-1 block">{errors.condition.message}</span>}
+              </div>
+
+              <div>
+                <label className="block text-label-md font-label-md text-on-surface mb-stack-xs" htmlFor="usageTime">Thời gian sử dụng</label>
+                <div className="relative z-10">
+                  <CustomSelect
+                    value={watch('usageTime') || ""}
+                    onChange={(val) => setValue('usageTime', val, { shouldValidate: true, shouldDirty: true })}
+                    options={[
+                      { value: 'Dưới 1 tháng', label: 'Dưới 1 tháng' },
+                      { value: '1 - 6 tháng', label: '1 - 6 tháng' },
+                      { value: '6 - 12 tháng', label: '6 - 12 tháng' },
+                      { value: 'Trên 1 năm', label: 'Trên 1 năm' },
+                      { value: 'Chưa sử dụng', label: 'Chưa sử dụng' },
+                    ]}
+                    placeholder="Không bắt buộc"
+                    error={!!errors.usageTime}
+                  />
+                </div>
               </div>
 
               <div className="relative group/qty">

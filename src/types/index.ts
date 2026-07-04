@@ -22,6 +22,7 @@ export interface Listing {
   description: string;
   price: number;
   condition: ItemCondition;
+  usageTime?: string;
   images: string[];
   sellerId: string;
   sellerEmail?: string; // Optional for backward compatibility, used for verification badges
