@@ -67,7 +67,7 @@ describe('FeedSidebar', () => {
       expect(screen.getByText('Textbooks & Books')).toBeInTheDocument();
     });
 
-    const resetBtn = screen.getByRole('button', { name: /Reset All/i });
+    const resetBtn = screen.getByRole('button', { name: /Clear Filters/i });
     fireEvent.click(resetBtn);
 
     expect(handleFilterChange).toHaveBeenCalledWith({});

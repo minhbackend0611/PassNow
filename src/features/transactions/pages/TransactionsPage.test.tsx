@@ -3,9 +3,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import TransactionsPage from './TransactionsPage';
 import { useAuthStore } from '../../../store/useAuthStore';
-import { getUserTransactions } from '../../../services/transactionService';
+import { useTransactionStore } from '../../../store/useTransactionStore';
 
 vi.mock('../../../store/useAuthStore');
+vi.mock('../../../store/useTransactionStore');
 vi.mock('../../../services/transactionService');
 vi.mock('../../../services/reviewService', () => ({
   getReviewsByReviewer: vi.fn().mockResolvedValue([]),
@@ -33,25 +34,31 @@ describe('TransactionsPage', () => {
 
   it('prompts to login if not logged in', () => {
     vi.mocked(useAuthStore).mockReturnValue({ user: null } as unknown as ReturnType<typeof useAuthStore>);
+    vi.mocked(useTransactionStore).mockReturnValue({ transactions: [], buyingActionRequiredCount: 0, sellingActionRequiredCount: 0 } as unknown as ReturnType<typeof useTransactionStore>);
     renderComponent();
     expect(screen.getByText(/Please log in/i)).toBeInTheDocument();
   });
 
   it('renders transactions list', async () => {
     vi.mocked(useAuthStore).mockReturnValue({ user: { uid: 'buyer_123' } } as unknown as ReturnType<typeof useAuthStore>);
-    vi.mocked(getUserTransactions).mockResolvedValue([
-      {
-        id: 'tx_1',
-        listingId: 'listing_1',
-        listingTitle: 'Laptop',
-        sellerId: 'seller_123',
-        buyerId: 'buyer_123',
-        sellerConfirmed: false,
-        buyerConfirmed: false,
-        status: 'pending',
-        createdAt: Date.now()
-      }
-    ]);
+    vi.mocked(useTransactionStore).mockReturnValue({
+      transactions: [
+        {
+          id: 'tx_1',
+          listingId: 'listing_1',
+          listingTitle: 'Laptop',
+          sellerId: 'seller_123',
+          buyerId: 'buyer_123',
+          sellerConfirmed: true,
+          buyerConfirmed: false,
+          status: 'pending',
+          createdAt: Date.now()
+        }
+      ],
+      buyingActionRequiredCount: 0,
+      sellingActionRequiredCount: 0,
+      initializeListener: vi.fn(),
+    } as unknown as ReturnType<typeof useTransactionStore>);
 
     renderComponent();
 

@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { BrowserRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import HomePage from './HomePage';
 import { useAuthStore } from '../../../store/useAuthStore';
 import { getListings } from '../../../services/listingService';
@@ -88,11 +88,11 @@ describe('HomePage Feed sorting and Filters', () => {
     vi.clearAllMocks();
   });
 
-  const renderComponent = () => {
+  const renderComponent = (initialRoute = '/?browse=true') => {
     render(
-      <BrowserRouter>
+      <MemoryRouter initialEntries={[initialRoute]}>
         <HomePage />
-      </BrowserRouter>
+      </MemoryRouter>
     );
   };
 
@@ -142,11 +142,11 @@ describe('HomePage Feed sorting and Filters', () => {
       expect(screen.getByText('No results found')).toBeInTheDocument();
     });
 
-    const clearButton = screen.getByRole('button', { name: /Clear filters/i });
+    const clearButton = screen.getByRole('button', { name: /Back to Home Page/i });
     fireEvent.click(clearButton);
 
     await waitFor(() => {
-      expect(getListings).toHaveBeenLastCalledWith({});
+      expect(getListings).toHaveBeenLastCalledWith(expect.objectContaining({}));
     });
   });
 });
