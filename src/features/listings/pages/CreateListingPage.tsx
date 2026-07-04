@@ -13,8 +13,8 @@ import { useToastStore } from '../../../store/useToastStore';
 const createListingSchema = z.object({
   title: z.string().min(1, { message: 'Title is required' }).max(100),
   category: z.string().min(1, { message: 'Category is required' }),
-  condition: z.string().min(1, { message: 'Condition is required' }),
-  usageTime: z.string().optional(),
+  condition: z.string().min(1, 'Please select a condition'),
+  isFree: z.boolean().default(false),
   description: z.string(),
   listingType: z.enum(['sell', 'free']),
   price: z.coerce.number().min(0).optional(),
@@ -53,8 +53,9 @@ export default function CreateListingPage() {
     resolver: zodResolver(createListingSchema) as any,
     defaultValues: {
       listingType: 'sell',
+      condition: '',
+      isFree: false,
       description: '',
-      usageTime: '',
       specificAddress: '',
       quantity: 1,
     }
@@ -89,8 +90,8 @@ export default function CreateListingPage() {
             title: listing.title,
             category: listing.category,
             condition: listing.condition,
-            usageTime: listing.usageTime || '',
             description: listing.description,
+            isFree: listing.isFree || false,
             listingType: listing.isFree ? 'free' : 'sell',
             price: listing.isFree ? undefined : listing.price,
             quantity: listing.quantity || 1,
@@ -282,7 +283,6 @@ export default function CreateListingPage() {
           price: isFree ? 0 : (data.price || 0),
           isFree,
           condition: data.condition as ItemCondition,
-          usageTime: data.usageTime,
           category: data.category,
           quantity: data.quantity,
           images: finalImages,
@@ -303,7 +303,6 @@ export default function CreateListingPage() {
           price: isFree ? 0 : (data.price || 0),
           isFree,
           condition: data.condition as ItemCondition,
-          usageTime: data.usageTime,
           category: data.category,
           quantity: data.quantity,
           images: finalImages,
@@ -456,25 +455,6 @@ export default function CreateListingPage() {
                   />
                 </div>
                 {errors.condition && <span className="text-label-sm font-label-sm text-error mt-1 block">{errors.condition.message}</span>}
-              </div>
-
-              <div>
-                <label className="block text-label-md font-label-md text-on-surface mb-stack-xs" htmlFor="usageTime">Usage time</label>
-                <div className="relative z-10">
-                  <CustomSelect
-                    value={watch('usageTime') || ""}
-                    onChange={(val) => setValue('usageTime', val, { shouldValidate: true, shouldDirty: true })}
-                    options={[
-                      { value: 'Under 1 month', label: 'Under 1 month' },
-                      { value: '1 - 6 months', label: '1 - 6 months' },
-                      { value: '6 - 12 months', label: '6 - 12 months' },
-                      { value: 'Over 1 year', label: 'Over 1 year' },
-                      { value: 'Never used', label: 'Never used' },
-                    ]}
-                    placeholder="Optional"
-                    error={!!errors.usageTime}
-                  />
-                </div>
               </div>
 
               <div className="relative group/qty">
