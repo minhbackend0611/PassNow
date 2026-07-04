@@ -325,7 +325,7 @@ export default function CreateListingPage() {
   };
 
   return (
-    <main className="flex-grow flex items-start justify-center p-gutter md:p-stack-lg bg-surface-container-low/50">
+    <main className="flex-grow flex items-start justify-center p-gutter pb-28 md:p-stack-lg bg-surface-container-low/50">
       <div className="w-full max-w-3xl flex flex-col gap-6">
         
         {/* Header Area */}
