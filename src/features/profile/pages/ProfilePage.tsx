@@ -6,6 +6,7 @@ import { doc, setDoc } from 'firebase/firestore';
 import { updateProfile } from 'firebase/auth';
 import { auth, db } from '../../../lib/firebase';
 import StudentBadge from '../../../components/ui/StudentBadge';
+import { isStudentEmail } from '../../../utils/student';
 import { useAuthStore } from '../../../store/useAuthStore';
 import { CustomSelect } from '../../../components/ui/CustomSelect';
 
@@ -379,20 +380,20 @@ export default function ProfilePage() {
             Verified Credentials
           </h3>
           <div className="space-y-stack-md">
-            <div className="group/cred flex items-center justify-between p-stack-md bg-surface-container/50 hover:bg-surface-container rounded-[24px] border border-outline-variant/50 hover:border-primary/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-md cursor-default">
-              <div className="flex items-center gap-stack-md">
-                <div className="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center group-hover/cred:scale-110 transition-transform duration-300 shadow-sm">
-                  <span className="material-symbols-outlined">verified_user</span>
+            {isStudentEmail(authUser?.email) && (
+              <div className="group/cred flex items-center justify-between p-stack-md bg-surface-container/50 hover:bg-surface-container rounded-[24px] border border-outline-variant/50 hover:border-primary/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-md cursor-default">
+                <div className="flex items-center gap-stack-md">
+                  <div className="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center group-hover/cred:scale-110 transition-transform duration-300 shadow-sm">
+                    <span className="material-symbols-outlined">verified_user</span>
+                  </div>
+                  <div>
+                    <h4 className="text-label-md font-label-md text-on-surface">Student Status</h4>
+                    <p className="text-label-sm font-label-sm text-on-surface-variant">Verified via {authUser?.email}</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-label-md font-label-md text-on-surface">Student Status</h4>
-                  <p className="text-label-sm font-label-sm text-on-surface-variant">Verified via {authUser?.email}</p>
-                </div>
+                <StudentBadge email={authUser?.email} variant="full" />
               </div>
-              <span className="text-primary text-label-sm font-label-sm flex items-center gap-1 bg-primary/10 px-3 py-1.5 rounded-full border border-primary/20 shadow-sm group-hover/cred:bg-primary group-hover/cred:text-white transition-colors duration-300">
-                <span className="material-symbols-outlined text-[16px]">check_circle</span> Verified
-              </span>
-            </div>
+            )}
 
             <div className="group/cred flex items-center justify-between p-stack-md bg-surface-container/50 hover:bg-surface-container rounded-[24px] border border-outline-variant/50 hover:border-secondary/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-md cursor-default">
               <div className="flex items-center gap-stack-md">
