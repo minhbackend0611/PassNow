@@ -53,9 +53,9 @@ export default function TopNavBar() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      // Need to handle closing, but we might click inside the input.
-      // So we attach ref to a wrapper or handle it differently.
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      const target = event.target as Element;
+      // If click is not inside any search form or dropdown, close it
+      if (!target.closest('.search-form-container') && !target.closest('.live-search-dropdown')) {
         setShowLiveDropdown(false);
       }
     };
@@ -66,7 +66,7 @@ export default function TopNavBar() {
   const renderLiveSearchDropdown = () => {
     if (!showLiveDropdown || liveResults.length === 0) return null;
     return (
-      <div ref={dropdownRef} className="absolute top-full left-0 right-0 mt-2 bg-surface/95 backdrop-blur-xl border border-outline-variant/30 shadow-[0_8px_30px_rgba(0,0,0,0.12)] rounded-2xl overflow-hidden z-[100] flex flex-col max-h-[60vh] overflow-y-auto">
+      <div className="live-search-dropdown absolute top-full left-0 right-0 mt-2 bg-surface/95 backdrop-blur-xl border border-outline-variant/30 shadow-[0_8px_30px_rgba(0,0,0,0.12)] rounded-2xl overflow-hidden z-[100] flex flex-col max-h-[60vh] overflow-y-auto">
         {liveResults.map(item => (
           <div 
             key={item.id} 
@@ -186,7 +186,7 @@ export default function TopNavBar() {
 
       <div className="flex items-center gap-stack-md">
         <form 
-          className="relative hidden xl:block group"
+          className="search-form-container relative hidden xl:block group"
           onSubmit={(e) => {
             e.preventDefault();
             setShowLiveDropdown(false);
@@ -282,7 +282,7 @@ export default function TopNavBar() {
       {/* Mobile Search Bar */}
       <div className="px-gutter pb-3 block xl:hidden w-full">
         <form 
-          className="relative group w-full"
+          className="search-form-container relative group w-full"
           onSubmit={(e) => {
             e.preventDefault();
             setShowLiveDropdown(false);
