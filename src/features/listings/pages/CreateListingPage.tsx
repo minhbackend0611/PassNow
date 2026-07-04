@@ -247,6 +247,7 @@ export default function CreateListingPage() {
       const rawValue = e.currentTarget.value;
       const numericString = rawValue.replace(/\D/g, '');
       if (numericString) {
+        e.preventDefault();
         const newValue = parseInt(numericString + '000', 10);
         setValue('price', newValue, { shouldValidate: true });
       }
@@ -555,7 +556,7 @@ export default function CreateListingPage() {
                   {/* Background hint for Tab */}
                   <div className="absolute inset-0 pl-10 pr-4 flex items-center pointer-events-none z-20 overflow-hidden text-body-md font-body-md whitespace-pre">
                     <span className="text-transparent">{formatCurrency(watch('price'))}</span>
-                    {watch('price') !== undefined && watch('price') !== null && String(watch('price')).length > 0 && !String(watch('price')).endsWith('000') && (
+                    {watch('price') !== undefined && watch('price') !== null && String(watch('price')).length > 0 && (
                       <span className="text-on-surface-variant/40 flex items-center gap-1 animate-fade-in">
                         .000 <kbd className="text-[10px] bg-surface-variant text-on-surface-variant px-1 rounded ml-1 font-sans">Tab ⇥</kbd>
                       </span>
