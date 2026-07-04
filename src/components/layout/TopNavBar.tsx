@@ -143,42 +143,43 @@ export default function TopNavBar() {
       </div>
 
       <div className="flex items-center gap-stack-md">
-        <div className="relative hidden xl:block group">
+        <form 
+          className="relative hidden xl:block group"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (localQuery.trim()) {
+              if (location.pathname !== '/') {
+                navigate(`/?q=${encodeURIComponent(localQuery)}`);
+              } else {
+                const newParams = new URLSearchParams(searchParams);
+                newParams.set('q', localQuery);
+                setSearchParams(newParams);
+              }
+            } else if (location.pathname === '/') {
+              const newParams = new URLSearchParams(searchParams);
+              newParams.delete('q');
+              setSearchParams(newParams);
+            }
+          }}
+        >
           <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary group-hover:scale-110 group-hover:text-primary transition-all duration-300" style={{ fontVariationSettings: "'FILL' 0" }}>search</span>
           <input 
             value={localQuery}
             onChange={(e) => setLocalQuery(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                if (localQuery.trim()) {
-                  if (location.pathname !== '/') {
-                    navigate(`/?q=${encodeURIComponent(localQuery)}`);
-                  } else {
-                    const newParams = new URLSearchParams(searchParams);
-                    newParams.set('q', localQuery);
-                    setSearchParams(newParams);
-                  }
-                } else if (location.pathname === '/') {
-                  const newParams = new URLSearchParams(searchParams);
-                  newParams.delete('q');
-                  setSearchParams(newParams);
-                }
-              }
-            }}
             className="pl-11 pr-8 py-2.5 bg-surface-variant/30 backdrop-blur-sm rounded-full border border-outline-variant/50 hover:border-primary/50 hover:shadow-md hover:-translate-y-0.5 focus:border-primary focus:ring-4 focus:ring-primary/20 text-body-md font-body-md w-64 focus:w-80 transition-all duration-300 outline-none shadow-sm text-left text-ellipsis" 
             placeholder="Search items..." 
             type="text" 
           />
           {localQuery && (
             <button 
+              type="button"
               onClick={() => setLocalQuery('')}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-error transition-colors flex items-center justify-center"
             >
               <span className="material-symbols-outlined text-[18px]">close</span>
             </button>
           )}
-        </div>
+        </form>
         
         <Link to="/list">
           <button className="relative overflow-hidden group bg-gradient-to-r from-primary to-secondary text-white text-label-md font-bold px-5 py-2.5 rounded-full hover:shadow-[0_8px_20px_rgba(0,166,126,0.25)] hover:-translate-y-0.5 transition-all duration-300 hidden sm:flex items-center gap-1.5">
@@ -231,35 +232,36 @@ export default function TopNavBar() {
 
       {/* Mobile Search Bar */}
       <div className="px-gutter pb-3 block xl:hidden w-full">
-        <div className="relative group w-full">
+        <form 
+          className="relative group w-full"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (localQuery.trim()) {
+              if (location.pathname !== '/') {
+                navigate(`/?q=${encodeURIComponent(localQuery)}`);
+              } else {
+                const newParams = new URLSearchParams(searchParams);
+                newParams.set('q', localQuery);
+                setSearchParams(newParams);
+              }
+            } else if (location.pathname === '/') {
+              const newParams = new URLSearchParams(searchParams);
+              newParams.delete('q');
+              setSearchParams(newParams);
+            }
+          }}
+        >
           <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant" style={{ fontVariationSettings: "'FILL' 0" }}>search</span>
           <input 
             value={localQuery}
             onChange={(e) => setLocalQuery(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                if (localQuery.trim()) {
-                  if (location.pathname !== '/') {
-                    navigate(`/?q=${encodeURIComponent(localQuery)}`);
-                  } else {
-                    const newParams = new URLSearchParams(searchParams);
-                    newParams.set('q', localQuery);
-                    setSearchParams(newParams);
-                  }
-                } else if (location.pathname === '/') {
-                  const newParams = new URLSearchParams(searchParams);
-                  newParams.delete('q');
-                  setSearchParams(newParams);
-                }
-              }
-            }}
             className="pl-11 pr-8 py-2.5 bg-surface-variant/30 backdrop-blur-sm rounded-full border border-outline-variant/50 focus:border-primary focus:ring-4 focus:ring-primary/20 text-body-md font-body-md w-full transition-all duration-300 outline-none shadow-sm text-left" 
             placeholder="Search..." 
             type="text" 
           />
           {localQuery && (
             <button 
+              type="button"
               onClick={() => {
                 setLocalQuery('');
                 if (location.pathname === '/') {
@@ -273,7 +275,7 @@ export default function TopNavBar() {
               <span className="material-symbols-outlined text-[18px]">close</span>
             </button>
           )}
-        </div>
+        </form>
       </div>
     </header>
   );
