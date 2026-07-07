@@ -68,7 +68,7 @@ export default function HomeDiscoveryView({ listings, user, userLat, userLng, on
       `}</style>
       
       {/* 1. Enhanced Hero Banner */}
-      <section className="relative w-full h-[240px] md:h-[300px] rounded-[32px] overflow-hidden flex items-center shadow-lg group cursor-pointer transition-transform duration-500 hover:shadow-[0_16px_40px_rgba(0,166,126,0.15)]">
+      <section className="relative w-full min-h-[320px] md:min-h-[300px] h-auto py-8 md:py-0 rounded-[32px] overflow-hidden flex items-center shadow-lg group cursor-pointer transition-transform duration-500 hover:shadow-[0_16px_40px_rgba(0,166,126,0.15)]">
         <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/80 to-secondary/90 z-0"></div>
         
         {/* Abstract animated shapes */}

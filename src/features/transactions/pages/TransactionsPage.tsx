@@ -128,7 +128,7 @@ function TransactionItem({
       </div>
 
       {/* Visual Stepper */}
-      <div className="relative flex items-center justify-between w-full max-w-2xl mt-2 mb-2 self-center">
+      <div className="relative flex items-start justify-between w-full max-w-2xl mt-2 mb-2 self-center">
         {/* Background Line */}
         <div className="absolute left-6 right-6 top-[24px] -translate-y-1/2 h-1.5 bg-surface-variant rounded-full z-0"></div>
         {/* Progress Line */}
