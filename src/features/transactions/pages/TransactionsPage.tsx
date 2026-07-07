@@ -142,7 +142,7 @@ function TransactionItem({
           <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center shadow-md">
             <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
           </div>
-          <span className="text-label-sm font-bold text-on-surface bg-surface-container-lowest/80 px-2 py-0.5 rounded-xl text-center leading-tight">Requested</span>
+          <div className="inline-block text-label-sm font-bold text-on-surface bg-surface-container-lowest/80 px-2 py-0.5 rounded-xl text-center leading-tight max-w-[80px] sm:max-w-none">Requested</div>
         </div>
 
         {/* Step 2: Handover */}
@@ -154,9 +154,9 @@ function TransactionItem({
               handshake
             </span>
           </div>
-          <span className={`text-label-sm font-bold bg-surface-container-lowest/80 px-2 py-0.5 rounded-xl text-center leading-tight ${isCompleted ? 'text-on-surface' : 'text-primary'}`}>
+          <div className={`inline-block text-label-sm font-bold bg-surface-container-lowest/80 px-2 py-0.5 rounded-xl text-center leading-tight max-w-[80px] sm:max-w-none ${isCompleted ? 'text-on-surface' : 'text-primary'}`}>
             {handoverText}
-          </span>
+          </div>
         </div>
 
         {/* Step 3: Completed / Cancelled */}
@@ -168,9 +168,9 @@ function TransactionItem({
               {tx.status === 'cancelled' ? 'cancel' : 'verified'}
             </span>
           </div>
-          <span className={`text-label-sm font-bold bg-surface-container-lowest/80 px-2 py-0.5 rounded-xl text-center leading-tight max-w-[80px] sm:max-w-none ${isCompleted ? 'text-primary' : tx.status === 'cancelled' ? 'text-error' : 'text-on-surface-variant'}`}>
+          <div className={`inline-block text-label-sm font-bold bg-surface-container-lowest/80 px-2 py-0.5 rounded-xl text-center leading-tight max-w-[80px] sm:max-w-none ${isCompleted ? 'text-primary' : tx.status === 'cancelled' ? 'text-error' : 'text-on-surface-variant'}`}>
             {tx.status === 'cancelled' ? 'Failed / Cancelled' : 'Completed'}
-          </span>
+          </div>
         </div>
       </div>
 

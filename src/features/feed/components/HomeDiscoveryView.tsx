@@ -75,8 +75,8 @@ export default function HomeDiscoveryView({ listings, user, userLat, userLng, on
         <div className="absolute top-0 right-10 w-72 h-72 bg-white/20 rounded-full blur-3xl -translate-y-1/2 group-hover:scale-125 transition-transform duration-1000 ease-out z-0 animate-float-slow"></div>
         <div className="absolute bottom-10 left-20 w-48 h-48 bg-secondary/40 rounded-full blur-2xl group-hover:translate-x-10 group-hover:-translate-y-4 transition-transform duration-1000 ease-out z-0 animate-float-fast"></div>
         
-        <div className="relative z-10 px-8 md:px-12 w-full max-w-3xl">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-white text-label-sm font-bold mb-4 border border-white/20">
+        <div className="relative z-10 px-6 sm:px-8 md:px-12 w-full max-w-3xl">
+          <div className="inline-flex w-fit items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/25 shadow-sm text-white text-label-sm font-bold mb-4 border border-white/30 backdrop-blur-sm whitespace-nowrap">
             <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>eco</span>
             Welcome to PassNow
           </div>
@@ -86,19 +86,19 @@ export default function HomeDiscoveryView({ listings, user, userLat, userLng, on
           <p className="text-body-lg text-white/90 mb-6 max-w-lg font-medium">
             Join thousands of students buying and selling safely within the university network.
           </p>
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <button 
               onClick={() => {
                 const el = document.getElementById('recent-items');
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="px-6 py-3 bg-white text-primary rounded-xl font-bold hover:bg-white/90 hover:shadow-[0_8px_24px_rgba(255,255,255,0.3)] hover:-translate-y-1 active:scale-95 transition-all duration-300 shadow-sm"
+              className="px-6 py-3 w-full sm:w-auto bg-white text-primary rounded-xl font-bold hover:bg-white/90 hover:shadow-[0_8px_24px_rgba(255,255,255,0.3)] hover:-translate-y-1 active:scale-95 transition-all duration-300 shadow-sm flex items-center justify-center"
             >
               Start Exploring
             </button>
             <button 
               onClick={() => onNavigateToSearch({})}
-              className="px-6 py-3 bg-primary-container/30 backdrop-blur-md text-white border border-white/30 rounded-xl font-bold hover:bg-primary-container/50 hover:shadow-[0_8px_24px_rgba(255,255,255,0.2)] hover:-translate-y-1 active:scale-95 transition-all duration-300 shadow-sm"
+              className="px-6 py-3 w-full sm:w-auto bg-primary-container/30 backdrop-blur-md text-white border border-white/30 rounded-xl font-bold hover:bg-primary-container/50 hover:shadow-[0_8px_24px_rgba(255,255,255,0.2)] hover:-translate-y-1 active:scale-95 transition-all duration-300 shadow-sm flex items-center justify-center"
             >
               Browse All Items
             </button>
