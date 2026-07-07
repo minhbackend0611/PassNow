@@ -10,7 +10,7 @@ import { useTransactionStore } from '../../../store/useTransactionStore';
 import { submitReview, getReviewsByReviewer } from '../../../services/reviewService';
 import { startConversation } from '../../../services/chatService';
 import { getUserById } from '../../../services/userService';
-import { getListingById } from '../../../services/listingService';
+import { getListingById, getListings } from '../../../services/listingService';
 import ReviewModal from '../../reviews/components/ReviewModal';
 import { ConfirmModal } from '../../../components/ui/ConfirmModal';
 import { useToastStore } from '../../../store/useToastStore';
@@ -289,15 +289,17 @@ function CancelledRequestsList({ txs, isBuyer }: { txs: any[], isBuyer: boolean 
   );
 }
 
-function ListingQueueHeader({ listingId, firstTx, activeCount }: { listingId: string, firstTx: any, activeCount: number }) {
-  const [listing, setListing] = useState<any>(null);
+function ListingQueueHeader({ listingId, firstTx, fallbackListing, activeCount }: { listingId: string, firstTx?: any, fallbackListing?: any, activeCount: number }) {
+  const [listing, setListing] = useState<any>(fallbackListing || null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    getListingById(listingId).then(res => {
-      if (res && res.listing) setListing(res.listing);
-    });
-  }, [listingId]);
+    if (!fallbackListing) {
+      getListingById(listingId).then(res => {
+        if (res && res.listing) setListing(res.listing);
+      });
+    }
+  }, [listingId, fallbackListing]);
 
   return (
     <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 px-2 border-b border-outline-variant/20 pb-6">
@@ -316,8 +318,8 @@ function ListingQueueHeader({ listingId, firstTx, activeCount }: { listingId: st
         )}
         <div className="flex flex-col gap-1.5">
           <div className="flex flex-wrap items-center gap-2">
-            <h2 className="text-title-lg font-bold text-on-surface group-hover/header:text-primary transition-colors truncate max-w-[150px] sm:max-w-[200px] md:max-w-md" title={firstTx.listingTitle}>
-              {firstTx.listingTitle}
+            <h2 className="text-title-lg font-bold text-on-surface group-hover/header:text-primary transition-colors truncate max-w-[150px] sm:max-w-[200px] md:max-w-md" title={firstTx?.listingTitle || listing?.title}>
+              {firstTx?.listingTitle || listing?.title || 'Loading...'}
             </h2>
             {listing && listing.status === 'pending' && (
               <span className="bg-warning/10 text-warning px-2 py-0.5 rounded-md text-label-sm font-bold border border-warning/20 whitespace-nowrap">
@@ -374,6 +376,14 @@ export default function TransactionsPage() {
   
   const [activeTab, setActiveTab] = useState<'buying' | 'selling'>('buying');
   const [showActionRequiredOnly, setShowActionRequiredOnly] = useState(false);
+  
+  const [myListings, setMyListings] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (user && activeTab === 'selling') {
+      getListings({ sellerId: user.uid }).then(setMyListings);
+    }
+  }, [user, activeTab]);
   const [isLoading, setIsLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
   
@@ -555,14 +565,21 @@ export default function TransactionsPage() {
 
   // Group selling transactions by listing to show queues
   const groupedSellingTxs = sellingTxs.reduce((acc, tx) => {
-    if (!acc[tx.listingId]) acc[tx.listingId] = { active: [], cancelled: [] };
+    if (!acc[tx.listingId]) acc[tx.listingId] = { active: [], cancelled: [], fallbackListing: null };
     if (tx.status === 'cancelled') {
       acc[tx.listingId].cancelled.push(tx);
     } else {
       acc[tx.listingId].active.push(tx);
     }
     return acc;
-  }, {} as Record<string, { active: Transaction[], cancelled: Transaction[] }>);
+  }, {} as Record<string, { active: Transaction[], cancelled: Transaction[], fallbackListing: any | null }>);
+
+  // Inject empty queues for active/pending listings with no requests
+  myListings.forEach(listing => {
+    if (listing.status !== 'sold' && !groupedSellingTxs[listing.id]) {
+      groupedSellingTxs[listing.id] = { active: [], cancelled: [], fallbackListing: listing };
+    }
+  });
 
   // Sort each group ascending (oldest first = highest priority in queue)
   Object.values(groupedSellingTxs).forEach(group => {
@@ -676,10 +693,14 @@ export default function TransactionsPage() {
         ) : activeTab === 'selling' ? (
           Object.entries(groupedSellingTxs).map(([listingId, group]) => {
             const firstTx = group.active[0] || group.cancelled[0];
-            if (!firstTx) return null;
             return (
               <div key={listingId} className="flex flex-col gap-4 mb-4 bg-surface-container-lowest/30 p-6 rounded-[32px] border border-outline-variant/30 shadow-inner">
-                <ListingQueueHeader listingId={listingId} firstTx={firstTx} activeCount={group.active.length} />
+                <ListingQueueHeader 
+                  listingId={listingId} 
+                  firstTx={firstTx} 
+                  fallbackListing={group.fallbackListing}
+                  activeCount={group.active.length} 
+                />
                 
                 <div className="flex flex-col gap-4 mt-2">
                   {group.active.length === 0 ? (
