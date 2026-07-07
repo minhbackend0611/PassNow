@@ -150,9 +150,30 @@ export const VIETNAM_UNIVERSITIES: University[] = [
 ];
 
 export const getUniversityByName = (name: string): University | undefined => {
-  const lowercaseName = name.toLowerCase();
+  const lowercaseName = name.toLowerCase().trim();
+  
+  // Clean up common words to improve fuzzy matching
+  const cleanName = lowercaseName
+    .replace('university of', '')
+    .replace('university', '')
+    .replace('đại học', '')
+    .replace('trường', '')
+    .trim();
+
   return VIETNAM_UNIVERSITIES.find(
-    u => u.name.toLowerCase() === lowercaseName || 
-         (u.aliases && u.aliases.some(alias => alias.toLowerCase() === lowercaseName))
+    u => {
+      const uName = u.name.toLowerCase();
+      // Exact or partial match on main name
+      if (uName.includes(cleanName) || cleanName.includes(uName)) return true;
+      
+      // Match aliases
+      if (u.aliases) {
+        return u.aliases.some(alias => {
+          const lowerAlias = alias.toLowerCase();
+          return lowerAlias.includes(cleanName) || cleanName.includes(lowerAlias);
+        });
+      }
+      return false;
+    }
   );
 };

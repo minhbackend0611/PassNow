@@ -125,6 +125,7 @@ export default function LocationPicker({
       }
     } else {
       // Fallback: School not in our curated DB, use Nominatim as fallback
+      alert(`Trường của bạn (${userSchool}) chưa có trong hệ thống dữ liệu Đa cơ sở (Multi-campus) của PassNow. Hệ thống sẽ dùng bản đồ thông thường để tìm tự động.`);
       setIsLocating(true);
       fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(userSchool)}&countrycodes=vn&limit=1`)
         .then(res => res.json())
