@@ -315,10 +315,20 @@ function ListingQueueHeader({ listingId, firstTx, activeCount }: { listingId: st
           </div>
         )}
         <div className="flex flex-col gap-1.5">
-          <div className="flex items-center gap-2">
-            <h2 className="text-title-lg font-bold text-on-surface group-hover/header:text-primary transition-colors truncate max-w-[200px] md:max-w-md" title={firstTx.listingTitle}>
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 className="text-title-lg font-bold text-on-surface group-hover/header:text-primary transition-colors truncate max-w-[150px] sm:max-w-[200px] md:max-w-md" title={firstTx.listingTitle}>
               {firstTx.listingTitle}
             </h2>
+            {listing && listing.status === 'pending' && (
+              <span className="bg-warning/10 text-warning px-2 py-0.5 rounded-md text-label-sm font-bold border border-warning/20 whitespace-nowrap">
+                Meetup Pending
+              </span>
+            )}
+            {listing && listing.status === 'active' && (
+              <span className="bg-primary/10 text-primary px-2 py-0.5 rounded-md text-label-sm font-bold border border-primary/20 whitespace-nowrap">
+                Available
+              </span>
+            )}
           </div>
           {listing && (
             <div className="flex flex-col gap-1.5">
