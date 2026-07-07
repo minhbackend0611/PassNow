@@ -376,6 +376,7 @@ export default function TransactionsPage() {
   
   const [activeTab, setActiveTab] = useState<'buying' | 'selling'>('buying');
   const [showActionRequiredOnly, setShowActionRequiredOnly] = useState(false);
+  const [sellingFilter, setSellingFilter] = useState<'all' | 'active' | 'pending'>('all');
   
   const [myListings, setMyListings] = useState<any[]>([]);
 
@@ -691,7 +692,35 @@ export default function TransactionsPage() {
             </button>
           </div>
         ) : activeTab === 'selling' ? (
-          Object.entries(groupedSellingTxs).map(([listingId, group]) => {
+          <div className="flex flex-col w-full">
+            <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-2 -mx-2 px-2 md:mx-0 md:px-0 scrollbar-hide">
+               <button 
+                 onClick={() => setSellingFilter('all')} 
+                 className={`px-4 py-1.5 rounded-full text-label-md font-bold whitespace-nowrap transition-colors ${sellingFilter === 'all' ? 'bg-on-surface text-surface' : 'bg-surface-variant/30 text-on-surface-variant hover:bg-surface-variant/50 border border-outline-variant/20'}`}
+               >
+                 All Listings
+               </button>
+               <button 
+                 onClick={() => setSellingFilter('active')} 
+                 className={`px-4 py-1.5 rounded-full text-label-md font-bold whitespace-nowrap transition-colors ${sellingFilter === 'active' ? 'bg-primary/10 text-primary border border-primary/20' : 'bg-surface-variant/30 text-on-surface-variant hover:bg-surface-variant/50 border border-outline-variant/20'}`}
+               >
+                 Available
+               </button>
+               <button 
+                 onClick={() => setSellingFilter('pending')} 
+                 className={`px-4 py-1.5 rounded-full text-label-md font-bold whitespace-nowrap transition-colors ${sellingFilter === 'pending' ? 'bg-warning/10 text-warning border border-warning/20' : 'bg-surface-variant/30 text-on-surface-variant hover:bg-surface-variant/50 border border-outline-variant/20'}`}
+               >
+                 Meetup Pending
+               </button>
+            </div>
+            
+            {Object.entries(groupedSellingTxs)
+              .filter(([listingId, group]) => {
+                if (sellingFilter === 'all') return true;
+                const finalStatus = group.fallbackListing?.status || myListings.find(l => l.id === listingId)?.status;
+                return finalStatus === sellingFilter;
+              })
+              .map(([listingId, group]) => {
             const firstTx = group.active[0] || group.cancelled[0];
             return (
               <div key={listingId} className="flex flex-col gap-4 mb-4 bg-surface-container-lowest/30 p-6 rounded-[32px] border border-outline-variant/30 shadow-inner">
@@ -737,7 +766,8 @@ export default function TransactionsPage() {
                 <CancelledRequestsList txs={group.cancelled} isBuyer={false} />
               </div>
             );
-          })
+          })}
+          </div>
         ) : (
           <div className="flex flex-col gap-4">
             {activeBuyingTxs.length === 0 && cancelledBuyingTxs.length > 0 && (
