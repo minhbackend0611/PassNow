@@ -424,11 +424,13 @@ export default function TransactionsPage() {
       const tx = transactions.find(t => t.id === targetTxId);
       if (tx) {
         // Auto switch tab if necessary
-        if (tx.sellerId === user?.uid && activeTab !== 'selling') {
-          setActiveTab('selling');
-        } else if (tx.buyerId === user?.uid && activeTab !== 'buying') {
-          setActiveTab('buying');
-        }
+        setTimeout(() => {
+          if (tx.sellerId === user?.uid && activeTab !== 'selling') {
+            setActiveTab('selling');
+          } else if (tx.buyerId === user?.uid && activeTab !== 'buying') {
+            setActiveTab('buying');
+          }
+        }, 0);
 
         // Wait for render then scroll & highlight
         setTimeout(() => {
