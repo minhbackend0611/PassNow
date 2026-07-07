@@ -291,6 +291,7 @@ function CancelledRequestsList({ txs, isBuyer }: { txs: any[], isBuyer: boolean 
 
 function ListingQueueHeader({ listingId, firstTx, activeCount }: { listingId: string, firstTx: any, activeCount: number }) {
   const [listing, setListing] = useState<any>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getListingById(listingId).then(res => {
@@ -300,19 +301,22 @@ function ListingQueueHeader({ listingId, firstTx, activeCount }: { listingId: st
 
   return (
     <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 px-2 border-b border-outline-variant/20 pb-6">
-      <div className="flex items-start gap-4">
+      <div 
+        className="flex items-start gap-4 cursor-pointer group/header"
+        onClick={() => navigate(`/listings/${listingId}`)}
+      >
         {listing && listing.images && listing.images.length > 0 ? (
-          <div className="w-20 h-20 rounded-2xl overflow-hidden shrink-0 border border-outline-variant/30 shadow-sm bg-surface-variant/30">
-            <img src={listing.images[0]} alt={listing.title} className="w-full h-full object-cover" />
+          <div className="w-20 h-20 rounded-2xl overflow-hidden shrink-0 border border-outline-variant/30 shadow-sm bg-surface-variant/30 group-hover/header:shadow-md transition-shadow">
+            <img src={listing.images[0]} alt={listing.title} className="w-full h-full object-cover group-hover/header:scale-110 transition-transform duration-500" />
           </div>
         ) : (
-          <div className="w-20 h-20 rounded-2xl shrink-0 border border-outline-variant/30 shadow-sm bg-surface-variant/30 flex items-center justify-center text-on-surface-variant">
-            <span className="material-symbols-outlined text-3xl">image</span>
+          <div className="w-20 h-20 rounded-2xl shrink-0 border border-outline-variant/30 shadow-sm bg-surface-variant/30 flex items-center justify-center text-on-surface-variant group-hover/header:shadow-md transition-shadow">
+            <span className="material-symbols-outlined text-3xl group-hover/header:scale-110 transition-transform duration-500">image</span>
           </div>
         )}
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center gap-2">
-            <h2 className="text-title-lg font-bold text-on-surface truncate max-w-[200px] md:max-w-md" title={firstTx.listingTitle}>
+            <h2 className="text-title-lg font-bold text-on-surface group-hover/header:text-primary transition-colors truncate max-w-[200px] md:max-w-md" title={firstTx.listingTitle}>
               {firstTx.listingTitle}
             </h2>
           </div>
