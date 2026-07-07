@@ -321,7 +321,7 @@ function ListingQueueHeader({ listingId, firstTx, fallbackListing, activeCount }
             <h2 className="text-title-lg font-bold text-on-surface group-hover/header:text-primary transition-colors truncate max-w-[150px] sm:max-w-[200px] md:max-w-md" title={firstTx?.listingTitle || listing?.title}>
               {firstTx?.listingTitle || listing?.title || 'Loading...'}
             </h2>
-            {listing && listing.status === 'reserved' && (
+            {listing && ['reserved', 'completed', 'sold'].includes(listing.status) && (
               <span className="bg-warning/10 text-warning px-2 py-0.5 rounded-md text-label-sm font-bold border border-warning/20 whitespace-nowrap">
                 Hidden
               </span>
@@ -720,6 +720,9 @@ export default function TransactionsPage() {
               .filter(([listingId, group]) => {
                 if (sellingFilter === 'all') return true;
                 const finalStatus = group.fallbackListing?.status || myListings.find(l => l.id === listingId)?.status;
+                if (sellingFilter === 'reserved') {
+                  return ['reserved', 'completed', 'sold'].includes(finalStatus);
+                }
                 return finalStatus === sellingFilter;
               })
               .map(([listingId, group]) => {
