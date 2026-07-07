@@ -36,7 +36,6 @@ export default function TopNavBar() {
 
   const [liveResults, setLiveResults] = useState<Listing[]>([]);
   const [showLiveDropdown, setShowLiveDropdown] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Fetch live search results
   useEffect(() => {

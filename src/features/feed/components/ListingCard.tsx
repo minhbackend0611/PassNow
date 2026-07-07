@@ -2,7 +2,6 @@ import type { Listing } from '../../../types';
 import { useNavigate } from 'react-router-dom';
 import { calculateDistanceKm } from '../../../utils/geo';
 import StudentBadge from '../../../components/ui/StudentBadge';
-import { formatRelativeTime } from '../../../utils/formatTime';
 
 interface ListingCardProps {
   listing: Listing;
