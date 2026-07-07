@@ -136,15 +136,15 @@ function TransactionItem({
         ></div>
 
         {/* Step 1: Requested */}
-        <div className="relative z-10 flex flex-col items-center gap-2 px-2">
+        <div className="relative z-10 flex flex-col items-center gap-2 px-1">
           <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center shadow-md">
             <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
           </div>
-          <span className="text-label-sm font-bold text-on-surface bg-surface-container-lowest/80 px-2 rounded-full">Requested</span>
+          <span className="text-label-sm font-bold text-on-surface bg-surface-container-lowest/80 px-2 py-0.5 rounded-xl text-center leading-tight">Requested</span>
         </div>
 
         {/* Step 2: Handover */}
-        <div className="relative z-10 flex flex-col items-center gap-2 px-2">
+        <div className="relative z-10 flex flex-col items-center gap-2 px-1">
           <div className={`w-12 h-12 rounded-full flex items-center justify-center shadow-sm transition-colors duration-500 ${
             isCompleted ? 'bg-primary text-white' : 'bg-surface-variant border-[3px] border-primary text-primary bg-surface'
           }`}>
@@ -152,13 +152,13 @@ function TransactionItem({
               handshake
             </span>
           </div>
-          <span className={`text-label-sm font-bold bg-surface-container-lowest/80 px-2 rounded-full ${isCompleted ? 'text-on-surface' : 'text-primary'}`}>
+          <span className={`text-label-sm font-bold bg-surface-container-lowest/80 px-2 py-0.5 rounded-xl text-center leading-tight ${isCompleted ? 'text-on-surface' : 'text-primary'}`}>
             {handoverText}
           </span>
         </div>
 
         {/* Step 3: Completed / Cancelled */}
-        <div className="relative z-10 flex flex-col items-center gap-2 px-2">
+        <div className="relative z-10 flex flex-col items-center gap-2 px-1">
           <div className={`w-12 h-12 rounded-full flex items-center justify-center shadow-sm transition-colors duration-500 ${
             isCompleted ? 'bg-primary text-white' : tx.status === 'cancelled' ? 'bg-error text-white' : 'bg-surface-variant text-on-surface-variant border-2 border-outline-variant/30 bg-surface'
           }`}>
@@ -166,29 +166,30 @@ function TransactionItem({
               {tx.status === 'cancelled' ? 'cancel' : 'verified'}
             </span>
           </div>
-          <span className={`text-label-sm font-bold bg-surface-container-lowest/80 px-2 rounded-full ${isCompleted ? 'text-primary' : tx.status === 'cancelled' ? 'text-error' : 'text-on-surface-variant'}`}>
+          <span className={`text-label-sm font-bold bg-surface-container-lowest/80 px-2 py-0.5 rounded-xl text-center leading-tight max-w-[80px] sm:max-w-none ${isCompleted ? 'text-primary' : tx.status === 'cancelled' ? 'text-error' : 'text-on-surface-variant'}`}>
             {tx.status === 'cancelled' ? 'Failed / Cancelled' : 'Completed'}
           </span>
         </div>
       </div>
 
       {/* Actions */}
-      <div className="flex flex-wrap items-center justify-end gap-3 pt-2">
+      <div className="flex flex-row items-stretch justify-end gap-2 pt-3 w-full border-t border-outline-variant/20 mt-2">
         <button 
           onClick={handleChat}
           disabled={isStartingChat}
-          className="px-6 py-2.5 bg-secondary/10 text-secondary hover:bg-secondary/20 border border-secondary/20 hover:border-secondary/40 rounded-xl text-label-md font-bold transition-all disabled:opacity-50 active:scale-[0.98] cursor-pointer flex items-center gap-2"
+          className="flex-1 sm:flex-none px-2 py-2.5 bg-secondary/10 text-secondary hover:bg-secondary/20 border border-secondary/20 hover:border-secondary/40 rounded-xl text-[11px] sm:text-label-md font-bold transition-all disabled:opacity-50 active:scale-[0.98] cursor-pointer flex flex-col sm:flex-row justify-center items-center gap-1 sm:gap-1.5 text-center leading-tight"
         >
           <span className="material-symbols-outlined text-[20px]">chat</span>
-          {isStartingChat ? 'Opening...' : `Chat with ${isBuyer ? 'Seller' : 'Buyer'}`}
+          <span className="whitespace-normal sm:whitespace-nowrap">{isStartingChat ? 'Opening...' : `Chat with ${isBuyer ? 'Seller' : 'Buyer'}`}</span>
         </button>
         {tx.status === 'pending' && isBuyer && (
           <button 
             onClick={() => handleCancel(tx)}
             disabled={processingId === tx.id}
-            className="px-6 py-2.5 bg-error/5 text-error hover:bg-error/10 border border-error/20 hover:border-error/40 rounded-xl text-label-md font-bold transition-all disabled:opacity-50 active:scale-[0.98] cursor-pointer"
+            className="flex-1 sm:flex-none px-2 py-2.5 bg-error/5 text-error hover:bg-error/10 border border-error/20 hover:border-error/40 rounded-xl text-[11px] sm:text-label-md font-bold transition-all disabled:opacity-50 active:scale-[0.98] cursor-pointer flex flex-col sm:flex-row justify-center items-center gap-1 sm:gap-1.5 text-center leading-tight"
           >
-            Cancel Request
+            <span className="material-symbols-outlined text-[20px]">cancel</span>
+            <span className="whitespace-normal sm:whitespace-nowrap">Cancel Request</span>
           </button>
         )}
 
@@ -196,10 +197,10 @@ function TransactionItem({
           <button 
             onClick={() => handleBuyerConfirm(tx)}
             disabled={processingId === tx.id}
-            className="px-8 py-2.5 bg-gradient-to-r from-primary to-primary/90 text-white rounded-xl text-label-md font-bold shadow-[0_4px_14px_rgba(0,166,126,0.3)] hover:shadow-[0_8px_25px_rgba(0,166,126,0.4)] hover:-translate-y-0.5 active:scale-95 transition-all flex items-center gap-2 disabled:opacity-50 disabled:transform-none disabled:shadow-none cursor-pointer"
+            className="flex-1 sm:flex-none px-2 py-2.5 bg-gradient-to-r from-primary to-primary/90 text-white rounded-xl text-[11px] sm:text-label-md font-bold shadow-[0_4px_14px_rgba(0,166,126,0.3)] hover:shadow-[0_8px_25px_rgba(0,166,126,0.4)] hover:-translate-y-0.5 active:scale-95 transition-all flex flex-col sm:flex-row justify-center items-center gap-1 sm:gap-1.5 text-center leading-tight disabled:opacity-50 disabled:transform-none disabled:shadow-none cursor-pointer"
           >
             <span className="material-symbols-outlined text-[20px]">inventory_2</span>
-            Confirm Receipt
+            <span className="whitespace-normal sm:whitespace-nowrap">Confirm Receipt</span>
           </button>
         )}
         
@@ -207,27 +208,27 @@ function TransactionItem({
           <button 
             onClick={() => handleSellerConfirm(tx)}
             disabled={processingId === tx.id}
-            className="px-8 py-2.5 bg-gradient-to-r from-primary to-primary/90 text-white rounded-xl text-label-md font-bold shadow-[0_4px_14px_rgba(0,166,126,0.3)] hover:shadow-[0_8px_25px_rgba(0,166,126,0.4)] hover:-translate-y-0.5 active:scale-95 transition-all flex items-center gap-2 disabled:opacity-50 disabled:transform-none disabled:shadow-none cursor-pointer"
+            className="flex-1 sm:flex-none px-2 py-2.5 bg-gradient-to-r from-primary to-primary/90 text-white rounded-xl text-[11px] sm:text-label-md font-bold shadow-[0_4px_14px_rgba(0,166,126,0.3)] hover:shadow-[0_8px_25px_rgba(0,166,126,0.4)] hover:-translate-y-0.5 active:scale-95 transition-all flex flex-col sm:flex-row justify-center items-center gap-1 sm:gap-1.5 text-center leading-tight disabled:opacity-50 disabled:transform-none disabled:shadow-none cursor-pointer"
           >
             <span className="material-symbols-outlined text-[20px]">local_shipping</span>
-            Confirm Delivery
+            <span className="whitespace-normal sm:whitespace-nowrap">Confirm Delivery</span>
           </button>
         )}
         
         {tx.status === 'completed' && !reviewedTxIds.has(tx.id) && (
           <button 
             onClick={() => setReviewModalTx(tx)}
-            className="px-8 py-2.5 bg-amber-500/10 text-amber-600 border border-amber-500/30 hover:bg-amber-500 hover:text-white rounded-xl text-label-md font-bold transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95 flex items-center gap-2 group/review cursor-pointer"
+            className="flex-1 sm:flex-none px-2 py-2.5 bg-amber-500/10 text-amber-600 border border-amber-500/30 hover:bg-amber-500 hover:text-white rounded-xl text-[11px] sm:text-label-md font-bold transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95 flex flex-col sm:flex-row justify-center items-center gap-1 sm:gap-1.5 text-center leading-tight group/review cursor-pointer"
           >
             <span className="material-symbols-outlined text-[20px] group-hover/review:scale-110 transition-transform" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-            Leave Review
+            <span className="whitespace-normal sm:whitespace-nowrap">Leave Review</span>
           </button>
         )}
 
         {tx.status === 'completed' && reviewedTxIds.has(tx.id) && (
-          <div className="px-6 py-2.5 bg-surface-variant/50 text-on-surface-variant rounded-xl text-label-md font-bold border border-outline-variant/30 flex items-center gap-2">
+          <div className="flex-1 sm:flex-none px-2 py-2.5 bg-surface-variant/50 text-on-surface-variant rounded-xl text-[11px] sm:text-label-md font-bold border border-outline-variant/30 flex flex-col sm:flex-row justify-center items-center gap-1 sm:gap-1.5 text-center leading-tight">
             <span className="material-symbols-outlined text-[20px] text-primary">done_all</span>
-            Reviewed
+            <span className="whitespace-normal sm:whitespace-nowrap">Reviewed</span>
           </div>
         )}
       </div>

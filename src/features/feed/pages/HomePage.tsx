@@ -70,7 +70,7 @@ export default function HomePage() {
   const [autoLocation, setAutoLocation] = useState<{lat: number, lng: number} | null>(user?.coordinates || null);
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
-  const browseMode = searchParams.get('browse') === 'true';
+  const browseMode = searchParams.get('browse') === 'true' || location.pathname === '/browse';
   const activeTab = searchParams.get('free') === 'true' ? 'free' : 'all';
 
   const filter: ListingFilter = useMemo(() => {

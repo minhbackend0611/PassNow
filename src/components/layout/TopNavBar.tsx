@@ -101,7 +101,7 @@ export default function TopNavBar() {
     navigate('/');
   };
 
-  const isBrowseMode = location.pathname === '/' && (
+  const isBrowseMode = (location.pathname === '/' || location.pathname === '/browse') && (
     searchParams.has('q') || 
     searchParams.has('category') || 
     searchParams.has('condition') || 
@@ -109,7 +109,8 @@ export default function TopNavBar() {
     searchParams.has('maxPrice') || 
     searchParams.has('school') ||
     searchParams.has('radiusKm') ||
-    searchParams.get('browse') === 'true'
+    searchParams.get('browse') === 'true' ||
+    location.pathname === '/browse'
   );
 
   const showBackButton = location.pathname !== '/' || isBrowseMode;
@@ -280,7 +281,7 @@ export default function TopNavBar() {
       </div>
 
       {/* Mobile Search Bar */}
-      <div className="px-gutter pb-3 block xl:hidden w-full">
+      <div className="px-gutter pb-3 block xl:hidden w-full relative z-[100]">
         <form 
           className="search-form-container relative group w-full"
           onSubmit={(e) => {
