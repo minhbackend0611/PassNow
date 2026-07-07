@@ -321,13 +321,13 @@ function ListingQueueHeader({ listingId, firstTx, fallbackListing, activeCount }
             <h2 className="text-title-lg font-bold text-on-surface group-hover/header:text-primary transition-colors truncate max-w-[150px] sm:max-w-[200px] md:max-w-md" title={firstTx?.listingTitle || listing?.title}>
               {firstTx?.listingTitle || listing?.title || 'Loading...'}
             </h2>
-            {listing && listing.status === 'pending' && (
+            {listing && listing.status === 'reserved' && (
               <span className="bg-warning/10 text-warning px-2 py-0.5 rounded-md text-label-sm font-bold border border-warning/20 whitespace-nowrap">
-                Meetup Pending
+                Hidden
               </span>
             )}
-            {listing && listing.status === 'active' && (
-              <span className="bg-primary/10 text-primary px-2 py-0.5 rounded-md text-label-sm font-bold border border-primary/20 whitespace-nowrap">
+            {listing && listing.status === 'available' && (
+              <span className="bg-success/10 text-success px-2 py-0.5 rounded-md text-label-sm font-bold border border-success/20 whitespace-nowrap">
                 Available
               </span>
             )}
@@ -376,7 +376,7 @@ export default function TransactionsPage() {
   
   const [activeTab, setActiveTab] = useState<'buying' | 'selling'>('buying');
   const [showActionRequiredOnly, setShowActionRequiredOnly] = useState(false);
-  const [sellingFilter, setSellingFilter] = useState<'all' | 'active' | 'pending'>('all');
+  const [sellingFilter, setSellingFilter] = useState<'all' | 'available' | 'reserved'>('all');
   
   const [myListings, setMyListings] = useState<any[]>([]);
 
@@ -703,16 +703,16 @@ export default function TransactionsPage() {
                  All Listings
                </button>
                <button 
-                 onClick={() => setSellingFilter('active')} 
-                 className={`px-4 py-1.5 rounded-full text-label-md font-bold whitespace-nowrap transition-colors ${sellingFilter === 'active' ? 'bg-primary/10 text-primary border border-primary/20' : 'bg-surface-variant/30 text-on-surface-variant hover:bg-surface-variant/50 border border-outline-variant/20'}`}
+                 onClick={() => setSellingFilter('available')} 
+                 className={`px-4 py-1.5 rounded-full text-label-md font-bold whitespace-nowrap transition-colors ${sellingFilter === 'available' ? 'bg-success/10 text-success border border-success/20' : 'bg-surface-variant/30 text-on-surface-variant hover:bg-surface-variant/50 border border-outline-variant/20'}`}
                >
                  Available
                </button>
                <button 
-                 onClick={() => setSellingFilter('pending')} 
-                 className={`px-4 py-1.5 rounded-full text-label-md font-bold whitespace-nowrap transition-colors ${sellingFilter === 'pending' ? 'bg-warning/10 text-warning border border-warning/20' : 'bg-surface-variant/30 text-on-surface-variant hover:bg-surface-variant/50 border border-outline-variant/20'}`}
+                 onClick={() => setSellingFilter('reserved')} 
+                 className={`px-4 py-1.5 rounded-full text-label-md font-bold whitespace-nowrap transition-colors ${sellingFilter === 'reserved' ? 'bg-warning/10 text-warning border border-warning/20' : 'bg-surface-variant/30 text-on-surface-variant hover:bg-surface-variant/50 border border-outline-variant/20'}`}
                >
-                 Meetup Pending
+                 Hidden
                </button>
             </div>
             
