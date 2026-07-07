@@ -8,7 +8,12 @@ const USERS_COLLECTION = 'users';
 
 export const getListings = async (filter?: ListingFilter): Promise<Listing[]> => {
   // Only query by status to avoid complex composite index requirements from Firebase
-  const q = query(collection(db, LISTINGS_COLLECTION), where('status', '==', 'available'));
+  let q;
+  if (filter?.sellerId && filter?.includeAllStatuses) {
+    q = query(collection(db, LISTINGS_COLLECTION), where('sellerId', '==', filter.sellerId));
+  } else {
+    q = query(collection(db, LISTINGS_COLLECTION), where('status', '==', 'available'));
+  }
   
   try {
     const querySnapshot = await getDocs(q);

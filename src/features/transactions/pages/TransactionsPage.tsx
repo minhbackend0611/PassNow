@@ -382,7 +382,7 @@ export default function TransactionsPage() {
 
   useEffect(() => {
     if (user && activeTab === 'selling') {
-      getListings({ sellerId: user.uid }).then(setMyListings);
+      getListings({ sellerId: user.uid, includeAllStatuses: true }).then(setMyListings);
     }
   }, [user, activeTab]);
   const [isLoading, setIsLoading] = useState(true);

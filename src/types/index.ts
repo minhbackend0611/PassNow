@@ -55,6 +55,7 @@ export interface ListingFilter {
   radiusKm?: number;
   userLat?: number;
   userLng?: number;
+  includeAllStatuses?: boolean;
 }
 
 export type TransactionStatus = 'pending' | 'completed' | 'cancelled';
