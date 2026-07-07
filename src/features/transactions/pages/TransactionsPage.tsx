@@ -77,7 +77,10 @@ function TransactionItem({
           </div>
           
           {!hideListingInfo && (
-            <div className="flex items-start gap-4 mt-2 mb-2 p-4 bg-surface-container-low/50 hover:bg-surface-container-low rounded-2xl border border-outline-variant/30 transition-all duration-300 group/listing">
+            <div 
+              onClick={() => navigate(`/listings/${tx.listingId}`)}
+              className="flex items-start gap-4 mt-2 mb-2 p-4 bg-surface-container-low/50 hover:bg-surface-container-low rounded-2xl border border-outline-variant/30 transition-all duration-300 group/listing cursor-pointer"
+            >
               {listing && listing.images && listing.images.length > 0 ? (
                 <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 shadow-sm border border-outline-variant/30">
                   <img src={listing.images[0]} alt={listing.title} className="w-full h-full object-cover group-hover/listing:scale-110 transition-transform duration-500" />
@@ -90,8 +93,7 @@ function TransactionItem({
               
               <div className="flex flex-col min-w-0 justify-center">
                 <h3 
-                  onClick={() => navigate(`/listings/${tx.listingId}`)}
-                  className="text-title-md font-bold text-on-surface group-hover/listing:text-primary transition-colors cursor-pointer truncate"
+                  className="text-title-md font-bold text-on-surface group-hover/listing:text-primary transition-colors truncate"
                 >
                   {tx.listingTitle}
                 </h3>
