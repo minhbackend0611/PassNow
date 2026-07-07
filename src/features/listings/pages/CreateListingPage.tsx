@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAuthStore } from '../../../store/useAuthStore';
 import { createListing, uploadListingImages, getListingById, updateListing } from '../../../services/listingService';
 import type { ItemCondition } from '../../../types';
-import MapPickerModal from '../../../components/MapPickerModal';
+import LocationPicker from '../../../components/location/LocationPicker';
 import { CustomSelect } from '../../../components/ui/CustomSelect';
 import { useToastStore } from '../../../store/useToastStore';
 
@@ -62,19 +62,9 @@ export default function CreateListingPage() {
   });
 
   const listingType = watch('listingType');
-  const [isLocating, setIsLocating] = useState(false);
   const [coordinates, setCoordinates] = useState<{lat: number, lng: number} | undefined>(undefined);
-  const [isMapPickerOpen, setIsMapPickerOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
   const imageSectionRef = useRef<HTMLElement>(null);
-  
-  // Autocomplete state
-  const [searchQuery, setSearchQuery] = useState('');
-  interface OSMSuggestion { display_name: string; lat: string; lon: string; }
-  const [suggestions, setSuggestions] = useState<OSMSuggestion[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const searchTimeout = useRef<number | null>(null);
   
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -97,7 +87,6 @@ export default function CreateListingPage() {
             quantity: listing.quantity || 1,
             specificAddress: listing.specificAddress || '',
           });
-          setSearchQuery(listing.specificAddress || '');
           if (listing.coordinates) setCoordinates(listing.coordinates);
           setExistingImages(listing.images || []);
         } else {
@@ -145,82 +134,7 @@ export default function CreateListingPage() {
     setExistingImages(newExisting);
   };
 
-  const handleSearchQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchQuery(value);
-    setShowSuggestions(true);
-    
-    if (!value.trim()) {
-      setSuggestions([]);
-      return;
-    }
 
-    setIsSearching(true);
-    if (searchTimeout.current) clearTimeout(searchTimeout.current);
-    
-    searchTimeout.current = window.setTimeout(async () => {
-      try {
-        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}&countrycodes=vn&limit=5`);
-        const data = await res.json();
-        setSuggestions(data || []);
-      } catch (err) {
-        console.error("Error fetching suggestions:", err);
-      } finally {
-        setIsSearching(false);
-      }
-    }, 500);
-  };
-
-  const handleSelectSuggestion = (suggestion: OSMSuggestion) => {
-    setSearchQuery(suggestion.display_name);
-    setValue('specificAddress', suggestion.display_name, { shouldValidate: true });
-    setCoordinates({ lat: parseFloat(suggestion.lat), lng: parseFloat(suggestion.lon) });
-    setShowSuggestions(false);
-  };
-
-  const handleBlur = () => {
-    // Delay hiding so click event on suggestion can fire
-    setTimeout(() => {
-      setShowSuggestions(false);
-      // Strict constraint: if they typed something but didn't select, revert to the last valid selection or empty
-      const currentAddress = watch('specificAddress');
-      if (searchQuery !== currentAddress) {
-        setSearchQuery(currentAddress || '');
-      }
-    }, 200);
-  };
-
-  const handleUseMyUniversity = () => {
-    if (!user || !user.school) {
-      addToast("You haven't set a school in your profile yet.", 'error');
-      setIsLocating(false);
-      return;
-    }
-    
-    setIsLocating(true);
-    // Simulate typing the school
-    setSearchQuery(user.school);
-    setValue('specificAddress', user.school, { shouldValidate: true });
-    
-    // Fetch coordinates for it
-    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(user.school)}&countrycodes=vn&limit=1`)
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.length > 0) {
-          const suggestion = data[0];
-          setSearchQuery(suggestion.display_name);
-          setValue('specificAddress', suggestion.display_name, { shouldValidate: true });
-          setCoordinates({ lat: parseFloat(suggestion.lat), lng: parseFloat(suggestion.lon) });
-        } else {
-          addToast("Could not find exact coordinates for your school. Please select manually from the suggestions if needed.", 'info');
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        addToast("Could not find coordinates for your school.", 'error');
-      })
-      .finally(() => setIsLocating(false));
-  };
 
 
 
@@ -561,78 +475,13 @@ export default function CreateListingPage() {
 
           {/* Section: Location */}
           <section className="glass-panel bg-gradient-to-br from-surface-container-low/80 to-primary/5 rounded-[32px] p-6 md:p-8 hover:shadow-lg transition-shadow duration-500">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-stack-xs gap-2">
-              <label className="block text-label-md font-label-md text-on-surface" htmlFor="searchQuery">Transaction Address (Địa chỉ hẹn giao dịch) <span className="text-error">*</span></label>
-              
-              <div className="flex items-center gap-2 flex-wrap">
-                <button 
-                  type="button" 
-                  onClick={handleUseMyUniversity}
-                  disabled={isLocating}
-                  className="flex items-center gap-1 text-label-sm font-label-sm text-secondary-container hover:text-secondary disabled:opacity-50 transition-all duration-300 bg-secondary-container/10 px-3 py-1.5 rounded-xl border border-secondary-container/30 hover:-translate-y-0.5 hover:shadow-sm active:scale-95"
-                >
-                  <span className="material-symbols-outlined text-[16px]">school</span>
-                  Use My University
-                </button>
-
-
-                <button 
-                  type="button" 
-                  onClick={() => setIsMapPickerOpen(true)}
-                  disabled={isLocating}
-                  className="flex items-center gap-1 text-label-sm font-label-sm text-tertiary hover:text-tertiary-container hover:bg-tertiary/10 px-3 py-1.5 rounded-xl transition-all duration-300 disabled:opacity-50 hover:-translate-y-0.5 hover:shadow-sm active:scale-95"
-                >
-                  <span className="material-symbols-outlined text-[16px]">map</span>
-                  Open Map
-                </button>
-
-
-              </div>
-            </div>
-
-            <div className="relative">
-              <input 
-                id="searchQuery" 
-                value={searchQuery}
-                onChange={handleSearchQueryChange}
-                onFocus={() => setShowSuggestions(true)}
-                onBlur={handleBlur}
-                className={`w-full rounded-2xl border bg-surface/50 dark:bg-black/20 backdrop-blur-md px-4 py-3 text-body-md font-body-md transition-all duration-300 placeholder:text-on-surface-variant/50 ${errors.specificAddress ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant/50 focus:border-primary hover:border-primary/50 focus:ring-primary/20'} focus:outline-none focus:ring-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 focus:-translate-y-1 mt-stack-xs`} 
-                placeholder="Search for an address or place..." 
-              />
-              
-              {/* Hidden input to store validated address for react-hook-form */}
-              <input type="hidden" {...register('specificAddress')} />
-
-              {/* Suggestions Dropdown */}
-              {showSuggestions && (searchQuery.length > 0) && (
-                <div className="absolute z-50 w-full mt-2 bg-surface/95 backdrop-blur-xl border border-outline-variant/40 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] overflow-hidden animate-fade-in origin-top">
-                  <div className="max-h-48 overflow-y-auto custom-scrollbar">
-                    <ul className="py-2">
-                      {isSearching ? (
-                        <div className="p-4 text-body-sm text-on-surface-variant text-center flex items-center justify-center gap-2">
-                          <div className="w-4 h-4 border-2 border-primary/50 border-t-primary rounded-full animate-spin"></div>
-                          Searching...
-                        </div>
-                      ) : suggestions.length > 0 ? (
-                        suggestions.map((s, i) => (
-                          <li 
-                            key={i} 
-                            onMouseDown={() => handleSelectSuggestion(s)}
-                            className="px-5 py-3 hover:bg-surface-container-high hover:pl-7 cursor-pointer border-b border-outline-variant/20 last:border-0 transition-all duration-300 group"
-                          >
-                            <div className="text-body-sm font-body-sm text-on-surface truncate group-hover:text-primary transition-colors">{s.display_name}</div>
-                          </li>
-                        ))
-                      ) : (
-                        <div className="p-4 text-body-sm text-on-surface-variant text-center">No results found</div>
-                      )}
-                    </ul>
-                  </div>
-                </div>
-              )}
-            </div>
-            {errors.specificAddress && <span className="text-label-sm font-label-sm text-error mt-1 block">{errors.specificAddress.message}</span>}
+            <LocationPicker
+              address={watch('specificAddress') || ''}
+              onAddressChange={(val) => setValue('specificAddress', val, { shouldValidate: true })}
+              onCoordinatesChange={(lat, lng) => setCoordinates({ lat, lng })}
+              userSchool={user?.school || undefined}
+              error={errors.specificAddress?.message}
+            />
           </section>
 
           {/* Actions */}
@@ -649,18 +498,6 @@ export default function CreateListingPage() {
 
         </form>
       </div>
-      {/* Map Picker Modal */}
-      <MapPickerModal
-        isOpen={isMapPickerOpen}
-        onClose={() => setIsMapPickerOpen(false)}
-        initialLat={coordinates?.lat}
-        initialLng={coordinates?.lng}
-        onSelect={(lat, lng, address) => {
-          setCoordinates({ lat, lng });
-          setSearchQuery(address);
-          setValue('specificAddress', address, { shouldValidate: true });
-        }}
-      />
     </main>
   );
 }
