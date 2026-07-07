@@ -9,6 +9,7 @@ export interface Campus {
 export interface University {
   id: string;
   name: string;
+  aliases?: string[];
   campuses: Campus[];
 }
 
@@ -16,6 +17,7 @@ export const VIETNAM_UNIVERSITIES: University[] = [
   {
     id: 'hcmut',
     name: 'Đại học Bách Khoa TP.HCM',
+    aliases: ['Ho Chi Minh City University of Technology', 'HCMUT'],
     campuses: [
       {
         id: 'hcmut-1',
@@ -36,6 +38,7 @@ export const VIETNAM_UNIVERSITIES: University[] = [
   {
     id: 'hust',
     name: 'Đại học Bách Khoa Hà Nội',
+    aliases: ['Hanoi University of Science and Technology', 'HUST'],
     campuses: [
       {
         id: 'hust-1',
@@ -49,6 +52,7 @@ export const VIETNAM_UNIVERSITIES: University[] = [
   {
     id: 'fptu',
     name: 'Đại học FPT',
+    aliases: ['FPT University'],
     campuses: [
       {
         id: 'fptu-hn',
@@ -83,6 +87,7 @@ export const VIETNAM_UNIVERSITIES: University[] = [
   {
     id: 'ueh',
     name: 'Đại học Kinh tế TP.HCM (UEH)',
+    aliases: ['Ho Chi Minh City University of Economics', 'University of Economics Ho Chi Minh City', 'UEH'],
     campuses: [
       {
         id: 'ueh-a',
@@ -110,6 +115,7 @@ export const VIETNAM_UNIVERSITIES: University[] = [
   {
     id: 'uit',
     name: 'Đại học Công nghệ Thông tin (UIT)',
+    aliases: ['University of Information Technology', 'UIT'],
     campuses: [
       {
         id: 'uit-1',
@@ -123,6 +129,7 @@ export const VIETNAM_UNIVERSITIES: University[] = [
   {
     id: 'rmit',
     name: 'RMIT University Vietnam',
+    aliases: ['RMIT University Vietnam', 'RMIT Vietnam', 'RMIT'],
     campuses: [
       {
         id: 'rmit-sgs',
@@ -143,5 +150,9 @@ export const VIETNAM_UNIVERSITIES: University[] = [
 ];
 
 export const getUniversityByName = (name: string): University | undefined => {
-  return VIETNAM_UNIVERSITIES.find(u => u.name.toLowerCase() === name.toLowerCase());
+  const lowercaseName = name.toLowerCase();
+  return VIETNAM_UNIVERSITIES.find(
+    u => u.name.toLowerCase() === lowercaseName || 
+         (u.aliases && u.aliases.some(alias => alias.toLowerCase() === lowercaseName))
+  );
 };

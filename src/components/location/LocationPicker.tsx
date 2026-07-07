@@ -67,10 +67,19 @@ export default function LocationPicker({
     
     searchTimeout.current = window.setTimeout(async () => {
       try {
-        // Use Photon API for better autocomplete in VN
-        const res = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(value)}&lat=16.0&lon=106.0&zoom=10&limit=5`);
+        // Use Photon API with bbox for Vietnam
+        const res = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(value)}&lat=16.0&lon=106.0&zoom=10&limit=15&bbox=102.14,8.56,109.47,23.39`);
         const data = await res.json();
-        setSuggestions(data.features || []);
+        
+        if (data.features) {
+          // Filter to strictly Vietnam (countrycode VN) and limit to 5
+          const vnResults = data.features.filter((f: any) => 
+            f.properties.countrycode === 'VN' || f.properties.country === 'Vietnam'
+          ).slice(0, 5);
+          setSuggestions(vnResults);
+        } else {
+          setSuggestions([]);
+        }
       } catch (err) {
         console.error("Error fetching suggestions:", err);
       } finally {
