@@ -146,6 +146,27 @@ export const VIETNAM_UNIVERSITIES: University[] = [
         lng: 105.81177,
       }
     ]
+  },
+  {
+    id: 'hcmus',
+    name: 'Đại học Khoa học Tự nhiên - ĐHQG TP.HCM',
+    aliases: ['University of Science', 'Khoa học Tự nhiên', 'HCMUS', 'Trường Đại học Khoa học Tự nhiên'],
+    campuses: [
+      {
+        id: 'hcmus-1',
+        name: 'Cơ sở Nguyễn Văn Cừ',
+        address: '227 Nguyễn Văn Cừ, Phường 4, Quận 5, TP.HCM',
+        lat: 10.762886,
+        lng: 106.682496,
+      },
+      {
+        id: 'hcmus-2',
+        name: 'Cơ sở Linh Trung',
+        address: 'Khu đô thị ĐHQG-HCM, Phường Linh Trung, TP. Thủ Đức, TP.HCM',
+        lat: 10.876127,
+        lng: 106.799787,
+      }
+    ]
   }
 ];
 
