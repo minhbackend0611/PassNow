@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getListingById, deleteListing, toggleListingReservedStatus } from '../../../services/listingService';
 import { requestTransaction, cancelTransaction, getTransactionByListingAndBuyer } from '../../../services/transactionService';
+import { getCategoryIcon } from '../../../utils/category';
 import { ConfirmModal } from '../../../components/ui/ConfirmModal';
 import { useToastStore } from '../../../store/useToastStore';
 import { startConversation } from '../../../services/chatService';
@@ -252,7 +253,7 @@ export default function ListingDetailPage() {
                 {listing.condition}
               </span>
               <span className="text-on-surface-variant text-label-sm font-label-sm flex items-center gap-1 bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant/30">
-                <span className="material-symbols-outlined text-[16px]">category</span> {listing.category}
+                <span className="material-symbols-outlined text-[16px]">{getCategoryIcon(listing.category)}</span> {listing.category}
               </span>
               {(listing.quantity && listing.quantity > 1) && (
                 <span className="bg-tertiary-container text-on-tertiary-container text-label-sm font-bold px-3 py-1.5 rounded-full border border-tertiary/20 shadow-sm flex items-center gap-1">

@@ -1,6 +1,7 @@
 import type { Listing } from '../../../types';
 import { useNavigate } from 'react-router-dom';
 import { calculateDistanceKm } from '../../../utils/geo';
+import { getCategoryIcon } from '../../../utils/category';
 import StudentBadge from '../../../components/ui/StudentBadge';
 
 interface ListingCardProps {
@@ -104,11 +105,7 @@ export default function ListingCard({ listing, userLat, userLng }: ListingCardPr
       <div className="p-4 sm:p-5 flex flex-col flex-1 gap-2">
         <div className="flex items-center gap-1.5 text-primary text-[10px] sm:text-[11px] font-bold uppercase tracking-widest">
           <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-            {listing.category === 'Books' ? 'book' :
-             listing.category === 'Electronics' ? 'devices' :
-             listing.category === 'Furniture' ? 'chair' :
-             listing.category === 'Clothing' ? 'apparel' :
-             listing.category === 'Other' ? 'more_horiz' : 'category'}
+            {getCategoryIcon(listing.category)}
           </span> 
           <span className="truncate">{listing.category || 'Item'}</span>
         </div>
