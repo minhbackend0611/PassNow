@@ -262,19 +262,21 @@ export default function LocationPicker({
         {showSuggestions && (searchQuery.length > 0) && (
           <div className="absolute top-full left-0 right-0 mt-2 bg-surface-container-lowest rounded-2xl shadow-xl border border-outline-variant/30 overflow-hidden z-50">
             {suggestions.length > 0 ? (
-              <ul className="max-h-60 overflow-y-auto overscroll-contain">
+              <ul className="max-h-60 overflow-y-auto overscroll-contain p-2 flex flex-col gap-1">
                 {suggestions.map((feature, idx) => (
                   <li 
                     key={idx}
-                    className="px-4 py-3 hover:bg-surface-container cursor-pointer transition-colors border-b border-outline-variant/10 last:border-0 flex items-start gap-3"
+                    className="px-4 py-3 hover:bg-surface-container hover:shadow-sm rounded-xl cursor-pointer transition-all duration-200 hover:-translate-y-0.5 active:scale-95 flex items-start gap-3 group/item"
                     onClick={() => handleSelectSuggestion(feature)}
                   >
-                    <MapPin className="w-5 h-5 text-on-surface-variant mt-0.5 shrink-0" />
-                    <div>
-                      <p className="text-body-md font-medium text-on-surface">
+                    <div className="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center shrink-0 group-hover/item:bg-primary/10 transition-colors">
+                      <MapPin className="w-4 h-4 text-on-surface-variant group-hover/item:text-primary transition-colors" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-body-md font-semibold text-on-surface group-hover/item:text-primary transition-colors truncate">
                         {feature.properties.name || feature.properties.street || 'Location'}
                       </p>
-                      <p className="text-body-sm text-on-surface-variant truncate">
+                      <p className="text-body-sm text-on-surface-variant truncate mt-0.5">
                         {[feature.properties.city, feature.properties.state, feature.properties.country].filter(Boolean).join(', ')}
                       </p>
                     </div>
@@ -328,29 +330,29 @@ export default function LocationPicker({
       {showCampusModal && (
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-surface/80 backdrop-blur-sm" onClick={() => setShowCampusModal(false)} />
-          <div className="bg-surface-container-lowest rounded-3xl shadow-xl w-full max-w-md relative z-10 overflow-hidden border border-outline-variant/30 animate-in fade-in zoom-in-95 duration-200">
-            <div className="p-6 border-b border-outline-variant/50">
+          <div className="bg-surface-container-lowest rounded-[32px] shadow-2xl w-full max-w-md relative z-10 flex flex-col max-h-[85vh] border border-outline-variant/30 animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6 md:p-8 border-b border-outline-variant/50 shrink-0">
               <h3 className="text-title-lg font-bold text-on-surface">Select Campus</h3>
-              <p className="text-body-sm text-on-surface-variant mt-1">{campusSchoolName} has multiple campuses.</p>
+              <p className="text-body-sm text-on-surface-variant mt-2">{campusSchoolName} has multiple campuses.</p>
             </div>
-            <div className="p-2 max-h-[60vh] overflow-y-auto">
+            <div className="p-4 overflow-y-auto flex-1 flex flex-col gap-2 bg-surface">
               {schoolCampuses.map(campus => (
                 <button
                   key={campus.id}
                   type="button"
                   onClick={() => selectCampus(campus)}
-                  className="w-full text-left p-4 hover:bg-surface-container rounded-2xl transition-colors flex flex-col gap-1 group"
+                  className="w-full text-left p-5 bg-surface-container-lowest hover:bg-surface-container hover:shadow-md rounded-2xl transition-all duration-300 hover:-translate-y-1 active:scale-[0.98] flex flex-col gap-1.5 group border border-outline-variant/30 hover:border-primary/30"
                 >
-                  <span className="text-body-lg font-semibold text-on-surface group-hover:text-primary transition-colors">{campus.name}</span>
-                  <span className="text-body-sm text-on-surface-variant line-clamp-2">{campus.address}</span>
+                  <span className="text-title-sm font-bold text-on-surface group-hover:text-primary transition-colors">{campus.name}</span>
+                  <span className="text-body-sm text-on-surface-variant line-clamp-2 leading-relaxed">{campus.address}</span>
                 </button>
               ))}
             </div>
-            <div className="p-4 border-t border-outline-variant/50 bg-surface-container/30">
+            <div className="p-6 md:p-8 border-t border-outline-variant/50 bg-surface-container-lowest shrink-0">
               <button
                 type="button"
                 onClick={() => setShowCampusModal(false)}
-                className="w-full py-3 rounded-full border border-outline-variant text-on-surface hover:bg-surface-container transition-colors font-semibold"
+                className="w-full py-3.5 rounded-full border-2 border-outline-variant text-on-surface hover:bg-surface-container hover:text-on-surface transition-all duration-200 font-bold active:scale-95"
               >
                 Cancel
               </button>
