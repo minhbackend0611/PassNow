@@ -48,11 +48,13 @@ export default function MapPickerModal({ isOpen, onClose, onSelect, initialLat, 
     if (position) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsLoading(true);
-      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.lat}&lon=${position.lng}`)
+      fetch(`https://photon.komoot.io/reverse?lon=${position.lng}&lat=${position.lat}`)
         .then(res => res.json())
         .then(data => {
-          if (data && data.display_name) {
-            setAddress(data.display_name);
+          if (data && data.features && data.features.length > 0) {
+            const props = data.features[0].properties;
+            const addressString = [props.name, props.street, props.city, props.state, props.country].filter(Boolean).join(', ');
+            setAddress(addressString || 'Unknown location');
           } else {
             setAddress('Unknown location');
           }
@@ -97,7 +99,7 @@ export default function MapPickerModal({ isOpen, onClose, onSelect, initialLat, 
           </button>
         </div>
 
-        <div className="flex-1 w-full relative" style={{ minHeight: '50vh' }}>
+        <div className="flex-1 w-full relative h-[50vh] min-h-[400px] z-0">
           <MapContainer center={center} zoom={13} style={{ width: '100%', height: '100%' }}>
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

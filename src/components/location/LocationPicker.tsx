@@ -124,17 +124,44 @@ export default function LocationPicker({
         selectCampus(campus);
       }
     } else {
-      // Fallback: School not in our curated DB, use Nominatim as fallback
-      alert(`Trường của bạn (${userSchool}) chưa có trong hệ thống dữ liệu Đa cơ sở (Multi-campus) của PassNow. Hệ thống sẽ dùng bản đồ thông thường để tìm tự động.`);
+      // Fallback: School not in our curated DB, dynamically query OSM/Photon for campuses
+      alert(`Trường của bạn (${userSchool}) chưa có trong hệ thống dữ liệu cố định. Đang tìm kiếm các cơ sở tự động bằng Bản đồ mở (OSM)...`);
       setIsLocating(true);
-      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(userSchool)}&countrycodes=vn&limit=1`)
+      fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(userSchool)}&bbox=102.14,8.56,109.47,23.39&limit=5`)
         .then(res => res.json())
         .then(data => {
-          if (data && data.length > 0) {
-            const suggestion = data[0];
-            setSearchQuery(suggestion.display_name);
-            onAddressChange(suggestion.display_name);
-            onCoordinatesChange(parseFloat(suggestion.lat), parseFloat(suggestion.lon));
+          if (data && data.features && data.features.length > 0) {
+            const vnResults = data.features.filter((f: any) => 
+              f.properties.countrycode === 'VN' || f.properties.country === 'Vietnam'
+            );
+            
+            if (vnResults.length > 1) {
+              // Dynamic Multi-Campus
+              const dynamicCampuses = vnResults.map((f: any, idx: number) => {
+                const props = f.properties;
+                return {
+                  id: `dynamic-${idx}`,
+                  name: props.name || `Cơ sở ${idx + 1}`,
+                  address: [props.street, props.city, props.state, props.country].filter(Boolean).join(', '),
+                  lat: f.geometry.coordinates[1],
+                  lng: f.geometry.coordinates[0],
+                };
+              });
+              setSchoolCampuses(dynamicCampuses);
+              setCampusSchoolName(userSchool);
+              setShowCampusModal(true);
+            } else if (vnResults.length === 1) {
+              // Single Result
+              const f = vnResults[0];
+              const props = f.properties;
+              const displayName = [props.name, props.street, props.city, props.state].filter(Boolean).join(', ');
+              setSearchQuery(displayName);
+              onAddressChange(displayName);
+              onCoordinatesChange(f.geometry.coordinates[1], f.geometry.coordinates[0]);
+            } else {
+              alert("Could not find exact coordinates for your school. Please select manually on the map.");
+              setIsMapOpen(true);
+            }
           } else {
             alert("Could not find exact coordinates for your school. Please select manually on the map.");
             setIsMapOpen(true);
@@ -165,11 +192,15 @@ export default function LocationPicker({
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        // Reverse geocode with Nominatim for precision
-        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
+        // Reverse geocode with Photon for precision and reliability
+        fetch(`https://photon.komoot.io/reverse?lon=${longitude}&lat=${latitude}`)
           .then(res => res.json())
           .then(data => {
-            const displayName = data.display_name || 'My Current Location';
+            let displayName = 'My Current Location';
+            if (data && data.features && data.features.length > 0) {
+              const props = data.features[0].properties;
+              displayName = [props.name, props.street, props.city, props.state, props.country].filter(Boolean).join(', ') || displayName;
+            }
             setSearchQuery(displayName);
             onAddressChange(displayName);
             onCoordinatesChange(latitude, longitude);
