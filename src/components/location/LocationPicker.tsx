@@ -335,7 +335,7 @@ export default function LocationPicker({
               <h3 className="text-title-lg font-bold text-on-surface">Select Campus</h3>
               <p className="text-body-sm text-on-surface-variant mt-2">{campusSchoolName} has multiple campuses.</p>
             </div>
-            <div className="p-4 overflow-y-auto flex-1 flex flex-col gap-2 bg-surface">
+            <div className="p-4 overflow-y-auto flex-1 flex flex-col gap-2 bg-surface min-h-0">
               {schoolCampuses.map(campus => (
                 <button
                   key={campus.id}

@@ -99,7 +99,7 @@ export default function MapPickerModal({ isOpen, onClose, onSelect, initialLat, 
           </button>
         </div>
 
-        <div className="flex-1 w-full relative h-[50vh] min-h-[400px] z-0">
+        <div className="flex-1 w-full relative h-[50vh] min-h-[250px] min-h-0 z-0">
           <MapContainer center={center} zoom={13} style={{ width: '100%', height: '100%' }}>
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
