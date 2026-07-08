@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import ReactDOM from 'react-dom';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -79,7 +80,7 @@ export default function MapPickerModal({ isOpen, onClose, onSelect, initialLat, 
 
   if (!isOpen) return null;
 
-  return (
+  return typeof document !== 'undefined' ? ReactDOM.createPortal(
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-surface/80 backdrop-blur-sm transition-opacity" onClick={onClose} />
       
@@ -142,6 +143,7 @@ export default function MapPickerModal({ isOpen, onClose, onSelect, initialLat, 
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>,
+    document.body
+  ) : null;
 }

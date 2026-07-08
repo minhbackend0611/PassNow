@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom';
 import { getUniversityByName } from '../../constants/universities';
 import type { Campus } from '../../constants/universities';
 import MapPickerModal from '../MapPickerModal';
@@ -327,7 +328,7 @@ export default function LocationPicker({
       </div>
 
       {/* Multi-Campus Selection Modal */}
-      {showCampusModal && (
+      {showCampusModal && typeof document !== 'undefined' && ReactDOM.createPortal(
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-surface/80 backdrop-blur-sm" onClick={() => setShowCampusModal(false)} />
           <div className="bg-surface-container-lowest rounded-[32px] shadow-2xl w-full max-w-md relative z-10 flex flex-col max-h-[85vh] border border-outline-variant/30 animate-in fade-in zoom-in-95 duration-200">
@@ -358,7 +359,8 @@ export default function LocationPicker({
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Full Map Picker Modal */}
