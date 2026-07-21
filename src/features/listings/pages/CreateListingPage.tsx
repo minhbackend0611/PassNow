@@ -19,7 +19,7 @@ const createListingSchema = z.object({
   listingType: z.enum(['sell', 'free']),
   price: z.coerce.number().min(0).optional(),
   quantity: z.coerce.number().min(1, { message: 'Quantity must be at least 1' }).default(1),
-  specificAddress: z.string().min(1, { message: 'Address is required' }),
+  specificAddress: z.string().trim().min(1, { message: 'Address is required' }).max(300, { message: 'Address is too long' }),
 }).refine((data) => {
   if (data.listingType === 'sell' && (!data.price || data.price <= 0)) {
     return false;
@@ -30,7 +30,8 @@ const createListingSchema = z.object({
   path: ["price"],
 });
 
-type CreateListingValues = z.infer<typeof createListingSchema>;
+type CreateListingInput = z.input<typeof createListingSchema>;
+type CreateListingValues = z.output<typeof createListingSchema>;
 
 export default function CreateListingPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -49,8 +50,8 @@ export default function CreateListingPage() {
     reset,
     formState: { errors },
 
-  } = useForm<CreateListingValues>({
-    resolver: zodResolver(createListingSchema) as any,
+  } = useForm<CreateListingInput, unknown, CreateListingValues>({
+    resolver: zodResolver(createListingSchema),
     defaultValues: {
       listingType: 'sell',
       condition: '',
@@ -98,7 +99,7 @@ export default function CreateListingPage() {
         addToast('Error fetching listing', 'error');
       }).finally(() => setIsLoading(false));
     }
-  }, [id, isEditMode, reset, navigate]);
+  }, [id, isEditMode, reset, navigate, addToast]);
 
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -140,9 +141,10 @@ export default function CreateListingPage() {
 
 
 
-  const formatCurrency = (val: number | string | undefined) => {
+  const formatCurrency = (val: unknown) => {
     if (val === undefined || val === null || val === '') return '';
-    const num = parseInt(val.toString().replace(/\D/g, ''), 10);
+    if (typeof val !== 'number' && typeof val !== 'string') return '';
+    const num = parseInt(String(val).replace(/\D/g, ''), 10);
     if (isNaN(num)) return '';
     return num.toLocaleString('vi-VN');
   };
@@ -477,8 +479,10 @@ export default function CreateListingPage() {
           <section className="glass-panel bg-gradient-to-br from-surface-container-low/80 to-primary/5 rounded-[32px] p-6 md:p-8 hover:shadow-lg transition-shadow duration-500">
             <LocationPicker
               address={watch('specificAddress') || ''}
-              onAddressChange={(val) => setValue('specificAddress', val, { shouldValidate: true })}
+              coordinates={coordinates}
+              onAddressChange={(val) => setValue('specificAddress', val, { shouldValidate: true, shouldDirty: true })}
               onCoordinatesChange={(lat, lng) => setCoordinates({ lat, lng })}
+              onCoordinatesClear={() => setCoordinates(undefined)}
               userSchool={user?.school || undefined}
               error={errors.specificAddress?.message}
             />

@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import type { NavigateFunction } from 'react-router-dom';
 import { useAuthStore } from '../../../store/useAuthStore';
 import { 
   sellerConfirmTransaction, 
-  buyerConfirmTransaction,
   cancelTransaction
 } from '../../../services/transactionService';
 import { useTransactionStore } from '../../../store/useTransactionStore';
@@ -14,15 +15,28 @@ import { getListingById, getListings } from '../../../services/listingService';
 import ReviewModal from '../../reviews/components/ReviewModal';
 import { ConfirmModal } from '../../../components/ui/ConfirmModal';
 import { useToastStore } from '../../../store/useToastStore';
-import type { Transaction } from '../../../types';
+import type { Listing, ReceiptStatus, Transaction, User } from '../../../types';
+
+interface TransactionItemProps {
+  tx: Transaction;
+  user: { uid: string };
+  isBuyer: boolean;
+  navigate: NavigateFunction;
+  processingId: string | null;
+  reviewedTxIds: Set<string>;
+  handleCancel: (transaction: Transaction) => void;
+  handleSellerConfirm: (transaction: Transaction) => void;
+  setReviewModalTx: Dispatch<SetStateAction<Transaction | null>>;
+  hideListingInfo?: boolean;
+}
 
 function TransactionItem({
   tx, user, isBuyer, navigate, processingId, reviewedTxIds,
-  handleCancel, handleBuyerConfirm, handleSellerConfirm, setReviewModalTx,
+  handleCancel, handleSellerConfirm, setReviewModalTx,
   hideListingInfo = false
-}: any) {
-  const [partner, setPartner] = useState<any>(null);
-  const [listing, setListing] = useState<any>(null);
+}: TransactionItemProps) {
+  const [partner, setPartner] = useState<User | null>(null);
+  const [listing, setListing] = useState<Listing | null>(null);
   const [isStartingChat, setIsStartingChat] = useState(false);
 
   useEffect(() => {
@@ -39,7 +53,9 @@ function TransactionItem({
   }, [tx.sellerId, tx.buyerId, isBuyer, tx.listingId]);
 
   const isCompleted = tx.status === 'completed';
-  const handoverText = isCompleted ? "Handover Done" : (tx.sellerConfirmed ? "Seller Confirmed" : (tx.buyerConfirmed ? "Buyer Confirmed" : "Meetup Pending"));
+  const isSellerConfirmed = isCompleted || tx.sellerConfirmed;
+  const canBuyerReview = isBuyer && isSellerConfirmed;
+  const displayStatus = isSellerConfirmed ? 'completed' : tx.status;
 
   const handleChat = async () => {
     if (!partner || !user) return;
@@ -63,13 +79,13 @@ function TransactionItem({
         <div className="flex flex-col gap-2 flex-grow min-w-0">
           <div className="flex items-center gap-2">
             <span className={`text-label-sm font-label-sm px-3 py-1 rounded-full font-bold tracking-wider ${
-              tx.status === 'completed' 
+              displayStatus === 'completed'
                 ? 'bg-primary/10 text-primary border border-primary/20 shadow-sm' 
-                : tx.status === 'cancelled'
+                : displayStatus === 'cancelled'
                 ? 'bg-error/10 text-error border border-error/20 shadow-sm'
                 : 'bg-secondary/10 text-secondary border border-secondary/20 shadow-sm'
             }`}>
-              {tx.status.toUpperCase()}
+              {displayStatus.toUpperCase()}
             </span>
             <span className="text-label-sm text-on-surface-variant bg-surface-variant/30 px-3 py-1 rounded-full border border-outline-variant/20">
               {new Date(tx.createdAt).toLocaleDateString()}
@@ -134,7 +150,7 @@ function TransactionItem({
         {/* Progress Line */}
         <div 
           className="absolute left-6 top-[24px] -translate-y-1/2 h-1.5 bg-gradient-to-r from-primary to-secondary rounded-full z-0 transition-all duration-1000"
-          style={{ width: isCompleted ? 'calc(100% - 48px)' : (tx.sellerConfirmed || tx.buyerConfirmed ? '50%' : '15%') }}
+          style={{ width: isSellerConfirmed ? 'calc(100% - 48px)' : '0' }}
         ></div>
 
         {/* Step 1: Requested */}
@@ -145,31 +161,19 @@ function TransactionItem({
           <div className="inline-block text-label-sm font-bold text-on-surface bg-surface-container-lowest/80 px-2 py-0.5 rounded-xl text-center leading-tight max-w-[80px] sm:max-w-none">Requested</div>
         </div>
 
-        {/* Step 2: Handover */}
+        {/* Step 2: Seller confirms and completes the transaction */}
         <div className="relative z-10 flex flex-col items-center gap-2 px-1">
           <div className={`w-12 h-12 rounded-full flex items-center justify-center shadow-sm transition-colors duration-500 ${
-            isCompleted ? 'bg-primary text-white' : 'bg-surface-variant border-[3px] border-primary text-primary bg-surface'
+            isSellerConfirmed
+              ? 'bg-primary text-white'
+              : 'bg-surface-variant text-on-surface-variant border-2 border-outline-variant/30 bg-surface'
           }`}>
-            <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: isCompleted ? "'FILL' 1" : "'FILL' 0" }}>
-              handshake
+            <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: isSellerConfirmed ? "'FILL' 1" : "'FILL' 0" }}>
+              verified
             </span>
           </div>
-          <div className={`inline-block text-label-sm font-bold bg-surface-container-lowest/80 px-2 py-0.5 rounded-xl text-center leading-tight max-w-[80px] sm:max-w-none ${isCompleted ? 'text-on-surface' : 'text-primary'}`}>
-            {handoverText}
-          </div>
-        </div>
-
-        {/* Step 3: Completed / Cancelled */}
-        <div className="relative z-10 flex flex-col items-center gap-2 px-1">
-          <div className={`w-12 h-12 rounded-full flex items-center justify-center shadow-sm transition-colors duration-500 ${
-            isCompleted ? 'bg-primary text-white' : tx.status === 'cancelled' ? 'bg-error text-white' : 'bg-surface-variant text-on-surface-variant border-2 border-outline-variant/30 bg-surface'
-          }`}>
-            <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: (isCompleted || tx.status === 'cancelled') ? "'FILL' 1" : "'FILL' 0" }}>
-              {tx.status === 'cancelled' ? 'cancel' : 'verified'}
-            </span>
-          </div>
-          <div className={`inline-block text-label-sm font-bold bg-surface-container-lowest/80 px-2 py-0.5 rounded-xl text-center leading-tight max-w-[80px] sm:max-w-none ${isCompleted ? 'text-primary' : tx.status === 'cancelled' ? 'text-error' : 'text-on-surface-variant'}`}>
-            {tx.status === 'cancelled' ? 'Failed / Cancelled' : 'Completed'}
+          <div className={`inline-block text-label-sm font-bold bg-surface-container-lowest/80 px-2 py-0.5 rounded-xl text-center leading-tight max-w-[110px] sm:max-w-none ${isSellerConfirmed ? 'text-primary' : 'text-on-surface-variant'}`}>
+            {isCompleted ? 'Completed' : tx.sellerConfirmed ? 'Seller Confirmed' : 'Awaiting Seller'}
           </div>
         </div>
       </div>
@@ -184,7 +188,7 @@ function TransactionItem({
           <span className="material-symbols-outlined text-[20px]">chat</span>
           <span className="whitespace-normal sm:whitespace-nowrap">{isStartingChat ? 'Opening...' : `Chat with ${isBuyer ? 'Seller' : 'Buyer'}`}</span>
         </button>
-        {tx.status === 'pending' && isBuyer && (
+        {tx.status === 'pending' && isBuyer && !tx.sellerConfirmed && (
           <button 
             onClick={() => handleCancel(tx)}
             disabled={processingId === tx.id}
@@ -195,17 +199,6 @@ function TransactionItem({
           </button>
         )}
 
-        {tx.status === 'pending' && isBuyer && !tx.buyerConfirmed && tx.sellerConfirmed && (
-          <button 
-            onClick={() => handleBuyerConfirm(tx)}
-            disabled={processingId === tx.id}
-            className="flex-1 sm:flex-none px-2 py-2.5 bg-gradient-to-r from-primary to-primary/90 text-white rounded-xl text-[11px] sm:text-label-md font-bold shadow-[0_4px_14px_rgba(0,166,126,0.3)] hover:shadow-[0_8px_25px_rgba(0,166,126,0.4)] hover:-translate-y-0.5 active:scale-95 transition-all flex flex-col sm:flex-row justify-center items-center gap-1 sm:gap-1.5 text-center leading-tight disabled:opacity-50 disabled:transform-none disabled:shadow-none cursor-pointer"
-          >
-            <span className="material-symbols-outlined text-[20px]">inventory_2</span>
-            <span className="whitespace-normal sm:whitespace-nowrap">Confirm Receipt</span>
-          </button>
-        )}
-        
         {tx.status === 'pending' && !isBuyer && !tx.sellerConfirmed && (
           <button 
             onClick={() => handleSellerConfirm(tx)}
@@ -217,7 +210,7 @@ function TransactionItem({
           </button>
         )}
         
-        {tx.status === 'completed' && !reviewedTxIds.has(tx.id) && (
+        {canBuyerReview && !reviewedTxIds.has(tx.id) && (
           <button 
             onClick={() => setReviewModalTx(tx)}
             className="flex-1 sm:flex-none px-2 py-2.5 bg-amber-500/10 text-amber-600 border border-amber-500/30 hover:bg-amber-500 hover:text-white rounded-xl text-[11px] sm:text-label-md font-bold transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95 flex flex-col sm:flex-row justify-center items-center gap-1 sm:gap-1.5 text-center leading-tight group/review cursor-pointer"
@@ -227,7 +220,7 @@ function TransactionItem({
           </button>
         )}
 
-        {tx.status === 'completed' && reviewedTxIds.has(tx.id) && (
+        {canBuyerReview && reviewedTxIds.has(tx.id) && (
           <div className="flex-1 sm:flex-none px-2 py-2.5 bg-surface-variant/50 text-on-surface-variant rounded-xl text-[11px] sm:text-label-md font-bold border border-outline-variant/30 flex flex-col sm:flex-row justify-center items-center gap-1 sm:gap-1.5 text-center leading-tight">
             <span className="material-symbols-outlined text-[20px] text-primary">done_all</span>
             <span className="whitespace-normal sm:whitespace-nowrap">Reviewed</span>
@@ -238,7 +231,7 @@ function TransactionItem({
   );
 }
 
-function CancelledTransactionItem({ tx, isBuyer }: { tx: any, isBuyer: boolean }) {
+function CancelledTransactionItem({ tx, isBuyer }: { tx: Transaction, isBuyer: boolean }) {
   const [partnerName, setPartnerName] = useState<string>('Loading...');
   useEffect(() => {
     const partnerId = isBuyer ? tx.sellerId : tx.buyerId;
@@ -248,14 +241,14 @@ function CancelledTransactionItem({ tx, isBuyer }: { tx: any, isBuyer: boolean }
   }, [tx, isBuyer]);
 
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-surface-container-lowest/50 p-4 rounded-2xl border border-error/10 hover:border-error/20 transition-colors">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-surface-container-lowest/50 p-4 rounded-2xl border border-outline-variant/30 hover:border-outline-variant/60 transition-colors">
       <div className="flex items-center gap-3">
-         <div className="w-10 h-10 rounded-full bg-error/10 text-error flex items-center justify-center font-bold text-sm border border-error/20">
-            <span className="material-symbols-outlined text-[18px]">person_off</span>
+         <div className="w-10 h-10 rounded-full bg-surface-variant/50 text-on-surface-variant flex items-center justify-center font-bold text-sm border border-outline-variant/30">
+            <span className="material-symbols-outlined text-[18px]">cancel</span>
          </div>
          <div className="flex flex-col">
-           <span className="text-label-md text-on-surface line-through opacity-70">{partnerName}</span>
-           <span className="text-label-sm text-error/80 font-bold">Failed / Cancelled</span>
+           <span className="text-label-md text-on-surface opacity-80">{partnerName}</span>
+           <span className="text-label-sm text-on-surface-variant font-bold">Cancelled</span>
          </div>
       </div>
       <span className="text-label-sm text-on-surface-variant bg-surface-variant/40 px-3 py-1 rounded-full self-start sm:self-auto border border-outline-variant/20">{new Date(tx.createdAt).toLocaleDateString()}</span>
@@ -263,7 +256,7 @@ function CancelledTransactionItem({ tx, isBuyer }: { tx: any, isBuyer: boolean }
   );
 }
 
-function CancelledRequestsList({ txs, isBuyer }: { txs: any[], isBuyer: boolean }) {
+function CancelledRequestsList({ txs, isBuyer }: { txs: Transaction[], isBuyer: boolean }) {
   const [isExpanded, setIsExpanded] = useState(false);
   if (txs.length === 0) return null;
 
@@ -289,8 +282,15 @@ function CancelledRequestsList({ txs, isBuyer }: { txs: any[], isBuyer: boolean 
   );
 }
 
-function ListingQueueHeader({ listingId, firstTx, fallbackListing, activeCount }: { listingId: string, firstTx?: any, fallbackListing?: any, activeCount: number }) {
-  const [listing, setListing] = useState<any>(fallbackListing || null);
+interface ListingQueueHeaderProps {
+  listingId: string;
+  firstTx?: Transaction;
+  fallbackListing?: Listing | null;
+  activeCount: number;
+}
+
+function ListingQueueHeader({ listingId, firstTx, fallbackListing, activeCount }: ListingQueueHeaderProps) {
+  const [listing, setListing] = useState<Listing | null>(fallbackListing || null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -372,13 +372,13 @@ export default function TransactionsPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const targetTxId = searchParams.get('id');
-  const { transactions, buyingActionRequiredCount, sellingActionRequiredCount } = useTransactionStore();
+  const { transactions, sellingActionRequiredCount } = useTransactionStore();
   
   const [activeTab, setActiveTab] = useState<'buying' | 'selling'>('buying');
   const [showActionRequiredOnly, setShowActionRequiredOnly] = useState(false);
   const [sellingFilter, setSellingFilter] = useState<'all' | 'available' | 'reserved'>('all');
   
-  const [myListings, setMyListings] = useState<any[]>([]);
+  const [myListings, setMyListings] = useState<Listing[]>([]);
 
   useEffect(() => {
     if (user && activeTab === 'selling') {
@@ -471,26 +471,10 @@ export default function TransactionsPage() {
         setConfirmConfig(prev => ({ ...prev, isOpen: false }));
         setProcessingId(tx.id);
         try {
-          await cancelTransaction(tx.id);
-        } finally {
-          setProcessingId(null);
-        }
-      }
-    });
-  };
-
-  const handleBuyerConfirm = (tx: Transaction) => {
-    setConfirmConfig({
-      isOpen: true,
-      title: 'Confirm Receipt',
-      message: 'Confirm you have received this item?',
-      confirmText: 'Confirm Receipt',
-      isDestructive: false,
-      onConfirm: async () => {
-        setConfirmConfig(prev => ({ ...prev, isOpen: false }));
-        setProcessingId(tx.id);
-        try {
-          await buyerConfirmTransaction(tx.id, tx.listingId);
+          const success = await cancelTransaction(tx.id);
+          if (!success) {
+            addToast('This request can no longer be cancelled.', 'error');
+          }
         } finally {
           setProcessingId(null);
         }
@@ -501,15 +485,20 @@ export default function TransactionsPage() {
   const handleSellerConfirm = (tx: Transaction) => {
     setConfirmConfig({
       isOpen: true,
-      title: 'Confirm Delivery',
-      message: 'Confirm you have delivered this item?',
+      title: 'Complete Transaction',
+      message: 'Confirm you have delivered this item. This will complete the transaction and allow the buyer to leave a review.',
       confirmText: 'Confirm Delivery',
       isDestructive: false,
       onConfirm: async () => {
         setConfirmConfig(prev => ({ ...prev, isOpen: false }));
         setProcessingId(tx.id);
         try {
-          await sellerConfirmTransaction(tx.id, tx.listingId);
+          const success = await sellerConfirmTransaction(tx.id);
+          if (!success) {
+            addToast('Unable to complete this transaction. Please refresh and try again.', 'error');
+          } else {
+            setShowActionRequiredOnly(false);
+          }
         } finally {
           setProcessingId(null);
         }
@@ -517,21 +506,22 @@ export default function TransactionsPage() {
     });
   };
 
-  const handleReviewSubmit = async (rating: number, comment: string) => {
+  const handleReviewSubmit = async (rating: number, comment: string, receiptStatus: ReceiptStatus) => {
     if (!user || !reviewModalTx) return;
+    if (reviewModalTx.buyerId !== user.uid) {
+      addToast('Only the buyer can review this transaction.', 'error');
+      return;
+    }
     setIsSubmittingReview(true);
-    
-    const revieweeId = reviewModalTx.buyerId === user.uid 
-      ? reviewModalTx.sellerId 
-      : reviewModalTx.buyerId;
 
     const success = await submitReview(
       reviewModalTx.id,
       reviewModalTx.listingId,
       user.uid,
-      revieweeId,
+      reviewModalTx.sellerId,
       rating,
-      comment
+      comment,
+      receiptStatus
     );
 
     if (success) {
@@ -547,12 +537,14 @@ export default function TransactionsPage() {
     setIsSubmittingReview(false);
   };
 
-  // Include 'cancelled' transactions so they don't disappear, allowing the user to see them fail
-  // Filter based on showActionRequiredOnly and activeTab
-  const filteredTransactions = showActionRequiredOnly 
+  const activeActionCount = activeTab === 'selling' ? sellingActionRequiredCount : 0;
+  const isActionFilterActive = showActionRequiredOnly && activeActionCount > 0;
+
+  // Include cancelled transactions so users can still see their request history.
+  // Filter based on the effective action filter and active tab.
+  const filteredTransactions = isActionFilterActive
     ? transactions.filter(tx => {
         if (tx.status !== 'pending') return false;
-        if (activeTab === 'buying' && tx.buyerId === user?.uid && tx.sellerConfirmed && !tx.buyerConfirmed) return true;
         if (activeTab === 'selling' && tx.sellerId === user?.uid && !tx.sellerConfirmed) return true;
         return false;
       })
@@ -564,8 +556,6 @@ export default function TransactionsPage() {
   const activeBuyingTxs = buyingTxs.filter(t => t.status !== 'cancelled');
   const cancelledBuyingTxs = buyingTxs.filter(t => t.status === 'cancelled');
 
-  const activeActionCount = activeTab === 'buying' ? buyingActionRequiredCount : sellingActionRequiredCount;
-
   // Group selling transactions by listing to show queues
   const groupedSellingTxs = sellingTxs.reduce((acc, tx) => {
     if (!acc[tx.listingId]) acc[tx.listingId] = { active: [], cancelled: [], fallbackListing: null };
@@ -575,7 +565,7 @@ export default function TransactionsPage() {
       acc[tx.listingId].active.push(tx);
     }
     return acc;
-  }, {} as Record<string, { active: Transaction[], cancelled: Transaction[], fallbackListing: any | null }>);
+  }, {} as Record<string, { active: Transaction[], cancelled: Transaction[], fallbackListing: Listing | null }>);
 
   // Inject empty queues for active/pending listings with no requests
   myListings.forEach(listing => {
@@ -609,17 +599,17 @@ export default function TransactionsPage() {
         {/* Actions Required Quick Filter */}
         {activeActionCount > 0 && (
           <button
-            onClick={() => setShowActionRequiredOnly(!showActionRequiredOnly)}
+            onClick={() => setShowActionRequiredOnly(!isActionFilterActive)}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-label-md font-bold transition-all ${
-              showActionRequiredOnly 
+              isActionFilterActive
                 ? 'bg-error text-white shadow-[0_4px_14px_rgba(200,0,0,0.3)]' 
                 : 'bg-error/10 text-error border border-error/20 hover:bg-error/20'
             }`}
           >
             <span className="material-symbols-outlined text-[20px]">
-              {showActionRequiredOnly ? 'filter_alt_off' : 'notification_important'}
+              {isActionFilterActive ? 'filter_alt_off' : 'notification_important'}
             </span>
-            {showActionRequiredOnly ? 'Show All' : `${activeActionCount} Action${activeActionCount > 1 ? 's' : ''} Required`}
+            {isActionFilterActive ? 'Show All' : `${activeActionCount} Action${activeActionCount > 1 ? 's' : ''} Required`}
           </button>
         )}
         
@@ -636,19 +626,18 @@ export default function TransactionsPage() {
           
           <button
             onClick={() => { setActiveTab('buying'); setShowActionRequiredOnly(false); }}
+            aria-label="Buying"
             className={`relative flex-1 flex justify-center items-center gap-2 py-2.5 px-6 rounded-xl text-label-lg font-bold transition-colors duration-300 z-10 ${
               activeTab === 'buying' ? 'text-primary' : 'text-on-surface-variant hover:text-on-surface'
             }`}
           >
             <span className="material-symbols-outlined text-[20px]">shopping_bag</span>
             Buying
-            {buyingActionRequiredCount > 0 && (
-              <span className="absolute top-2 right-2 w-2 h-2 bg-error rounded-full ring-2 ring-surface"></span>
-            )}
           </button>
           
           <button
             onClick={() => { setActiveTab('selling'); setShowActionRequiredOnly(false); }}
+            aria-label="Selling"
             className={`relative flex-1 flex justify-center items-center gap-2 py-2.5 px-6 rounded-xl text-label-lg font-bold transition-colors duration-300 z-10 ${
               activeTab === 'selling' ? 'text-primary' : 'text-on-surface-variant hover:text-on-surface'
             }`}
@@ -721,7 +710,9 @@ export default function TransactionsPage() {
                 if (sellingFilter === 'all') return true;
                 const finalStatus = group.fallbackListing?.status || myListings.find(l => l.id === listingId)?.status;
                 if (sellingFilter === 'reserved') {
-                  return ['reserved', 'completed', 'sold'].includes(finalStatus);
+                  return finalStatus
+                    ? ['reserved', 'completed', 'sold'].includes(finalStatus)
+                    : false;
                 }
                 return finalStatus === sellingFilter;
               })
@@ -757,7 +748,6 @@ export default function TransactionsPage() {
                             processingId={processingId}
                             reviewedTxIds={reviewedTxIds}
                             handleCancel={handleCancel}
-                            handleBuyerConfirm={handleBuyerConfirm}
                             handleSellerConfirm={handleSellerConfirm}
                             setReviewModalTx={setReviewModalTx}
                             hideListingInfo={true}
@@ -790,7 +780,6 @@ export default function TransactionsPage() {
                 processingId={processingId}
                 reviewedTxIds={reviewedTxIds}
                 handleCancel={handleCancel}
-                handleBuyerConfirm={handleBuyerConfirm}
                 handleSellerConfirm={handleSellerConfirm}
                 setReviewModalTx={setReviewModalTx}
               />
@@ -800,7 +789,7 @@ export default function TransactionsPage() {
               <div className="mt-8 bg-surface-container-lowest/30 p-6 rounded-[32px] border border-outline-variant/30 shadow-sm">
                  <h3 className="text-title-md font-bold text-on-surface-variant mb-4 flex items-center gap-2">
                     <span className="material-symbols-outlined text-[20px]">history</span>
-                    Cancelled / Failed Purchases
+                    Cancelled Purchases
                  </h3>
                  <div className="flex flex-col gap-3">
                    {cancelledBuyingTxs.map(tx => (
@@ -813,13 +802,15 @@ export default function TransactionsPage() {
         )}
       </div>
 
-      <ReviewModal 
-        isOpen={!!reviewModalTx}
-        onClose={() => setReviewModalTx(null)}
-        onSubmit={handleReviewSubmit}
-        revieweeName={reviewModalTx ? (reviewModalTx.buyerId === user?.uid ? 'the Seller' : 'the Buyer') : undefined}
-        isSubmitting={isSubmittingReview}
-      />
+      {reviewModalTx && (
+        <ReviewModal
+          isOpen
+          onClose={() => setReviewModalTx(null)}
+          onSubmit={handleReviewSubmit}
+          revieweeName="the Seller"
+          isSubmitting={isSubmittingReview}
+        />
+      )}
       <ConfirmModal
         isOpen={confirmConfig.isOpen}
         title={confirmConfig.title}

@@ -1,9 +1,20 @@
-import { collection, doc, query, where, getDocs, runTransaction } from 'firebase/firestore';
-import { db } from '../lib/firebase';
-import type { Review, User } from '../types';
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  runTransaction,
+  where
+} from 'firebase/firestore';
+import { auth, db } from '../lib/firebase';
+import type { ReceiptStatus, Review, Transaction, User } from '../types';
 
 const REVIEWS_COLLECTION = 'reviews';
+const TRANSACTIONS_COLLECTION = 'transactions';
 const USERS_COLLECTION = 'users';
+
+const isReceiptStatus = (value: string): value is ReceiptStatus =>
+  value === 'received' || value === 'not_received';
 
 export const submitReview = async (
   transactionId: string,
@@ -11,40 +22,78 @@ export const submitReview = async (
   reviewerId: string,
   revieweeId: string,
   rating: number,
-  comment?: string
+  comment?: string,
+  receiptStatus: ReceiptStatus = 'received'
 ): Promise<boolean> => {
-  try {
-    const reviewRef = doc(collection(db, REVIEWS_COLLECTION));
-    const userRef = doc(db, USERS_COLLECTION, revieweeId);
+  if (
+    auth.currentUser?.uid !== reviewerId
+    || !Number.isInteger(rating)
+    || rating < 1
+    || rating > 5
+    || (comment?.length ?? 0) > 500
+    || !isReceiptStatus(receiptStatus)
+  ) {
+    return false;
+  }
 
-    await runTransaction(db, async (transaction) => {
-      // 1. Get the current user data to recalculate rating
-      const userDoc = await transaction.get(userRef);
-      if (!userDoc.exists()) {
-        throw new Error("Reviewee does not exist!");
+  try {
+    // Existing reviews used auto-generated IDs, so check them before switching to
+    // the deterministic ID used for new reviews.
+    const legacyDuplicateQuery = query(
+      collection(db, REVIEWS_COLLECTION),
+      where('transactionId', '==', transactionId),
+      where('reviewerId', '==', reviewerId)
+    );
+    const legacyDuplicates = await getDocs(legacyDuplicateQuery);
+    if (!legacyDuplicates.empty) return false;
+
+    const transactionRef = doc(db, TRANSACTIONS_COLLECTION, transactionId);
+    const reviewRef = doc(db, REVIEWS_COLLECTION, `${transactionId}_${reviewerId}`);
+    const userRef = doc(db, USERS_COLLECTION, revieweeId);
+    const normalizedComment = comment?.trim();
+
+    await runTransaction(db, async (firestoreTransaction) => {
+      const [transactionDoc, reviewDoc, userDoc] = await Promise.all([
+        firestoreTransaction.get(transactionRef),
+        firestoreTransaction.get(reviewRef),
+        firestoreTransaction.get(userRef)
+      ]);
+
+      if (!transactionDoc.exists()) throw new Error('Transaction does not exist');
+      if (reviewDoc.exists()) throw new Error('Transaction has already been reviewed');
+      if (!userDoc.exists()) throw new Error('Reviewee does not exist');
+
+      const transactionData = transactionDoc.data() as Transaction;
+      const sellerHasConfirmed = transactionData.sellerConfirmed
+        || transactionData.status === 'completed';
+      if (
+        !sellerHasConfirmed
+        || transactionData.buyerId !== reviewerId
+        || transactionData.sellerId !== revieweeId
+        || transactionData.listingId !== listingId
+      ) {
+        throw new Error('User is not eligible to review this transaction');
       }
-      
+
       const userData = userDoc.data() as User;
       const currentTotal = userData.totalReviews || 0;
       const currentRating = userData.rating || 0;
-
       const newTotal = currentTotal + 1;
       const newRating = ((currentRating * currentTotal) + rating) / newTotal;
 
-      // 2. Write the new review document
       const newReview: Omit<Review, 'id'> = {
         transactionId,
-        listingId,
+        listingId: transactionData.listingId,
         reviewerId,
-        revieweeId,
+        revieweeId: transactionData.sellerId,
         rating,
-        comment,
-        createdAt: Date.now()
+        receiptStatus,
+        createdAt: Date.now(),
+        ...(normalizedComment ? { comment: normalizedComment } : {})
       };
-      transaction.set(reviewRef, newReview);
 
-      // 3. Update the user's rating and totalReviews
-      transaction.update(userRef, {
+      firestoreTransaction.set(reviewRef, newReview);
+      firestoreTransaction.update(userRef, {
         rating: newRating,
         totalReviews: newTotal
       });
@@ -52,7 +101,7 @@ export const submitReview = async (
 
     return true;
   } catch (error) {
-    console.error("Error submitting review:", error);
+    console.error('Error submitting review:', error);
     return false;
   }
 };
@@ -62,51 +111,50 @@ export const checkIfReviewed = async (
   reviewerId: string
 ): Promise<boolean> => {
   try {
-    const q = query(
+    const reviewQuery = query(
       collection(db, REVIEWS_COLLECTION),
       where('transactionId', '==', transactionId),
       where('reviewerId', '==', reviewerId)
     );
-    const snap = await getDocs(q);
-    return !snap.empty;
+    const snapshot = await getDocs(reviewQuery);
+    return !snapshot.empty;
   } catch (error) {
-    console.error("Error checking review status:", error);
+    console.error('Error checking review status:', error);
     return false;
   }
 };
 
 export const getUserReviews = async (userId: string): Promise<Review[]> => {
   try {
-    const q = query(
+    const reviewQuery = query(
       collection(db, REVIEWS_COLLECTION),
       where('revieweeId', '==', userId)
     );
-    const snap = await getDocs(q);
-    const reviews: Review[] = [];
-    snap.forEach(doc => {
-      reviews.push({ id: doc.id, ...doc.data() } as Review);
-    });
+    const snapshot = await getDocs(reviewQuery);
+    const reviews = snapshot.docs.map((document) => ({
+      id: document.id,
+      ...document.data()
+    } as Review));
     return reviews.sort((a, b) => b.createdAt - a.createdAt);
   } catch (error) {
-    console.error("Error fetching user reviews:", error);
+    console.error('Error fetching user reviews:', error);
     return [];
   }
 };
 
 export const getReviewsByReviewer = async (reviewerId: string): Promise<Review[]> => {
   try {
-    const q = query(
+    const reviewQuery = query(
       collection(db, REVIEWS_COLLECTION),
       where('reviewerId', '==', reviewerId)
     );
-    const snap = await getDocs(q);
-    const reviews: Review[] = [];
-    snap.forEach(doc => {
-      reviews.push({ id: doc.id, ...doc.data() } as Review);
-    });
-    return reviews;
+    const snapshot = await getDocs(reviewQuery);
+    return snapshot.docs.map((document) => ({
+      id: document.id,
+      ...document.data()
+    } as Review));
   } catch (error) {
-    console.error("Error fetching reviews by reviewer:", error);
+    console.error('Error fetching reviews by reviewer:', error);
     return [];
   }
 };

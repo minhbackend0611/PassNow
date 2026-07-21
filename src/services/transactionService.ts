@@ -1,18 +1,26 @@
-import { collection, doc, query, where, getDocs, writeBatch, getDoc, onSnapshot } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import {
+  collection,
+  doc,
+  getDocs,
+  onSnapshot,
+  query,
+  runTransaction,
+  where
+} from 'firebase/firestore';
+import { auth, db } from '../lib/firebase';
 import { sendSystemMessage } from './chatService';
-import { 
-  sendTransactionRequestedEmail, 
-  sendSellerConfirmedEmail, 
-  sendBuyerConfirmedEmail, 
+import {
+  sendSellerConfirmedEmail,
+  sendTransactionCancelledEmail,
   sendTransactionCompletedEmail,
-  sendTransactionCancelledEmail
+  sendTransactionRequestedEmail
 } from './emailService';
 import { getUserById } from './userService';
-import type { Transaction } from '../types';
+import type { Listing, Transaction } from '../types';
 
 const TRANSACTIONS_COLLECTION = 'transactions';
 const LISTINGS_COLLECTION = 'listings';
+const legacyReconciliationsInFlight = new Set<string>();
 
 export const requestTransaction = async (
   listingId: string,
@@ -20,48 +28,83 @@ export const requestTransaction = async (
   sellerId: string,
   buyerId: string
 ): Promise<string | null> => {
+  if (auth.currentUser?.uid !== buyerId || buyerId === sellerId) return null;
+
   try {
-    // Check if buyer already has an active request for this listing
+    // This also catches active legacy requests that used auto-generated IDs.
     const existing = await getTransactionByListingAndBuyer(listingId, buyerId);
     if (existing) {
-      console.warn("User already has an active transaction for this listing");
+      console.warn('User already has an active transaction for this listing');
       return null;
     }
 
-    const batch = writeBatch(db);
-    
-    // Create new transaction doc
-    const transactionRef = doc(collection(db, TRANSACTIONS_COLLECTION));
-    const newTransaction: Omit<Transaction, 'id'> = {
-      listingId,
-      listingTitle,
-      sellerId,
-      buyerId,
-      sellerConfirmed: false,
-      buyerConfirmed: false,
-      status: 'pending',
-      createdAt: Date.now()
-    };
-    
-    batch.set(transactionRef, newTransaction);
-
-    await batch.commit();
-
-    await sendSystemMessage(
-      listingId, 
-      sellerId, 
-      buyerId, 
-      '👋 A buyer has requested to buy this item! Please check your Transactions page to manage requests.'
+    // A deterministic ID makes concurrent requests from the same buyer converge
+    // on one document. The transaction also prevents requests after sell-out.
+    const transactionRef = doc(
+      db,
+      TRANSACTIONS_COLLECTION,
+      `${listingId}_${buyerId}`
     );
+    const listingRef = doc(db, LISTINGS_COLLECTION, listingId);
+    const created = await runTransaction(db, async (firestoreTransaction) => {
+      const [listingSnap, existingTransactionSnap] = await Promise.all([
+        firestoreTransaction.get(listingRef),
+        firestoreTransaction.get(transactionRef)
+      ]);
+      if (!listingSnap.exists()) return false;
 
-    // Send email to seller
-    getUserById(buyerId).then(buyer => {
-      sendTransactionRequestedEmail(sellerId, buyer?.displayName || 'A user', listingTitle, transactionRef.id);
+      const listing = listingSnap.data() as Listing;
+      const completedCount = Math.max(0, Number(listing.completedCount) || 0);
+      const quantity = Math.max(1, Number(listing.quantity) || 1);
+      const hasActiveDeterministicRequest = existingTransactionSnap.exists()
+        && (existingTransactionSnap.data() as Transaction).status !== 'cancelled';
+      if (
+        listing.sellerId !== sellerId
+        || listing.status !== 'available'
+        || completedCount >= quantity
+        || hasActiveDeterministicRequest
+      ) {
+        return false;
+      }
+
+      const newTransaction: Omit<Transaction, 'id'> = {
+        listingId,
+        listingTitle: listing.title || listingTitle,
+        sellerId: listing.sellerId,
+        buyerId,
+        sellerConfirmed: false,
+        status: 'pending',
+        createdAt: Date.now()
+      };
+      firestoreTransaction.set(transactionRef, newTransaction);
+      return true;
     });
+
+    if (!created) return null;
+
+    try {
+      await sendSystemMessage(
+        listingId,
+        sellerId,
+        buyerId,
+        'A buyer has requested to buy this item. Please check your Transactions page to manage requests.'
+      );
+    } catch (error) {
+      console.error('Error sending transaction request notification:', error);
+    }
+
+    void getUserById(buyerId).then((buyer) =>
+      sendTransactionRequestedEmail(
+        sellerId,
+        buyer?.displayName || 'A user',
+        listingTitle,
+        transactionRef.id
+      )
+    );
 
     return transactionRef.id;
   } catch (error) {
-    console.error("Error requesting transaction:", error);
+    console.error('Error requesting transaction:', error);
     return null;
   }
 };
@@ -71,180 +114,188 @@ export const cancelTransaction = async (
 ): Promise<boolean> => {
   try {
     const transactionRef = doc(db, TRANSACTIONS_COLLECTION, transactionId);
-    const transactionSnap = await getDoc(transactionRef);
-    
-    if (!transactionSnap.exists()) return false;
-    const transactionData = transactionSnap.data() as Transaction;
+    const transactionData = await runTransaction(db, async (firestoreTransaction) => {
+      const transactionSnap = await firestoreTransaction.get(transactionRef);
+      if (!transactionSnap.exists()) return null;
 
-    const batch = writeBatch(db);
-    batch.update(transactionRef, { status: 'cancelled' });
+      const data = transactionSnap.data() as Transaction;
+      if (
+        auth.currentUser?.uid !== data.buyerId
+        || data.status !== 'pending'
+        || data.sellerConfirmed
+      ) return null;
 
-    await batch.commit();
-
-    // Send email to seller about the cancellation
-    getUserById(transactionData.buyerId).then(buyer => {
-      sendTransactionCancelledEmail(
-        transactionData.sellerId, 
-        buyer?.displayName || 'The buyer', 
-        transactionData.listingTitle
-      );
+      firestoreTransaction.update(transactionRef, { status: 'cancelled' });
+      return data;
     });
+
+    if (!transactionData) return false;
+
+    void getUserById(transactionData.buyerId).then((buyer) =>
+      sendTransactionCancelledEmail(
+        transactionData.sellerId,
+        buyer?.displayName || 'The buyer',
+        transactionData.listingTitle
+      )
+    );
 
     return true;
   } catch (error) {
-    console.error("Error canceling transaction:", error);
+    console.error('Error canceling transaction:', error);
     return false;
   }
+};
+
+const cancelRemainingPendingTransactions = async (
+  listingId: string,
+  completedTransactionId: string
+): Promise<void> => {
+  const pendingQuery = query(
+    collection(db, TRANSACTIONS_COLLECTION),
+    where('listingId', '==', listingId),
+    where('status', '==', 'pending')
+  );
+  const pendingSnaps = await getDocs(pendingQuery);
+
+  await Promise.all(pendingSnaps.docs.map(async (pendingSnap) => {
+    if (pendingSnap.id === completedTransactionId) return;
+
+    const cancelledTransaction = await runTransaction(db, async (firestoreTransaction) => {
+      const freshSnap = await firestoreTransaction.get(pendingSnap.ref);
+      if (!freshSnap.exists()) return null;
+
+      const transactionData = freshSnap.data() as Transaction;
+      if (transactionData.status !== 'pending' || transactionData.sellerConfirmed) return null;
+
+      firestoreTransaction.update(freshSnap.ref, { status: 'cancelled' });
+      return transactionData;
+    });
+
+    if (!cancelledTransaction) return;
+
+    try {
+      await sendSystemMessage(
+        listingId,
+        cancelledTransaction.sellerId,
+        cancelledTransaction.buyerId,
+        'The seller has sold out of this item. Your request is canceled.'
+      );
+    } catch (error) {
+      console.error('Error sending sold-out notification:', error);
+    }
+  }));
 };
 
 export const sellerConfirmTransaction = async (
-  transactionId: string,
-  listingId: string
+  transactionId: string
 ): Promise<boolean> => {
   try {
     const transactionRef = doc(db, TRANSACTIONS_COLLECTION, transactionId);
-    const transactionSnap = await getDoc(transactionRef);
-    
-    if (!transactionSnap.exists()) return false;
-    
-    const transactionData = transactionSnap.data() as Transaction;
-    const batch = writeBatch(db);
+    const confirmationResult = await runTransaction(db, async (firestoreTransaction) => {
+      const transactionSnap = await firestoreTransaction.get(transactionRef);
+      if (!transactionSnap.exists()) return { outcome: 'invalid' as const };
 
-    batch.update(transactionRef, { sellerConfirmed: true });
+      const transactionData = transactionSnap.data() as Transaction;
+      if (auth.currentUser?.uid !== transactionData.sellerId) {
+        return { outcome: 'invalid' as const };
+      }
 
-    let sysPromises: Promise<void>[] = [];
+      if (transactionData.status === 'completed') {
+        const listingRef = doc(db, LISTINGS_COLLECTION, transactionData.listingId);
+        const listingSnap = await firestoreTransaction.get(listingRef);
+        if (!listingSnap.exists()) {
+          return {
+            outcome: 'already-completed' as const,
+            transactionData,
+            soldOut: false
+          };
+        }
 
-    // If buyer already confirmed, complete the transaction
-    if (transactionData.buyerConfirmed) {
-      batch.update(transactionRef, { 
+        const listing = listingSnap.data() as Listing;
+        const completedCount = Math.max(0, Number(listing.completedCount) || 0);
+        const quantity = Math.max(1, Number(listing.quantity) || 1);
+        return {
+          outcome: 'already-completed' as const,
+          transactionData,
+          soldOut: listing.status === 'completed' || completedCount >= quantity
+        };
+      }
+      if (transactionData.status !== 'pending') {
+        return { outcome: 'invalid' as const };
+      }
+
+      const listingRef = doc(db, LISTINGS_COLLECTION, transactionData.listingId);
+      const listingSnap = await firestoreTransaction.get(listingRef);
+      if (!listingSnap.exists()) return { outcome: 'invalid' as const };
+
+      const listing = listingSnap.data() as Listing;
+      const currentCompleted = Math.max(0, Number(listing.completedCount) || 0);
+      const quantity = Math.max(1, Number(listing.quantity) || 1);
+      if (currentCompleted >= quantity) return { outcome: 'invalid' as const };
+
+      const newCompleted = currentCompleted + 1;
+      const soldOut = newCompleted >= quantity;
+
+      firestoreTransaction.update(transactionRef, {
+        sellerConfirmed: true,
         status: 'completed',
         completedAt: Date.now()
       });
-      
-      const listingRef = doc(db, LISTINGS_COLLECTION, listingId);
-      const listingSnap = await getDoc(listingRef);
-      if (listingSnap.exists()) {
-        const listing = listingSnap.data() as any;
-        const currentCompleted = listing.completedCount || 0;
-        const newCompleted = currentCompleted + 1;
-        const quantity = listing.quantity || 1;
-        
-        batch.update(listingRef, { completedCount: newCompleted });
+      firestoreTransaction.update(listingRef, {
+        completedCount: newCompleted,
+        ...(soldOut ? { status: 'completed' } : {})
+      });
 
-        if (newCompleted >= quantity) {
-          batch.update(listingRef, { status: 'completed' });
+      return {
+        outcome: 'completed' as const,
+        transactionData,
+        soldOut
+      };
+    });
 
-          // Cancel all other pending transactions for this listing
-          const q = query(collection(db, TRANSACTIONS_COLLECTION), where('listingId', '==', listingId), where('status', '==', 'pending'));
-          const pendingSnaps = await getDocs(q);
-          
-          pendingSnaps.forEach(docSnap => {
-            if (docSnap.id !== transactionId) {
-              batch.update(docSnap.ref, { status: 'cancelled' });
-              const txData = docSnap.data() as Transaction;
-              sysPromises.push(
-                sendSystemMessage(listingId, txData.sellerId, txData.buyerId, 'The seller has sold out of this item. Your request is canceled.')
-              );
-            }
-          });
-        }
+    if (confirmationResult.outcome === 'invalid') return false;
+
+    const { transactionData, soldOut } = confirmationResult;
+    if (soldOut) {
+      try {
+        await cancelRemainingPendingTransactions(transactionData.listingId, transactionId);
+      } catch (error) {
+        // The transaction/inventory commit already succeeded. Report success and
+        // let an idempotent retry attempt the sold-out cleanup again.
+        console.error('Error canceling remaining sold-out requests:', error);
       }
     }
 
-    await batch.commit();
-    await Promise.all(sysPromises);
+    if (confirmationResult.outcome === 'already-completed') return true;
 
-    if (transactionData.buyerConfirmed) {
-      await sendSystemMessage(listingId, transactionData.sellerId, transactionData.buyerId, '🎉 Transaction completed! Thank you for using PassNow.');
-      // Send email to both
-      sendTransactionCompletedEmail(transactionData.sellerId, transactionData.listingTitle, transactionId);
-      sendTransactionCompletedEmail(transactionData.buyerId, transactionData.listingTitle, transactionId);
-    } else {
-      // Send email to buyer saying seller confirmed
-      getUserById(transactionData.sellerId).then(seller => {
-        sendSellerConfirmedEmail(transactionData.buyerId, seller?.displayName || 'The seller', transactionData.listingTitle, transactionId);
-      });
+    try {
+      await sendSystemMessage(
+        transactionData.listingId,
+        transactionData.sellerId,
+        transactionData.buyerId,
+        'Transaction completed. The buyer can now review the handover.'
+      );
+    } catch (error) {
+      console.error('Error sending completion notification:', error);
     }
+
+    void getUserById(transactionData.sellerId).then((seller) =>
+      sendSellerConfirmedEmail(
+        transactionData.buyerId,
+        seller?.displayName || 'The seller',
+        transactionData.listingTitle,
+        transactionId
+      )
+    );
+    void sendTransactionCompletedEmail(
+      transactionData.sellerId,
+      transactionData.listingTitle,
+      transactionId
+    );
 
     return true;
   } catch (error) {
-    console.error("Error seller confirming transaction:", error);
-    return false;
-  }
-};
-
-export const buyerConfirmTransaction = async (
-  transactionId: string,
-  listingId: string
-): Promise<boolean> => {
-  try {
-    const transactionRef = doc(db, TRANSACTIONS_COLLECTION, transactionId);
-    const transactionSnap = await getDoc(transactionRef);
-    
-    if (!transactionSnap.exists()) return false;
-    
-    const transactionData = transactionSnap.data() as Transaction;
-    const batch = writeBatch(db);
-
-    batch.update(transactionRef, { buyerConfirmed: true });
-
-    let sysPromises: Promise<void>[] = [];
-
-    // If seller already confirmed, complete the transaction
-    if (transactionData.sellerConfirmed) {
-      batch.update(transactionRef, { 
-        status: 'completed',
-        completedAt: Date.now()
-      });
-      
-      const listingRef = doc(db, LISTINGS_COLLECTION, listingId);
-      const listingSnap = await getDoc(listingRef);
-      if (listingSnap.exists()) {
-        const listing = listingSnap.data() as any;
-        const currentCompleted = listing.completedCount || 0;
-        const newCompleted = currentCompleted + 1;
-        const quantity = listing.quantity || 1;
-        
-        batch.update(listingRef, { completedCount: newCompleted });
-
-        if (newCompleted >= quantity) {
-          batch.update(listingRef, { status: 'completed' });
-
-          // Cancel all other pending transactions for this listing
-          const q = query(collection(db, TRANSACTIONS_COLLECTION), where('listingId', '==', listingId), where('status', '==', 'pending'));
-          const pendingSnaps = await getDocs(q);
-          
-          pendingSnaps.forEach(docSnap => {
-            if (docSnap.id !== transactionId) {
-              batch.update(docSnap.ref, { status: 'cancelled' });
-              const txData = docSnap.data() as Transaction;
-              sysPromises.push(
-                sendSystemMessage(listingId, txData.sellerId, txData.buyerId, 'The seller has sold out of this item. Your request is canceled.')
-              );
-            }
-          });
-        }
-      }
-    }
-
-    await batch.commit();
-    await Promise.all(sysPromises);
-
-    if (transactionData.sellerConfirmed) {
-      await sendSystemMessage(listingId, transactionData.sellerId, transactionData.buyerId, '🎉 Transaction completed! Thank you for using PassNow.');
-      // Send email to both
-      sendTransactionCompletedEmail(transactionData.sellerId, transactionData.listingTitle, transactionId);
-      sendTransactionCompletedEmail(transactionData.buyerId, transactionData.listingTitle, transactionId);
-    } else {
-      // Send email to seller saying buyer confirmed
-      getUserById(transactionData.buyerId).then(buyer => {
-        sendBuyerConfirmedEmail(transactionData.sellerId, buyer?.displayName || 'The buyer', transactionData.listingTitle, transactionId);
-      });
-    }
-
-    return true;
-  } catch (error) {
-    console.error("Error buyer confirming transaction:", error);
+    console.error('Error seller confirming transaction:', error);
     return false;
   }
 };
@@ -252,45 +303,42 @@ export const buyerConfirmTransaction = async (
 export const getUserTransactions = async (userId: string): Promise<Transaction[]> => {
   try {
     const transactions: Transaction[] = [];
-    
-    // Firestore requires compound indexes for OR queries or we can just do two separate queries
-    // Query where user is buyer
+
     const buyerQuery = query(
       collection(db, TRANSACTIONS_COLLECTION),
       where('buyerId', '==', userId)
     );
     const buyerSnap = await getDocs(buyerQuery);
-    buyerSnap.forEach(doc => {
-      transactions.push({ id: doc.id, ...doc.data() } as Transaction);
+    buyerSnap.forEach((snapshot) => {
+      transactions.push({ id: snapshot.id, ...snapshot.data() } as Transaction);
     });
 
-    // Query where user is seller
     const sellerQuery = query(
       collection(db, TRANSACTIONS_COLLECTION),
       where('sellerId', '==', userId)
     );
     const sellerSnap = await getDocs(sellerQuery);
-    sellerSnap.forEach(doc => {
-      // Prevent duplicates just in case (though a user usually isn't both buyer and seller)
-      if (!transactions.find(t => t.id === doc.id)) {
-        transactions.push({ id: doc.id, ...doc.data() } as Transaction);
+    sellerSnap.forEach((snapshot) => {
+      if (!transactions.find((transaction) => transaction.id === snapshot.id)) {
+        transactions.push({ id: snapshot.id, ...snapshot.data() } as Transaction);
       }
     });
 
-    // Sort by createdAt descending
     return transactions.sort((a, b) => b.createdAt - a.createdAt);
   } catch (error) {
-    console.error("Error fetching user transactions:", error);
+    console.error('Error fetching user transactions:', error);
     return [];
   }
 };
 
-export const subscribeToUserTransactions = (userId: string, callback: (transactions: Transaction[]) => void): () => void => {
+export const subscribeToUserTransactions = (
+  userId: string,
+  callback: (transactions: Transaction[]) => void
+): (() => void) => {
   const buyerQuery = query(
     collection(db, TRANSACTIONS_COLLECTION),
     where('buyerId', '==', userId)
   );
-
   const sellerQuery = query(
     collection(db, TRANSACTIONS_COLLECTION),
     where('sellerId', '==', userId)
@@ -300,23 +348,42 @@ export const subscribeToUserTransactions = (userId: string, callback: (transacti
   let sellerTransactions: Transaction[] = [];
 
   const updateAndNotify = () => {
-    // Merge, deduplicate (just in case), and sort
     const merged = [...buyerTransactions, ...sellerTransactions];
     const uniqueMap = new Map<string, Transaction>();
-    merged.forEach(tx => uniqueMap.set(tx.id, tx));
-    
-    const sorted = Array.from(uniqueMap.values()).sort((a, b) => b.createdAt - a.createdAt);
-    callback(sorted);
+    merged.forEach((transaction) => uniqueMap.set(transaction.id, transaction));
+    callback(Array.from(uniqueMap.values()).sort((a, b) => b.createdAt - a.createdAt));
   };
 
-  const unsubBuyer = onSnapshot(buyerQuery, (snap) => {
-    buyerTransactions = snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Transaction));
+  const unsubBuyer = onSnapshot(buyerQuery, (snapshot) => {
+    buyerTransactions = snapshot.docs.map((document) => ({
+      id: document.id,
+      ...document.data()
+    } as Transaction));
     updateAndNotify();
   });
 
-  const unsubSeller = onSnapshot(sellerQuery, (snap) => {
-    sellerTransactions = snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Transaction));
+  const unsubSeller = onSnapshot(sellerQuery, (snapshot) => {
+    sellerTransactions = snapshot.docs.map((document) => ({
+      id: document.id,
+      ...document.data()
+    } as Transaction));
     updateAndNotify();
+
+    // Backfill transactions created by the old two-confirmation flow. Only the
+    // seller subscription performs this write, and sellerConfirmTransaction is
+    // idempotent so concurrent tabs cannot double-increment inventory.
+    sellerTransactions
+      .filter((transaction) =>
+        transaction.status === 'pending'
+        && transaction.sellerConfirmed
+        && transaction.sellerId === userId
+      )
+      .forEach((transaction) => {
+        if (legacyReconciliationsInFlight.has(transaction.id)) return;
+        legacyReconciliationsInFlight.add(transaction.id);
+        void sellerConfirmTransaction(transaction.id)
+          .finally(() => legacyReconciliationsInFlight.delete(transaction.id));
+      });
   });
 
   return () => {
@@ -325,22 +392,26 @@ export const subscribeToUserTransactions = (userId: string, callback: (transacti
   };
 };
 
-export const getTransactionByListingAndBuyer = async (listingId: string, buyerId: string): Promise<Transaction | null> => {
+export const getTransactionByListingAndBuyer = async (
+  listingId: string,
+  buyerId: string
+): Promise<Transaction | null> => {
   try {
-    const q = query(
+    const transactionQuery = query(
       collection(db, TRANSACTIONS_COLLECTION),
       where('listingId', '==', listingId),
       where('buyerId', '==', buyerId)
     );
-    const snap = await getDocs(q);
-    if (!snap.empty) {
-      const docs = snap.docs.map(d => ({ id: d.id, ...d.data() } as Transaction));
-      const activeTx = docs.find(t => t.status !== 'cancelled');
-      if (activeTx) return activeTx;
-    }
-    return null;
+    const snapshot = await getDocs(transactionQuery);
+    if (snapshot.empty) return null;
+
+    const transactions = snapshot.docs.map((document) => ({
+      id: document.id,
+      ...document.data()
+    } as Transaction));
+    return transactions.find((transaction) => transaction.status !== 'cancelled') || null;
   } catch (error) {
-    console.error("Error fetching transaction:", error);
+    console.error('Error fetching transaction:', error);
     return null;
   }
 };
