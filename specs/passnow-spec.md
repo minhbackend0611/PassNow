@@ -27,8 +27,8 @@ P0 — Must have (MVP không thiếu):
   Free items section
 
 P1 — Should have (hoàn thiện trải nghiệm):
-  Transaction confirm flow (buyer + seller cùng confirm)
-  Rating & review sau giao dịch
+  Transaction flow (seller confirm là bước hoàn tất cuối cùng)
+  Buyer rating & review sau khi seller confirm
 
 P2 — Nice to have (sau MVP):
   Real-time chat (Firebase Realtime DB)
@@ -174,8 +174,7 @@ transactions/{transactionId}:
   sellerId:          string
   buyerId:           string
   sellerConfirmed:   boolean  # Default: false
-  buyerConfirmed:    boolean  # Default: false
-  status:            enum     # 'pending' | 'completed'
+  status:            enum     # 'pending' | 'completed' | 'cancelled'
   createdAt:         timestamp
   completedAt:       timestamp | null
 ```
@@ -191,6 +190,7 @@ reviews/{reviewId}:
   revieweeId:     string
   rating:         number     # 1 | 2 | 3 | 4 | 5
   comment:        string     # Optional, max 500 chars
+  receiptStatus:  enum       # 'received' | 'not_received'; UI default: 'received'
   createdAt:      timestamp
 ```
 
@@ -536,7 +536,7 @@ Scenario: Cập nhật thông tin cá nhân
 
 ---
 
-### FEATURE 6 — Transaction Confirm (P1)
+### FEATURE 6 — Transaction Completion (P1)
 
 #### Scenario 6.1: Buyer gửi yêu cầu giao dịch
 
@@ -549,39 +549,41 @@ Scenario: Buyer muốn mua / nhận đồ
        sellerId = listing.sellerId
        buyerId = currentUser.uid
        sellerConfirmed = false
-       buyerConfirmed = false
        status = 'pending'
-  And listings/{id}.status → 'reserved'
+  And không thay đổi listing.status, listing.completedCount hoặc rating của seller
   And seller nhận được notification (có thể là in-app badge, không cần push)
 
 Scenario: Buyer hủy yêu cầu trước khi seller confirm
   Given transaction.status = 'pending' và sellerConfirmed = false
   When buyer bấm "Hủy"
-  Then transaction bị xóa
-  And listings/{id}.status → 'active'
+  Then transaction.status = 'cancelled'
+  And listing và rating của seller không thay đổi
+
+Scenario: Seller không phản hồi yêu cầu
+  Given transaction.status = 'pending' và sellerConfirmed = false
+  When seller không thực hiện thao tác nào
+  Then transaction vẫn ở trạng thái 'pending' cho đến khi buyer hủy hoặc seller confirm
+  And không tự động phạt, hạ rating hoặc thay đổi inventory/listing
 ```
 
-#### Scenario 6.2: Cả hai bên confirm hoàn tất
+#### Scenario 6.2: Seller confirm và hoàn tất giao dịch
 
 ```gherkin
 Scenario: Seller confirm đã bàn giao đồ
-  Given transaction tồn tại
+  Given transaction.status = 'pending' và sellerConfirmed = false
   When seller bấm "Xác nhận đã bàn giao"
   Then transactions/{id}.sellerConfirmed = true
-
-Scenario: Buyer confirm đã nhận đồ
-  Given seller đã confirm
-  When buyer bấm "Xác nhận đã nhận"
-  Then transactions/{id}.buyerConfirmed = true
   And transactions/{id}.status = 'completed'
   And transactions/{id}.completedAt = now()
-  And listings/{id}.status = 'completed'
-  And cả hai bên được nhắc để lại đánh giá
+  And listings/{id}.completedCount tăng đúng 1 lần
+  And listings/{id}.status = 'completed' nếu completedCount đạt quantity
+  And buyer có quyền để lại đánh giá
 
-Scenario: Chỉ một bên confirm, bên kia chưa
-  Given sellerConfirmed = true, buyerConfirmed = false (hoặc ngược lại)
-  Then transaction.status vẫn = 'pending'
-  And listing.status vẫn = 'reserved'
+Scenario: Seller confirm lặp lại
+  Given transaction.status = 'completed' và sellerConfirmed = true
+  When seller gửi lại thao tác confirm
+  Then transaction và listing không thay đổi
+  And listings/{id}.completedCount không tăng thêm
 ```
 
 ---
@@ -592,19 +594,24 @@ Scenario: Chỉ một bên confirm, bên kia chưa
 
 ```gherkin
 Scenario: Buyer đánh giá seller
-  Given transaction.status = 'completed'
+  Given transaction.status = 'completed' và sellerConfirmed = true
   And buyer chưa đánh giá seller trong transaction này
-  When buyer chọn rating (1-5 sao) và nhập comment (tùy chọn)
+  When buyer chọn receiptStatus ('received' mặc định hoặc 'not_received')
+  And chọn rating (1-5 sao) và nhập comment (tùy chọn, tối đa 500 ký tự)
   And bấm "Gửi đánh giá"
-  Then tạo reviews/{reviewId} với reviewerId=buyer, revieweeId=seller
+  Then tạo reviews/{reviewId} với reviewerId=buyer, revieweeId=seller và receiptStatus đã chọn
   And users/{sellerId}.rating = (tổng rating mới) / (totalReviews + 1)
   And users/{sellerId}.totalReviews += 1
 
-Scenario: Seller đánh giá buyer
+Scenario: Seller hoặc người ngoài cố đánh giá transaction
   Given transaction.status = 'completed'
-  When seller đánh giá buyer tương tự
-  Then tạo reviews/{reviewId} với reviewerId=seller, revieweeId=buyer
-  And users/{buyerId}.rating được cập nhật
+  When người gửi review không phải buyer của transaction
+  Then không cho phép tạo review
+
+Scenario: Buyer đánh giá trước khi seller confirm
+  Given transaction.status = 'pending' và sellerConfirmed = false
+  When buyer cố gửi đánh giá
+  Then không cho phép tạo review
 
 Scenario: Đánh giá trùng
   Given người dùng đã đánh giá trong transaction này

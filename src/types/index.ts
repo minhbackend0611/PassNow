@@ -67,11 +67,14 @@ export interface Transaction {
   sellerId: string;
   buyerId: string;
   sellerConfirmed: boolean;
-  buyerConfirmed: boolean;
+  /** @deprecated Legacy confirmation step. New transactions complete when the seller confirms. */
+  buyerConfirmed?: boolean;
   status: TransactionStatus;
   createdAt: number;
   completedAt?: number | null;
 }
+
+export type ReceiptStatus = 'received' | 'not_received';
 
 export interface Review {
   id: string;
@@ -81,6 +84,8 @@ export interface Review {
   revieweeId: string;
   rating: number;
   comment?: string;
+  /** Optional so reviews created before receipt tracking remain readable. */
+  receiptStatus?: ReceiptStatus;
   createdAt: number;
 }
 

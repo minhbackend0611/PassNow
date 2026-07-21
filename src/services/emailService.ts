@@ -59,7 +59,7 @@ export const sendTransactionRequestedEmail = async (
       <h2 style="color: #00A67E;">PassNow - New Request</h2>
       <p>Hello,</p>
       <p>Great news! <strong>${buyerName || 'A user'}</strong> has requested to buy your item: <strong>${listingTitle}</strong>.</p>
-      <p>Please check your Transactions page to review and confirm this request.</p>
+      <p>Please coordinate the handover with the buyer. Confirm delivery only after the item has actually been handed over; that confirmation completes the transaction.</p>
       <div style="margin: 30px 0;">
         <a href="${getAppBaseUrl()}/transactions?id=${transactionId}" style="background-color: #00A67E; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Transaction</a>
       </div>
@@ -75,13 +75,13 @@ export const sendSellerConfirmedEmail = async (
   listingTitle: string,
   transactionId: string
 ) => {
-  const subject = `[PassNow] Request Accepted: ${listingTitle}`;
+  const subject = `[PassNow] Transaction Completed: ${listingTitle}`;
   const htmlContent = `
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
-      <h2 style="color: #00A67E;">PassNow - Request Accepted</h2>
+      <h2 style="color: #00A67E;">PassNow - Transaction Completed</h2>
       <p>Hello,</p>
-      <p><strong>${sellerName || 'The seller'}</strong> has confirmed your request for: <strong>${listingTitle}</strong>.</p>
-      <p>If you haven't already, please go to your Transactions page and confirm the transaction on your end to complete the process.</p>
+      <p><strong>${sellerName || 'The seller'}</strong> has confirmed the handover for: <strong>${listingTitle}</strong>.</p>
+      <p>The transaction is now complete. You can review the seller and record whether you received the item.</p>
       <div style="margin: 30px 0;">
         <a href="${getAppBaseUrl()}/transactions?id=${transactionId}" style="background-color: #00A67E; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Transaction</a>
       </div>
@@ -89,28 +89,6 @@ export const sendSellerConfirmedEmail = async (
     </div>
   `;
   return sendEmailNotification(buyerId, subject, htmlContent);
-};
-
-export const sendBuyerConfirmedEmail = async (
-  sellerId: string, 
-  buyerName: string, 
-  listingTitle: string,
-  transactionId: string
-) => {
-  const subject = `[PassNow] Buyer Confirmed: ${listingTitle}`;
-  const htmlContent = `
-    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
-      <h2 style="color: #00A67E;">PassNow - Buyer Confirmed</h2>
-      <p>Hello,</p>
-      <p><strong>${buyerName || 'The buyer'}</strong> has confirmed their end of the transaction for: <strong>${listingTitle}</strong>.</p>
-      <p>If you haven't already, please go to your Transactions page and confirm the transaction on your end to mark it as fully completed.</p>
-      <div style="margin: 30px 0;">
-        <a href="${getAppBaseUrl()}/transactions?id=${transactionId}" style="background-color: #00A67E; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Transaction</a>
-      </div>
-      <p style="color: #666; font-size: 12px;">Thank you for using PassNow!</p>
-    </div>
-  `;
-  return sendEmailNotification(sellerId, subject, htmlContent);
 };
 
 export const sendTransactionCompletedEmail = async (
@@ -123,8 +101,8 @@ export const sendTransactionCompletedEmail = async (
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
       <h2 style="color: #00A67E;">PassNow - Transaction Complete! 🎉</h2>
       <p>Hello,</p>
-      <p>The transaction for <strong>${listingTitle}</strong> has been successfully completed by both parties!</p>
-      <p>You can now leave a review for the other party to help build trust in our community.</p>
+      <p>The transaction for <strong>${listingTitle}</strong> was completed when the seller confirmed the handover.</p>
+      <p>No further confirmation is required from the buyer.</p>
       <div style="margin: 30px 0;">
         <a href="${getAppBaseUrl()}/transactions?id=${transactionId}" style="background-color: #00A67E; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Details</a>
       </div>

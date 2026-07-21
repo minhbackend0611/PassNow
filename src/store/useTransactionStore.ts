@@ -2,13 +2,31 @@ import { create } from 'zustand';
 import type { Transaction } from '../types';
 import { subscribeToUserTransactions } from '../services/transactionService';
 
-interface TransactionState {
+export interface TransactionState {
   actionRequiredCount: number;
   buyingActionRequiredCount: number;
   sellingActionRequiredCount: number;
   transactions: Transaction[];
   initializeTransactionListener: (userId: string) => () => void;
 }
+
+export const calculateTransactionActionCounts = (
+  transactions: Transaction[],
+  userId: string,
+) => {
+  const sellingActionRequiredCount = transactions.filter(
+    (transaction) =>
+      transaction.status === 'pending' &&
+      transaction.sellerId === userId &&
+      !transaction.sellerConfirmed,
+  ).length;
+
+  return {
+    actionRequiredCount: sellingActionRequiredCount,
+    buyingActionRequiredCount: 0,
+    sellingActionRequiredCount,
+  };
+};
 
 export const useTransactionStore = create<TransactionState>((set) => ({
   actionRequiredCount: 0,
@@ -17,19 +35,11 @@ export const useTransactionStore = create<TransactionState>((set) => ({
   transactions: [],
   initializeTransactionListener: (userId: string) => {
     return subscribeToUserTransactions(userId, (transactions) => {
-      let buyingCount = 0;
-      let sellingCount = 0;
-      transactions.forEach(tx => {
-        if (tx.status === 'pending') {
-          if (tx.buyerId === userId && tx.sellerConfirmed && !tx.buyerConfirmed) buyingCount++;
-          if (tx.sellerId === userId && !tx.sellerConfirmed) sellingCount++;
-        }
-      });
+      const actionCounts = calculateTransactionActionCounts(transactions, userId);
+
       set({ 
-        transactions, 
-        buyingActionRequiredCount: buyingCount,
-        sellingActionRequiredCount: sellingCount,
-        actionRequiredCount: buyingCount + sellingCount 
+        transactions,
+        ...actionCounts,
       });
     });
   },

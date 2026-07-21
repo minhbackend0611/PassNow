@@ -66,7 +66,7 @@ describe('CreateListingPage', () => {
         email: 'test@example.com',
         displayName: 'John Doe',
         isProfileComplete: true,
-        school: 'Test Uni',
+        school: 'Đại học Bách khoa Hà Nội',
         province: 'Hanoi',
         district: 'Test District',
         emailVerified: true
@@ -98,18 +98,10 @@ describe('CreateListingPage', () => {
     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
     fireEvent.change(fileInput, { target: { files: [file] } });
     fireEvent.change(screen.getByPlaceholderText('0'), { target: { value: '1000' } });
-    // Mock fetch for "Use My University" button
-    globalThis.fetch = vi.fn().mockResolvedValue({
-      json: () => Promise.resolve([{ display_name: '1 Dai Co Viet', lat: '10', lon: '10' }])
-    });
-
-    // Fill address using "Use My University"
-    fireEvent.click(screen.getByRole('button', { name: /Use My University/i }));
-
-    // Wait for address to populate
-    await waitFor(() => {
-      expect(screen.getByPlaceholderText(/Search for an address/i)).toHaveValue('1 Dai Co Viet');
-    });
+    // A single-campus university is preselected, but still requires an explicit confirmation.
+    fireEvent.click(screen.getByRole('button', { name: /My university campus/i }));
+    expect(screen.getByRole('dialog', { name: 'Choose a meetup campus' })).toBeVisible();
+    fireEvent.click(screen.getByRole('button', { name: 'Use this campus' }));
 
     // Submit
     fireEvent.click(screen.getByText('Post Listing'));
@@ -121,12 +113,12 @@ describe('CreateListingPage', () => {
         condition: 'New',
         price: 1000,
         isFree: false,
-        specificAddress: '1 Dai Co Viet',
+        specificAddress: 'Khuôn viên Đại Cồ Việt, Số 1 Đại Cồ Việt, Phường Bạch Mai, Hà Nội',
         description: 'This is a valid description with enough characters.',
         images: ['http://mock-image.com/test.png'],
-        coordinates: { lat: 10, lng: 10 },
+        coordinates: { lat: 21.00713, lng: 105.84277 },
         sellerId: '123',
-        school: 'Test Uni',
+        school: 'Đại học Bách khoa Hà Nội',
         district: 'Test District',
         province: 'Hanoi',
       }));

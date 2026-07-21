@@ -9,6 +9,7 @@ import { startConversation } from '../../../services/chatService';
 import type { Listing, User, Transaction } from '../../../types';
 import { Button } from '../../../components/ui/button';
 import { useAuthStore } from '../../../store/useAuthStore';
+import { useTransactionStore } from '../../../store/useTransactionStore';
 import StudentBadge from '../../../components/ui/StudentBadge';
 import { formatRelativeTime } from '../../../utils/formatTime';
 
@@ -25,6 +26,14 @@ export default function ListingDetailPage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const liveTransaction = useTransactionStore((state) =>
+    state.transactions.find((candidate) =>
+      candidate.listingId === id
+      && candidate.buyerId === currentUser?.uid
+      && candidate.status !== 'cancelled'
+    ) ?? null
+  );
+  const currentTransaction = liveTransaction ?? transaction;
 
   useEffect(() => {
     const fetchDetail = async () => {
@@ -36,8 +45,14 @@ export default function ListingDetailPage() {
         setSeller(data.seller);
         if (currentUser) {
            const tx = await getTransactionByListingAndBuyer(data.listing.id, currentUser.uid);
-           if (tx) setTransaction(tx);
+           setTransaction(tx);
+        } else {
+          setTransaction(null);
         }
+      } else {
+        setListing(null);
+        setSeller(null);
+        setTransaction(null);
       }
       setIsLoading(false);
     };
@@ -82,7 +97,6 @@ export default function ListingDetailPage() {
         sellerId: listing.sellerId,
         buyerId: currentUser.uid,
         sellerConfirmed: false,
-        buyerConfirmed: false,
         status: 'pending',
         createdAt: Date.now()
       });
@@ -91,9 +105,9 @@ export default function ListingDetailPage() {
   };
 
   const handleCancelRequest = async () => {
-    if (!transaction || !listing) return;
+    if (!currentTransaction || !listing || currentTransaction.status !== 'pending' || currentTransaction.sellerConfirmed) return;
     setIsProcessingTransaction(true);
-    const success = await cancelTransaction(transaction.id);
+    const success = await cancelTransaction(currentTransaction.id);
     if (success) {
       setTransaction(null);
     }
@@ -401,7 +415,12 @@ export default function ListingDetailPage() {
                     <span className="material-symbols-outlined">lock</span>
                     Completed
                   </div>
-                ) : transaction && transaction.status === 'pending' ? (
+                ) : currentTransaction && (currentTransaction.status === 'completed' || currentTransaction.sellerConfirmed) ? (
+                  <div className="w-full bg-primary/10 text-primary text-title-md font-bold py-4 rounded-2xl flex justify-center items-center gap-2 shadow-inner">
+                    <span className="material-symbols-outlined">verified</span>
+                    Transaction Completed
+                  </div>
+                ) : currentTransaction && currentTransaction.status === 'pending' ? (
                   <button 
                     onClick={handleCancelRequest}
                     disabled={isProcessingTransaction}

@@ -1,31 +1,39 @@
 import { useState } from 'react';
+import type { ReceiptStatus } from '../../../types';
 
 interface ReviewModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (rating: number, comment: string) => Promise<void>;
+  onSubmit: (rating: number, comment: string, receiptStatus: ReceiptStatus) => Promise<void>;
   revieweeName?: string;
   isSubmitting?: boolean;
 }
 
 export default function ReviewModal({
   isOpen,
+  ...contentProps
+}: ReviewModalProps) {
+  if (!isOpen) return null;
+
+  // Mounting the content only while open guarantees a fresh default state each time.
+  return <ReviewModalContent {...contentProps} />;
+}
+
+function ReviewModalContent({
   onClose,
   onSubmit,
   revieweeName,
   isSubmitting = false
-}: ReviewModalProps) {
+}: Omit<ReviewModalProps, 'isOpen'>) {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [comment, setComment] = useState('');
-
-  if (!isOpen) return null;
+  const [receiptStatus, setReceiptStatus] = useState<ReceiptStatus>('received');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (rating === 0) return;
-    await onSubmit(rating, comment);
-    // Reset state after successful submit is handled by parent closing modal
+    await onSubmit(rating, comment, receiptStatus);
   };
 
   return (
@@ -41,6 +49,7 @@ export default function ReviewModal({
         <button 
           onClick={onClose}
           disabled={isSubmitting}
+          aria-label="Close review"
           className="absolute top-4 right-4 w-8 h-8 rounded-full bg-surface-variant/50 flex items-center justify-center text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-colors disabled:opacity-50"
         >
           <span className="material-symbols-outlined text-[20px]">close</span>
@@ -61,12 +70,63 @@ export default function ReviewModal({
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          {/* Receipt status */}
+          <fieldset className="flex flex-col gap-3">
+            <legend className="w-full text-center text-label-lg font-bold text-on-surface">
+              Did you receive the item?
+            </legend>
+            <div className="grid grid-cols-2 gap-3">
+              <label className={`cursor-pointer rounded-2xl border p-3 transition-all ${
+                receiptStatus === 'received'
+                  ? 'border-primary bg-primary/10 text-primary shadow-sm'
+                  : 'border-outline-variant/50 bg-surface-variant/20 text-on-surface-variant hover:border-primary/40'
+              } ${isSubmitting ? 'pointer-events-none opacity-60' : ''}`}>
+                <input
+                  type="radio"
+                  name="receipt-status"
+                  value="received"
+                  aria-label="Received"
+                  checked={receiptStatus === 'received'}
+                  onChange={() => setReceiptStatus('received')}
+                  disabled={isSubmitting}
+                  className="sr-only"
+                />
+                <span className="flex flex-col items-center gap-1 text-center">
+                  <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>inventory_2</span>
+                  <span className="text-label-md font-bold">Received</span>
+                </span>
+              </label>
+
+              <label className={`cursor-pointer rounded-2xl border p-3 transition-all ${
+                receiptStatus === 'not_received'
+                  ? 'border-error bg-error/10 text-error shadow-sm'
+                  : 'border-outline-variant/50 bg-surface-variant/20 text-on-surface-variant hover:border-error/40'
+              } ${isSubmitting ? 'pointer-events-none opacity-60' : ''}`}>
+                <input
+                  type="radio"
+                  name="receipt-status"
+                  value="not_received"
+                  aria-label="Not received"
+                  checked={receiptStatus === 'not_received'}
+                  onChange={() => setReceiptStatus('not_received')}
+                  disabled={isSubmitting}
+                  className="sr-only"
+                />
+                <span className="flex flex-col items-center gap-1 text-center">
+                  <span className="material-symbols-outlined text-[24px]">inventory</span>
+                  <span className="text-label-md font-bold">Not received</span>
+                </span>
+              </label>
+            </div>
+          </fieldset>
+
           {/* Star Rating */}
           <div className="flex justify-center gap-2">
             {[1, 2, 3, 4, 5].map((star) => (
               <button
                 key={star}
                 type="button"
+                aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
                 className="focus:outline-none transition-transform hover:scale-110 active:scale-95"
                 onMouseEnter={() => setHoverRating(star)}
                 onMouseLeave={() => setHoverRating(0)}
