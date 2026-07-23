@@ -1,0 +1,1011 @@
+﻿Nhóm 8
+
+
+
+
+PassNow
+Business Plan Document
+Version 3.0
+
+
+Revision History
+Date
+	Version
+	Description
+	Author
+	26/06/2026
+	1.0
+	10.1. Danh sách thành viên và vai trò cụ thể trong dự án
+	Lý
+	10.2. Năng lực, kinh nghiệm, kỹ năng liên quan của từng thành viên
+	All
+	10.3. Lý do đội ngũ phù hợp để triển khai ý tưởng. 
+	Uy
+	10.4.  Cơ cấu tổ chức nhóm/startup dự kiến.
+	Phúc
+	10.5. Các vị trí hoặc năng lực còn thiếu trong đội ngũ
+	Trí
+	10.6. Kế hoạch bổ sung nhân sự, cố vấn hoặc đối tác nếu cần
+	Trí
+	03/07/2026
+	2.0
+	1. Executive Summary
+	Lý
+	2. Problem and Opportunities
+	Phúc
+	3. Target Customer
+	Trí
+	4.1. Mô tả sản phẩm / dịch vụ
+	Lý
+	4.2. Các tính năng chính của sản phẩm
+	Lý
+	4.3. Mô hình hoạt động cơ bản
+	Phúc
+	5. Unique Value Proposition
+	Uy
+	7. Competitor Analysis
+	Trí
+	14. Development Roadmap
+	Uy, Minh
+	11/7/2026
+	3.0
+	6. Market Analysis
+	Lý
+	9.1 Mục tiêu Marketing
+	Trí
+	9.2 Khách hàng mục tiêu giai đoạn Go-to-Market
+	Trí
+	9.3 Định vị & thông điệp
+	Trí
+	9.4 Kênh Marketing
+	Minh
+	9.5 Kế hoạch ra mắt
+	Lý
+	9.6 Chiến dịch Marketing
+	Uy
+	9.7 Cộng đồng & đối tác
+	Uy
+	9.8 KPI đo lường
+	Phúc
+	9.9 Ngân sách Marketing
+	Phúc
+	
+
+________________
+
+
+Mục lục
+1. Executive Summary        5
+2. Problem and Opportunity        5
+3. Target Customers        6
+4. Product/Service Description        6
+4.1 Mô tả Ứng dụng PassNow        6
+4.2 Các tính năng chính của PassNow        6
+4.3 Mô hình hoạt động        8
+5. Unique Value Proposition        14
+6. Market Analysis        14
+6.1 Quy mô và đặc điểm thị trường        15
+6.2 Xu hướng thị trường        15
+6.3 Phân khúc thị trường mục tiêu        16
+6.4 Cơ hội thị trường cho PassNow        16
+6.5 Thách thức thị trường        17
+7. Competitor Analysis        17
+7.1 Phân tích đối thủ cạnh tranh        18
+7.2 Điểm khác biệt của PassNow        18
+7.3 Bảng so sánh sản phẩm của nhóm với các giải pháp hiện có        19
+8. Business Model        20
+9. Marketing and Go-to-Market Strategy        20
+9.1 Mục tiêu Marketing        20
+9.2 Khách hàng mục tiêu trong giai đoạn Go-to-Market        21
+9.3 Định vị thương hiệu và thông điệp truyền thông        22
+9.4 Kênh Marketing chủ lực        23
+9.5 Kế hoạch ra mắt sản phẩm theo từng giai đoạn        24
+9.6 Chiến dịch Marketing đề xuất        28
+9.7 Chiến lược xây dựng cộng đồng và đối tác        29
+9.8 Chỉ số đo lường hiệu quả Marketing        29
+9.9 Ngân sách cho Marketing        30
+10. Team        31
+10.1 Danh sách thành viên và vai trò cụ thể trong dự án.        31
+10.2 Năng lực, kinh nghiệm, kỹ năng liên quan của từng thành viên        31
+10.3 Lý do đội ngũ phù hợp để triển khai ý tưởng        33
+10.4 Cơ cấu tổ chức nhóm / startup dự kiến        33
+10.5 Các vị trí/năng lực còn thiếu trong đội ngũ        34
+10.6 Kế hoạch bổ sung nhân sự, cố vấn hoặc đối tác nếu cần        34
+11. Financial Plan        35
+11.1 Mô hình doanh thu        35
+11.2 Các nguồn doanh thu dự kiến        35
+11.3 Các nhóm chi phí chính        35
+11.4 Dự kiến doanh thu và chi phí giai đoạn đầu        35
+11.5 Điểm hòa vốn sơ bộ        36
+12. Fundraising Plan        36
+12.1 Nhu cầu gọi vốn        36
+12.2 Mục đích sử dụng vốn        36
+12.3 Kế hoạch sử dụng vốn theo từng hạng mục        36
+12.4 Các cột mốc phát triển sau khi nhận vốn        36
+12.5 Giá trị đề xuất cho nhà đầu tư        36
+13. Risks and Mitigation        36
+14. Development Roadmap        36
+15. Source Code, Prototype and Technical Appendix        37
+16. Conclusion        37
+________________
+Business Plan Document
+1. Executive Summary
+Thông tin chung về dự án:
+* Tên dự án: PassNow - Nền tảng trao đổi và thanh lý đồ cũ cho sinh viên
+* Nền tảng ứng dụng: Ứng dụng web tiến tiến (Progressive Web App - PWA)
+* Nhóm thực hiện: Nhóm 8, gồm 5 thành viên.
+Dự án PassNow được nhóm xây dựng và phát triển trong khuôn khổ của đồ án môn Khởi nghiệp thuộc ngành Công nghệ Thông tin tại trường Đại học Khoa học Tự nhiên. Ý tưởng của dự án xuất phát từ một nhu cầu rất thực tế của chính sinh viên: cứ sau mỗi học kỳ hoặc khi chuyển trọ, các bạn lại thừa ra rất nhiều giáo trình, đồ dùng cá nhân, đồ điện gia dụng nhưng không biết thanh lý cho ai. Trong khi đó, các bạn sinh viên khóa sau lại phải tốn khá nhiều tiền để mua mới những món đồ này.
+Để giải quyết bài toán đó, PassNow được thiết kế như một ứng dụng chuyên dùng để trao đổi và thanh lý đồ cũ. Thay vì làm một trang mua bán đại trà cho tất cả mọi người, PassNow tập trung tối ưu hóa trải nghiệm riêng cho đối tượng sinh viên. Ứng dụng ưu tiên kết nối các giao dịch nội khu (như trong cùng khu vực trường học, ký túc xá) giúp người mua và người bán dễ dàng hẹn gặp, kiểm tra đồ trực tiếp và tiết kiệm tối đa chi phí vận chuyển. Bên cạnh mục đích mua bán để kiếm thêm thu nhập hoặc tiết kiệm chi phí, PassNow còn tích hợp thêm tính năng cho tặng đồ miễn phí nhằm tăng tính kết nối trong cộng đồng.
+Tóm lại, PassNow không chỉ là một công cụ giúp sinh viên mua bán đồ cũ một cách tiện lợi, an toàn, mà còn hướng tới việc xây dựng một lối sống tiết kiệm và có trách nhiệm hơn trong cộng đồng sinh viên.
+2. Problem and Opportunity
+Trong quá trình học tập và sinh hoạt tại giảng đường, sinh viên và người trẻ thuê trọ thường xuyên phát sinh nhu cầu sử dụng các vật dụng mang tính ngắn hạn như giáo trình theo học kỳ, đồ dùng ký túc xá hay các thiết bị gia dụng nhỏ. Khi kết thúc môn học, chuyển phòng trọ hoặc tốt nghiệp ra trường, họ đối mặt với áp lực lớn trong việc dọn dẹp và thanh lý các món đồ này để giảm bớt gánh nặng di chuyển. Theo khảo sát nội bộ của nhóm với 58 phản hồi, có 48.3% người trả lời đã từng mua, bán, thanh lý hoặc cho tặng đồ đã qua sử dụng trong 12 tháng gần đây; 36.2% chưa từng thực hiện nhưng có nhu cầu. Điều này cho thấy nhu cầu trao đổi đồ cũ trong sinh viên là có thật và có khả năng lặp lại theo các thời điểm như đầu kỳ, cuối kỳ, chuyển trọ hoặc tốt nghiệp.. Tuy nhiên, việc kết nối giữa người cần bán và người cần mua tại môi trường học đường hiện nay vẫn gặp nhiều rào cản. Các chợ thương mại điện tử lớn như Chợ Tốt hay Facebook Marketplace quá đại trà, khiến những mặt hàng đặc thù của sinh viên dễ bị chìm lấp. Trong khi đó, việc mua bán qua các hội nhóm mạng xã hội lại đẩy người dùng vào tình thế bất tiện khi bài đăng bị trôi rất nhanh, thiếu công cụ lọc tìm kiếm và tiềm ẩn nhiều rủi ro lừa đảo từ các tài khoản ảo. Đặc biệt, với những giao dịch nhỏ lẻ hoặc các món đồ muốn cho tặng miễn phí, chi phí vận chuyển đường dài đắt đỏ hoàn toàn làm mất đi tính kinh tế và giá trị nhân văn của việc tái sử dụng, dẫn đến tình trạng lãng phí nhiều vật dụng còn giá trị. 
+Từ chính những thách thức đó, một cơ hội thị trường rõ rệt đã mở ra cho dự án PassNow thông qua mô hình giao dịch siêu cục bộ (Hyperlocal). Do sinh viên thường tập trung với mật độ cực kỳ cao tại các làng đại học, cụm ký túc xá và các khu phố trọ lân cận, đây trở thành một hệ sinh thái lý tưởng để người mua và người bán có thể dễ dàng đi bộ gặp nhau trực tiếp, kiểm tra hàng và thanh toán mà không tốn bất kỳ chi phí vận chuyển nào. Cơ hội này càng trở nên mạnh mẽ hơn khi thế hệ trẻ hiện nay đang ngày càng nhạy bén với việc tối ưu hóa chi phí sinh hoạt, đồng thời nhiệt tình đón nhận lối sống xanh, bền vững và sẵn sàng chia sẻ đồ dùng cho cộng đồng. Điểm mấu chốt giúp PassNow tự tin dẫn dắt thị trường này chính là việc khai thác tài nguyên email trường học (.edu.vn) để xác thực danh tính. Việc tạo ra một "màng lọc" uy tín như vậy không chỉ giúp loại bỏ hoàn toàn các tài khoản ảo, mà còn xây dựng nên một cộng đồng trao đổi an toàn, đáng tin cậy giữa những người bạn học với nhau – một lợi thế độc quyền mà các nền tảng đại trà lớn không thể triển khai một cách triệt để. 
+3. Target Customers
+PassNow hướng đến các nhóm người dùng chính sau:
+* Sinh viên đại học: Đây là nhóm khách hàng trọng tâm của dự án. Sinh viên thường có nhu cầu mua đồ cũ với giá hợp lý để tiết kiệm chi phí. Đồng thời, họ cũng thường có nhu cầu bán lại đồ sau khi kết thúc môn học, chuyển phòng trọ, tốt nghiệp hoặc không còn sử dụng.
+Ví dụ:
++ Sinh viên năm nhất cần mua sách, bàn học, xe đạp, đồ ký túc xá.
++ Sinh viên năm cuối muốn thanh lý đồ trước khi ra trường.
++ Sinh viên chuyển trọ muốn bán nhanh các vật dụng cồng kềnh.
+* Người mới đi làm: Người mới đi làm thường có thu nhập ban đầu chưa cao, có nhu cầu mua đồ đã qua sử dụng nhưng còn tốt để tiết kiệm chi phí. Họ cũng có thể thanh lý đồ khi thay đổi nơi ở hoặc nâng cấp vật dụng cá nhân.
+* Người thuê trọ thường xuyên thay đổi chỗ ở: Nhóm người thuê trọ thường gặp khó khăn khi di chuyển đồ đạc. Họ có nhu cầu bán, tặng hoặc trao đổi các món đồ như bàn, ghế, kệ, nệm, quạt, bếp điện, xe đạp và đồ gia dụng nhỏ.
+4. Product/Service Description 
+   1. Mô tả Ứng dụng PassNow
+PassNow là một nền tảng công nghệ trao đổi và thanh lý đồ cũ trực tuyến, được phát triển dưới mô hình PWA (Progressive Web App). Sản phẩm được thiết kế chuyên biệt để phục vụ cho đối tượng sinh viên tại các trường Đại học và các khu vực lân cận (như cụm Làng Đại học, khu ký túc xá…). Khái quát một cách cốt lõi, PassNow giải quyết bài toán lãng phí tài nguyên và chi phí sinh hoạt bằng cách giúp sinh viên dễ dàng sang nhượng, tái sử dụng giáo trình, đồ dùng cá nhân và thiết bị phòng trọ trong một môi trường an toàn và tiện lợi.
+   2. Các tính năng chính của PassNow
+PassNow được xây dựng với các tính năng chính nhằm hỗ trợ sinh viên đăng bán, cho tặng, tìm kiếm và giao dịch đồ cũ một cách thuận tiện, an toàn và phù hợp với phạm vi trường học, ký túc xá hoặc khu trọ. Các tính năng chính của PassNow được lựa chọn dựa trên nhu cầu thực tế từ khảo sát người dùng. Trong nhóm người có nhu cầu, 59.2% mong muốn có đánh giá uy tín người mua/người bán, 51% quan tâm đến lọc sản phẩm theo trường hoặc khu vực gần, và 49% muốn có chức năng nhắn tin trực tiếp trong nền tảng.
+      1. Xác Thực Người Dùng Qua Email Trường
+PassNow cho phép người dùng đăng ký tài khoản bằng email và xác thực thông qua liên kết được gửi đến email đó. Việc xác thực giúp hạn chế tài khoản ảo, tăng độ tin cậy giữa người mua và người bán, đặc biệt trong các giao dịch trực tiếp.
+Sau khi xác thực, người dùng cần hoàn tất hồ sơ cá nhân gồm tên hiển thị, trường học, tỉnh/thành phố và khu vực giao dịch. Những thông tin này giúp hệ thống nhận diện người dùng, đồng thời hỗ trợ việc hiển thị sản phẩm theo khu vực phù hợp.
+Luồng hoạt động cơ bản:
+* Người dùng đăng ký tài khoản bằng email.
+* Hệ thống gửi email xác thực đến địa chỉ đã đăng ký.
+* Người dùng xác nhận email.
+* Người dùng hoàn tất hồ sơ cá nhân gồm tên, trường học và khu vực giao dịch.
+* Sau khi hoàn tất, người dùng có thể sử dụng các chức năng chính như đăng tin, tìm kiếm, nhắn tin và giao dịch.
+Trong các giai đoạn phát triển tiếp theo, PassNow có thể mở rộng tính năng này bằng cách kiểm tra định dạng email trường học, bổ sung huy hiệu “đã xác thực sinh viên”, hoặc xác thực thêm qua số điện thoại/thẻ sinh viên nếu cần tăng mức độ an toàn.
+      2. Đăng tin thanh lý & cho tặng
+Tính năng đăng tin cho phép người dùng đưa các món đồ không còn nhu cầu sử dụng lên nền tảng để bán lại hoặc cho tặng. Khi đăng tin, người dùng nhập tên sản phẩm, mô tả, danh mục, tình trạng, hình ảnh, giá bán hoặc chọn chế độ miễn phí, số lượng và địa điểm giao dịch.
+PassNow hỗ trợ hai hình thức chính: thanh lý có giá bán và cho tặng miễn phí. Với các món đồ như giáo trình cũ, đồ ký túc xá, đồ học tập hoặc vật dụng cá nhân còn dùng tốt, người dùng có thể dễ dàng chuyển lại cho người cần thay vì bỏ phí.
+Luồng hoạt động cơ bản:
+* Người dùng chọn tạo tin đăng mới.
+* Người dùng chọn loại tin: bán có giá hoặc cho tặng miễn phí.
+* Người dùng nhập thông tin sản phẩm, tình trạng, danh mục, hình ảnh và địa điểm giao dịch.
+* Hệ thống kiểm tra các thông tin bắt buộc.
+* Tin đăng được tạo và hiển thị trên trang chủ/feed.
+* Người mua hoặc người nhận có thể xem chi tiết tin, nhắn tin hoặc gửi yêu cầu giao dịch.
+Tính năng này giúp người bán thanh lý đồ nhanh hơn, giảm tình trạng bỏ phí các món đồ còn dùng tốt, đồng thời giúp người mua tiếp cận đồ cũ với chi phí thấp hoặc miễn phí.
+      3. Bộ lọc vị trí
+Bộ lọc vị trí giúp người dùng tìm các sản phẩm ở gần mình, chẳng hạn cùng trường học, cùng quận/huyện, cùng khu ký túc xá hoặc khu trọ. Đây là tính năng quan trọng vì phần lớn giao dịch đồ cũ của sinh viên có giá trị không quá cao, thường phù hợp với việc gặp trực tiếp hơn là vận chuyển xa.
+Dựa trên thông tin hồ sơ người dùng và vị trí giao dịch của tin đăng, hệ thống có thể ưu tiên hiển thị các sản phẩm gần khu vực của người mua. Người dùng cũng có thể kết hợp lọc theo danh mục, khoảng giá, tình trạng sản phẩm và đồ miễn phí để tìm kiếm hiệu quả hơn.
+Luồng hoạt động cơ bản:
+* Người dùng thiết lập thông tin trường học và khu vực trong hồ sơ cá nhân.
+* Người bán nhập hoặc chọn địa điểm giao dịch khi đăng tin.
+* Hệ thống ghi nhận thông tin vị trí của sản phẩm.
+* Khi người mua truy cập trang chủ hoặc tìm kiếm, hệ thống ưu tiên hiển thị sản phẩm gần người dùng.
+* Người dùng có thể kết hợp bộ lọc vị trí với danh mục, giá, tình trạng và loại sản phẩm để tìm kết quả phù hợp hơn.
+Nhờ bộ lọc vị trí, PassNow phù hợp hơn với các giao dịch nội khu, đặc biệt là trong môi trường trường đại học, ký túc xá và khu trọ sinh viên.
+      4. Nhắn tin trao đổi
+Tính năng Nhắn tin trao đổi cho phép người mua và người bán trao đổi trực tiếp trong PassNow. Người mua có thể hỏi thêm thông tin về sản phẩm, thương lượng giá, xác nhận tình trạng món đồ và thống nhất thời gian, địa điểm giao dịch.
+Việc tích hợp chat trong ứng dụng giúp quá trình giao dịch liền mạch hơn, giảm nhu cầu chuyển sang nền tảng khác hoặc chia sẻ thông tin cá nhân quá sớm. Ngoài tin nhắn giữa hai bên, hệ thống cũng có thể gửi thông báo tự động liên quan đến yêu cầu giao dịch hoặc trạng thái giao dịch.
+Luồng hoạt động cơ bản:
+* Người mua xem chi tiết sản phẩm.
+* Người mua chọn liên hệ người bán.
+* Hệ thống tạo hoặc mở cuộc trò chuyện giữa hai bên gắn với sản phẩm đó.
+* Người mua và người bán trao đổi thông tin, thương lượng và thống nhất cách giao dịch.
+* Sau khi thống nhất, hai bên có thể tiếp tục thực hiện giao dịch trực tiếp và cập nhật trạng thái giao dịch trên hệ thống.
+Trong tương lai, tính năng này có thể được mở rộng thêm như thông báo đẩy, trạng thái đã đọc, gửi ảnh bổ sung hoặc gợi ý tin nhắn nhanh để tăng sự thuận tiện cho người dùng.
+      5. Hệ thống đánh giá uy tín
+Hệ thống đánh giá uy tín cho phép người mua và người bán đánh giá lẫn nhau sau khi giao dịch hoàn tất. Người dùng có thể chấm điểm bằng số sao và để lại nhận xét ngắn. Điểm đánh giá trung bình và số lượt đánh giá sẽ được hiển thị trên hồ sơ người dùng.
+Tính năng này giúp người dùng có thêm cơ sở để lựa chọn đối tượng giao dịch đáng tin cậy, giảm rủi ro khi mua bán với người lạ. Đồng thời, hệ thống đánh giá khuyến khích người dùng mô tả sản phẩm trung thực, phản hồi đúng hẹn và giao dịch có trách nhiệm hơn.
+Luồng hoạt động cơ bản:
+* Người mua và người bán thực hiện giao dịch.
+* Hai bên xác nhận giao dịch đã hoàn tất.
+* Hệ thống mở chức năng đánh giá sau giao dịch.
+* Người dùng chọn số sao và có thể nhập nhận xét ngắn.
+* Hệ thống cập nhật điểm uy tín và số lượt đánh giá trên hồ sơ người được đánh giá.
+* Các người dùng khác có thể xem thông tin đánh giá này khi cân nhắc giao dịch trong tương lai.
+Về lâu dài, hệ thống đánh giá uy tín là nền tảng quan trọng để PassNow xây dựng cộng đồng giao dịch đồ cũ an toàn, văn minh và bền vững cho sinh viên.
+   3. Mô hình hoạt động
+4.3.1        Sơ đồ hoạt động tổng quát 
+Sơ đồ hoạt động tổng quát của PassNow mô tả luồng tương tác khép kín giữa ba thực thể cốt lõi: Người bán (Sinh viên thanh lý/cho tặng), Nền tảng PassNow (Hệ thống xử lý & lưu trữ PWA), và Người mua (Sinh viên có nhu cầu). Quy trình tập trung vào việc tối ưu hóa giao dịch nội khu, tinh gọn và an toàn.
+  
+
+4.3.2        Quy trình dành cho người bán  
+A. Mô tả quy trình
+* Khởi tạo và Xác thực tài khoản: Người bán đăng nhập vào ứng dụng PassNow. Để tăng độ uy tín, người bán được khuyến khích xác thực bằng Email trường học (.edu.vn) để nhận "Đã xác thực sinh viên".
+* Tạo tin đăng: Người bán chọn mục "Đăng tin", tải lên hình ảnh thực tế của sản phẩm, điền tiêu đề, mô tả tình trạng, chọn danh mục phù hợp (Giáo trình, Đồ gia dụng nhỏ,...) và đặt giá bán (hoặc tích chọn "Cho tặng miễn phí").
+* Cập nhật vị trí giao dịch: Người bán chọn phạm vi giao dịch mặc định (ví dụ: Ký túc xá Khu B, Đại học KHTN cơ sở Linh Trung, Khu trọ cổng nhà khách,...) hoặc chọn địa điểm giao dịch trên bản đồ.
+* Tiếp nhận và Đóng tin: Khi có người mua đặt hàng, người bán nhận thông báo, tiến hành nhắn tin thương lượng trực tiếp.
+* Giao dịch với người mua: Người bán tiến hành giao hàng cho người mua theo thỏa thuận (trực tiếp tại điểm hẹn hoặc qua dịch vụ vận chuyển), nhận thanh toán, sau đó cập nhật trạng thái "Đã bán" để đóng tin đăng và nhận đánh giá từ người mua nhằm tích lũy điểm uy tín trên hệ thống 
+B. Sơ đồ quy trình
+  
+
+
+
+4.3.3        Quy trình dành cho người mua
+A. Mô tả quy trình
+* Đăng ký/Đăng nhập: Người mua truy cập vào ứng dụng PassNow và tiến hành đăng nhập tài khoản (hoặc đăng ký nếu chưa có tài khoản).
+* Tìm kiếm và Lọc sản phẩm: Người mua thực hiện tìm kiếm sản phẩm theo từ khóa (ví dụ: "Giáo trình Giải tích 1") và sử dụng bộ lọc nâng cao để phân loại theo danh mục, khoảng giá, tình trạng sản phẩm, tên trường đại học, khoảng cách hoặc chọn mục "Đồ cho tặng miễn phí".
+* Xem chi tiết và Đánh giá: Người mua bấm xem thông tin chi tiết về sản phẩm (hình ảnh thực tế, mô tả tình trạng, vị trí giao dịch) và kiểm tra mức độ uy tín (huy hiệu "Đã xác thực sinh viên", số sao đánh giá) của người bán.
+* Gửi yêu cầu giao dịch: Sau khi xem xét đầy đủ thông tin, người mua nhấn nút "Request to Buy" (Yêu cầu mua) hoặc "Request Free Item" (Yêu cầu nhận đồ miễn phí). Hệ thống sẽ gửi thông báo tức thời đến người bán để xác nhận.
+* Nhắn tin và Thương lượng: Khi nhấn yêu cầu, người mua có thể sử dụng tính năng chat tích hợp trên ứng dụng để chủ động nhắn tin, trao đổi thêm thông tin và thương lượng với người bán.
+* Giao dịch và Thanh toán: Hai bên tiến hành gặp mặt trực tiếp tại địa điểm đã thỏa thuận (Thư viện, sảnh ký túc xá, canteen, cổng trường,...) để kiểm tra tình trạng thực tế của sản phẩm và thực hiện thanh toán.
+* Hoàn tất và Đánh giá: Sau khi nhận sản phẩm thành công, người mua bấm xác nhận "Đã nhận hàng" trên ứng dụng, đồng thời tiến hành đánh giá độ tin cậy (số sao và bình luận) cho người bán để hoàn tất quy trình
+
+
+B. Sơ đồ quy trình
+  
+
+
+
+
+
+
+
+4.3.4        Cơ chế khớp lệnh và cách thức giao dịch
+Để tối ưu cho hành vi tiêu dùng và năng lực tài chính của sinh viên theo từng giai đoạn phát triển dự án, PassNow áp dụng cơ chế thanh toán và khớp lệnh linh hoạt:
+a) Cơ chế khớp lệnh 
+* Khi một sản phẩm được đăng lên PassNow, nhiều người mua có thể gửi yêu cầu giao dịch cho cùng một sản phẩm. Các yêu cầu này sẽ được hệ thống ghi nhận và hiển thị cho người bán dưới dạng danh sách.
+* Danh sách yêu cầu được sắp xếp theo thứ tự thời gian gửi, từ người gửi sớm nhất đến người gửi muộn hơn. Với mỗi yêu cầu, người bán có thể xem các thông tin cần thiết như tên người mua, thời gian gửi yêu cầu, nội dung tin nhắn, vị trí giao dịch dự kiến và điểm đánh giá uy tín nếu có.
+* Người bán sẽ là người quyết định chọn giao dịch với ai. Sau khi xem danh sách yêu cầu, người bán nhấn Approve đối với người mua phù hợp. Khi đó, sản phẩm chuyển sang trạng thái đang giữ chỗ hoặc đang giao dịch, đồng thời người mua được chọn sẽ nhận thông báo để tiếp tục trao đổi chi tiết với người bán.
+* Các yêu cầu còn lại không bị xóa ngay mà được giữ ở trạng thái chờ. Nếu giao dịch với người đã được approve không thành công, người bán có thể hủy lựa chọn hiện tại và approve một người mua khác trong danh sách.
+* Khi giao dịch hoàn tất, người bán xác nhận trạng thái sản phẩm là đã bán, đã tặng hoặc đã trao đổi. Lúc này, hệ thống sẽ đóng các yêu cầu còn lại và thông báo rằng sản phẩm không còn khả dụng.
+* Cơ chế khớp lệnh này giúp quá trình giao dịch rõ ràng, công bằng theo thứ tự thời gian, nhưng vẫn linh hoạt vì người bán có quyền chọn người phù hợp nhất để giao dịch.
+b) Cách thức giao dịch & Thanh toán (Payment Roadmap)
+Giai đoạn
+	Hình thức thanh toán
+	Chi tiết vận hành
+	Giai đoạn Hiện tại (MVP & Thử nghiệm)
+	Thanh toán trực tiếp (giao dịch tiền mặt / chuyển khoản ngân hàng cá nhân trực tiếp khi gặp mặt)
+	Người mua và Người bán gặp nhau trực tiếp tại điểm hẹn đã thỏa thuận để kiểm tra sản phẩm. Sau khi đồng ý nhận đồ, người mua thực hiện thanh toán trực tiếp cho người bán. 
+Ưu điểm: Nền tảng không can thiệp dòng tiền, không mất phí trung gian, phù hợp tuyệt đối với các giao dịch nhỏ lẻ, giá trị thấp của sinh viên.
+	Giai đoạn Tiếp theo (Mở rộng & Tăng trưởng)
+	Thanh toán điện tử tích hợp (Ví điện tử / Cổng thanh toán tiện lợi)
+	Tích hợp cổng thanh toán (MoMo, ZaloPay, VietQR…) trực tiếp trên ứng dụng. Áp dụng cơ chế Thanh toán tạm giữ: Người mua chuyển tiền qua cổng thanh toán PassNow khi đặt hàng PassNow giữ tiền tạm thời. Sau khi hai bên gặp nhau và người mua bấm "Đã nhận hàng", hệ thống sẽ giải ngân tiền về ví của người bán. Mở rộng thêm tính năng tích lũy điểm thưởng và quy đổi voucher từ hệ thống điểm đối tác nội khu của PassNow.
+	
+
+5. Unique Value Proposition
+PassNow không chỉ là một nền tảng mua bán đồ cũ thông thường, mà tập trung vào cộng đồng sinh viên và người trẻ có nhu cầu giao dịch nhanh, gần, rẻ và đáng tin cậy.
+Các điểm khác biệt chính gồm:
+* Tập trung vào sinh viên: Trong khi nhiều nền tảng hiện tại phục vụ nhiều nhóm khách hàng khác nhau, PassNow tập trung vào nhu cầu cụ thể của sinh viên như mua bán giáo trình, đồ ký túc xá, đồ trọ, xe đạp, đồ học tập và thiết bị cá nhân giá rẻ.
+* Giao dịch trong phạm vi gần: PassNow ưu tiên giao dịch trong trường học, ký túc xá, khu trọ hoặc khu vực gần nhau. Điều này phù hợp với các món đồ có giá trị thấp hoặc cồng kềnh, vì người dùng có thể gặp trực tiếp mà không cần vận chuyển xa.
+* Có chế độ cho tặng miễn phí: Không phải món đồ nào cũng cần bán. Một số đồ dùng như sách cũ, móc áo, kệ nhỏ, nồi, chén, đồ học tập hoặc đồ ký túc xá có thể được cho tặng lại cho người cần. Tính năng này giúp tạo ra giá trị cộng đồng và giảm lãng phí.
+* Phù hợp với xu hướng tiêu dùng tiết kiệm và bền vững: PassNow khuyến khích tái sử dụng đồ cũ, giúp sinh viên tiết kiệm chi phí và góp phần giảm rác thải. Đây là điểm có ý nghĩa xã hội, phù hợp với lối sống bền vững.
+6. Market Analysis
+Thị trường mà PassNow hướng đến là thị trường trao đổi, thanh lý và tái sử dụng đồ cũ trong cộng đồng sinh viên. Đây là một thị trường có quy mô không quá lớn nếu xét riêng từng trường, nhưng có tần suất nhu cầu lặp lại cao vì sinh viên thường xuyên thay đổi học kỳ, môn học, chỗ ở và nhu cầu sinh hoạt. Kết quả khảo sát cho thấy nhóm sản phẩm được quan tâm nhiều nhất là giáo trình, sách và tài liệu học tập với 85.7% trong nhóm người có nhu cầu lựa chọn. Bên cạnh đó, 57.1% quan tâm đến quần áo/phụ kiện, 49% quan tâm đến nội thất hoặc đồ phòng trọ, 38.8% quan tâm đến đồ điện tử nhỏ và 34.7% quan tâm đến đồ gia dụng nhỏ.
+Khác với các nền tảng mua bán đồ cũ đại trà, PassNow tập trung vào nhóm người dùng có đặc điểm rất cụ thể: sinh viên cần mua đồ với chi phí thấp, muốn bán hoặc cho tặng đồ không còn sử dụng, và ưu tiên giao dịch gần trong phạm vi trường học, ký túc xá hoặc khu trọ.
+   4. Quy mô và đặc điểm thị trường
+Trong môi trường đại học, sinh viên thường có nhu cầu sử dụng nhiều loại vật dụng mang tính ngắn hạn. Một số món đồ chỉ cần dùng trong một học kỳ hoặc một giai đoạn nhất định, chẳng hạn giáo trình, sách tham khảo, tài liệu học tập, đồ dùng ký túc xá, bàn học nhỏ, quạt, kệ sách, xe đạp hoặc các thiết bị điện tử cơ bản.
+Sau khi kết thúc học kỳ, chuyển trọ hoặc tốt nghiệp, các món đồ này thường không còn phù hợp với nhu cầu của người sở hữu nhưng vẫn còn giá trị sử dụng. Đây chính là nguồn cung tự nhiên cho thị trường đồ cũ sinh viên. Ở chiều ngược lại, sinh viên năm nhất, sinh viên mới chuyển trọ hoặc sinh viên muốn tiết kiệm chi phí lại có nhu cầu tìm mua các món đồ tương tự với giá thấp hơn so với mua mới.
+Vì vậy, thị trường của PassNow có tính hai chiều rõ rệt:
+Nhóm cung cấp sản phẩm
+	Nhu cầu chính
+	Sinh viên đã học xong môn
+	Bán hoặc tặng lại giáo trình, tài liệu học tập
+	Sinh viên chuyển trọ
+	Thanh lý đồ dùng phòng trọ, đồ gia dụng nhỏ
+	Sinh viên sắp tốt nghiệp
+	Bán nhanh các vật dụng không thể mang theo
+	Người thuê trọ, người mới đi làm
+	Thanh lý hoặc trao đổi đồ khi thay đổi nơi ở
+	
+
+Nhóm có nhu cầu nhận/mua
+	Nhu cầu chính
+	Sinh viên năm nhất
+	Mua đồ học tập, đồ ký túc xá, xe đạp, vật dụng cơ bản
+	Sinh viên đang học
+	Tìm giáo trình, tài liệu, thiết bị học tập giá rẻ
+	Sinh viên mới chuyển trọ
+	Mua đồ dùng phòng trọ với chi phí thấp
+	Người cần đồ miễn phí
+	Nhận lại các món còn dùng được từ cộng đồng
+	Điểm đáng chú ý là nhu cầu này không chỉ xuất hiện một lần, mà lặp lại theo chu kỳ học kỳ, mùa nhập học, mùa chuyển trọ và mùa tốt nghiệp. Điều này giúp PassNow có cơ hội duy trì lượng giao dịch ổn định nếu xây dựng được cộng đồng người dùng đủ tin cậy. 
+   5. Xu hướng thị trường 
+Thị trường đồ cũ trong sinh viên chịu ảnh hưởng bởi ba xu hướng chính.
+Thứ nhất, sinh viên ngày càng quan tâm đến việc tiết kiệm chi phí. Với các món đồ không nhất thiết phải mua mới như giáo trình, kệ sách, bàn học, quạt, xe đạp hoặc đồ ký túc xá, lựa chọn mua lại đồ cũ giúp giảm đáng kể chi phí sinh hoạt.
+Thứ hai, xu hướng tái sử dụng và tiêu dùng bền vững ngày càng được quan tâm. Nhiều món đồ vẫn còn dùng tốt nhưng bị bỏ đi chỉ vì người sở hữu không còn nhu cầu. Nếu có một kênh kết nối phù hợp, các món đồ này có thể tiếp tục được sử dụng bởi người khác, giảm lãng phí và tạo giá trị cộng đồng.
+Thứ ba, sinh viên có thói quen sử dụng nền tảng số và mạng xã hội để tìm kiếm thông tin, mua bán hoặc trao đổi. Tuy nhiên, các nhóm mạng xã hội thường thiếu công cụ quản lý giao dịch, lọc vị trí, phân loại sản phẩm và đánh giá độ uy tín. Đây là khoảng trống mà PassNow có thể khai thác bằng một nền tảng được thiết kế riêng cho sinh viên.
+   6. Phân khúc thị trường mục tiêu 
+Trong giai đoạn đầu, PassNow không nhắm đến toàn bộ thị trường đồ cũ, mà tập trung vào các phân khúc có nhu cầu rõ ràng và dễ tiếp cận nhất.
+Phân khúc
+	Đặc điểm
+	Nhu cầu chính
+	Mức độ ưu tiên
+	Sinh viên trong cùng trường/khoa
+	Dễ tiếp cận, có điểm chung về môn học và lịch học
+	Mua bán giáo trình, tài liệu, đồ học tập
+	Cao
+	Sinh viên ký túc xá
+	Sống gần nhau, dễ giao dịch trực tiếp
+	Đồ dùng phòng ở, đồ gia dụng nhỏ, đồ miễn phí
+	Cao
+	Sinh viên chuyển trọ
+	Cần xử lý đồ nhanh, ngại vận chuyển xa
+	Thanh lý bàn, ghế, nệm, kệ, quạt, xe đạp
+	Cao
+	Sinh viên năm nhất
+	Cần mua nhiều đồ ban đầu với chi phí thấp
+	Giáo trình, đồ ký túc xá, xe đạp, đồ học tập
+	Trung bình - cao
+	Người mới đi làm/người thuê trọ
+	Có nhu cầu mua đồ tiết kiệm hoặc thanh lý khi chuyển nơi ở
+	Đồ gia dụng, nội thất nhỏ, thiết bị cá nhân
+	Trung bình
+	Trong các phân khúc trên, nhóm sinh viên cùng trường, sinh viên ký túc xá và sinh viên chuyển trọ nên được ưu tiên trong giai đoạn đầu vì có khoảng cách địa lý gần, nhu cầu rõ ràng và khả năng tạo giao dịch nhanh.
+   7. Cơ hội thị trường cho PassNow 
+Cơ hội lớn nhất của PassNow nằm ở việc xây dựng một thị trường nhỏ nhưng có tính tập trung cao. Thay vì cạnh tranh trực tiếp với các nền tảng mua bán lớn, PassNow chọn hướng đi hẹp hơn: phục vụ riêng cộng đồng sinh viên và tối ưu cho giao dịch gần.
+Các cơ hội chính gồm:
+* Nhu cầu mua bán đồ cũ của sinh viên xuất hiện thường xuyên theo từng học kỳ.
+* Nhiều món đồ có giá trị thấp hoặc cồng kềnh chỉ phù hợp giao dịch gần, không phù hợp vận chuyển xa.
+* Các nhóm mua bán hiện tại còn rời rạc, bài đăng dễ trôi và thiếu công cụ lọc theo nhu cầu sinh viên.
+* Tính năng cho tặng miễn phí có thể tạo điểm khác biệt và tăng thiện cảm với cộng đồng.
+* Việc xác thực bằng email trường giúp tăng niềm tin giữa người dùng so với các tài khoản mạng xã hội không rõ danh tính.
+* Nếu triển khai tốt trong một trường hoặc một khu ký túc xá, mô hình có thể nhân rộng sang các trường khác.
+PassNow có thể bắt đầu từ một cộng đồng nhỏ như một khoa, một trường hoặc một khu ký túc xá. Khi lượng người dùng và tin đăng đủ ổn định, nền tảng có thể mở rộng theo mô hình từng cụm sinh viên, thay vì mở rộng đại trà ngay từ đầu.
+   8. Thách thức thị trường 
+Thách thức đầu tiên là thói quen hiện tại của sinh viên. Nhiều sinh viên đã quen đăng bài trong nhóm Facebook, nhắn tin trực tiếp hoặc hỏi người quen. Vì vậy, PassNow cần tạo được lý do đủ rõ để người dùng chuyển sang nền tảng mới, chẳng hạn dễ tìm hơn, giao dịch gần hơn, tin cậy hơn và có phân loại sản phẩm tốt hơn.
+Thách thức thứ hai là bài toán tạo đủ người mua và người bán cùng lúc. Nếu có người mua nhưng ít tin đăng, nền tảng sẽ kém hấp dẫn. Ngược lại, nếu có nhiều tin đăng nhưng ít người hỏi mua, người bán cũng không có động lực quay lại. Do đó, giai đoạn đầu cần tập trung vào các cộng đồng nhỏ có mật độ sinh viên cao để dễ tạo giao dịch thật.
+Thách thức thứ ba là vấn đề niềm tin và an toàn giao dịch. Vì PassNow chủ yếu hỗ trợ kết nối giữa người mua và người bán, nền tảng cần có cơ chế xác thực, đánh giá uy tín, báo cáo vi phạm và hướng dẫn giao dịch an toàn để hạn chế rủi ro.
+Nhìn chung, thị trường của PassNow tuy không phải là thị trường hoàn toàn mới, nhưng vẫn còn khoảng trống rõ ràng cho một nền tảng chuyên biệt dành cho sinh viên. Nếu triển khai đúng vào các cộng đồng nhỏ, ưu tiên giao dịch gần và xây dựng được niềm tin giữa người dùng, PassNow có tiềm năng trở thành một kênh trao đổi đồ cũ quen thuộc trong môi trường đại học.
+7. Competitor Analysis
+PassNow là nền tảng trao đổi và thanh lý đồ cũ dành cho sinh viên, được phát triển dưới dạng ứng dụng web/PWA nhằm giúp người dùng đăng bán, trao đổi hoặc cho tặng các món đồ không còn nhu cầu sử dụng. Trọng tâm của PassNow không phải là xây dựng một sàn thương mại điện tử đại trà, mà là tạo ra một cộng đồng giao dịch đồ cũ nhỏ, gần, nhanh và đáng tin cậy hơn cho sinh viên, người mới đi làm và người thuê trọ.
+Điểm khác biệt của PassNow nằm ở việc tập trung vào các nhu cầu rất cụ thể trong đời sống sinh viên như mua bán giáo trình, đồ ký túc xá, đồ trọ, xe đạp, thiết bị học tập, đồ điện gia dụng nhỏ hoặc các vật dụng còn tốt nhưng không còn dùng đến. Ngoài mua bán, PassNow còn hỗ trợ chế độ cho tặng miễn phí, xác thực người dùng, đánh giá uy tín và ưu tiên hiển thị sản phẩm trong phạm vi gần như cùng trường, cùng ký túc xá, cùng khu trọ hoặc cùng khu vực sinh sống.
+   9. Phân tích đối thủ cạnh tranh
+Hiện nay, các giải pháp thay thế mà người dùng có thể sử dụng để mua bán hoặc thanh lý đồ cũ bao gồm Chợ Tốt, Facebook Marketplace, các hội nhóm mua bán trên Facebook/Zalo và các sàn thương mại điện tử như Shopee. Tuy nhiên, các nền tảng này chưa được thiết kế chuyên biệt cho sinh viên và chưa giải quyết tốt các nhu cầu giao dịch nhỏ, gần, nhanh, có tính cộng đồng và có độ tin cậy cao.
+* Chợ Tốt là một trong những nền tảng rao vặt lớn tại Việt Nam, cho phép người dùng mua bán nhiều nhóm mặt hàng khác nhau, từ bất động sản, xe cộ, đồ điện tử, vật dụng cá nhân đến đồ gia dụng. Ưu điểm của Chợ Tốt là có lượng người dùng lớn, danh mục sản phẩm đa dạng và người dùng đã quen với việc mua bán đồ cũ trên nền tảng này. Tuy nhiên, vì phục vụ thị trường rộng nên Chợ Tốt chưa tập trung riêng vào sinh viên, chưa tối ưu cho các giao dịch nội khu trường học/ký túc xá và chưa có lớp cộng đồng dành riêng cho việc trao đổi hoặc cho tặng đồ sinh viên.
+* Facebook Marketplace và các hội nhóm mua bán đồ cũ có lợi thế lớn về lượng người dùng và sự quen thuộc. Sinh viên có thể dễ dàng đăng bài trong các nhóm mua bán của trường, ký túc xá hoặc khu vực đang sinh sống. Tuy nhiên, hạn chế lớn của hình thức này là bài đăng dễ bị trôi, khó lọc theo danh mục, giá, vị trí hoặc tình trạng sản phẩm. Ngoài ra, độ tin cậy của người mua và người bán chủ yếu dựa vào hồ sơ cá nhân, bình luận hoặc cảm nhận chủ quan, nên vẫn tồn tại rủi ro lừa đảo, bom hàng hoặc thông tin sản phẩm không chính xác.
+* Shopee và các sàn thương mại điện tử phù hợp với hoạt động mua bán hàng hóa mới, có quy trình thanh toán, vận chuyển, khuyến mãi và chính sách bán hàng rõ ràng. Tuy nhiên, các sàn này không phải môi trường tối ưu cho giao dịch đồ cũ nhỏ lẻ giữa sinh viên với nhau, đặc biệt là các món có giá trị thấp, cồng kềnh hoặc chỉ phù hợp giao nhận trực tiếp trong phạm vi gần.
+* Các nhóm Zalo, Messenger hoặc kênh truyền miệng trong trường học cũng là hình thức phổ biến để sinh viên hỏi mua, bán hoặc xin lại đồ cũ. Ưu điểm là nhanh, gần và có tính quen biết. Tuy nhiên, các kênh này thiếu cấu trúc quản lý bài đăng, không có hồ sơ sản phẩm rõ ràng, không có hệ thống đánh giá uy tín và khó mở rộng khi số lượng người dùng tăng. Người dùng cũng khó tìm lại các món đồ đã đăng trước đó hoặc so sánh nhiều lựa chọn cùng lúc.
+Từ phân tích trên, có thể thấy các giải pháp hiện có đều giải quyết được một phần nhu cầu mua bán đồ cũ, nhưng chưa có nền tảng nào tập trung rõ vào cộng đồng sinh viên với đầy đủ các yếu tố: giao dịch gần, đăng bài nhanh, cho tặng miễn phí, xác thực người dùng, đánh giá uy tín và xây dựng cộng đồng tái sử dụng đồ cũ.
+   10. Điểm khác biệt của PassNow
+* Thứ nhất, PassNow tập trung chuyên biệt vào sinh viên và đời sống học đường. Trong khi Chợ Tốt, Facebook Marketplace hoặc Shopee phục vụ nhiều nhóm người dùng khác nhau, PassNow tập trung vào các nhu cầu cụ thể của sinh viên như mua bán giáo trình, đồ ký túc xá, đồ trọ, xe đạp, bàn học, kệ sách, đồ điện gia dụng nhỏ và các vật dụng học tập. Điều này giúp sản phẩm, giao diện và quy trình sử dụng được thiết kế sát với hành vi thực tế của người dùng mục tiêu.
+* Thứ hai, PassNow ưu tiên giao dịch trong phạm vi gần. Với các món đồ sinh viên thường thanh lý, giá trị sản phẩm không quá cao hoặc khá cồng kềnh, việc vận chuyển xa thường không hiệu quả. Do đó, PassNow ưu tiên hiển thị sản phẩm theo vị trí gần như cùng trường, cùng ký túc xá, cùng khu trọ hoặc cùng quận. Người mua và người bán có thể dễ dàng hẹn gặp trực tiếp, kiểm tra sản phẩm và tiết kiệm chi phí giao hàng.
+* Thứ ba, PassNow có chế độ cho tặng miễn phí. Không phải món đồ nào sinh viên cũng muốn bán. Nhiều món như sách cũ, móc áo, chén, nồi, kệ nhỏ, đồ học tập hoặc đồ ký túc xá vẫn còn sử dụng tốt nhưng giá trị bán lại thấp. PassNow tạo một khu vực riêng cho các món đồ được cho tặng, từ đó khuyến khích sinh viên chia sẻ với nhau, giảm lãng phí và xây dựng tinh thần hỗ trợ trong cộng đồng.
+* Thứ tư, PassNow tăng độ tin cậy thông qua xác thực và đánh giá người dùng. Nền tảng dự kiến hỗ trợ xác thực bằng email trường học hoặc giấy tờ định danh như CCCD. Người dùng đã xác thực sẽ có dấu hiệu nhận diện riêng trên hồ sơ. Sau mỗi giao dịch, người mua và người bán có thể đánh giá lẫn nhau để hình thành điểm uy tín. Cơ chế này giúp hạn chế các hành vi như đăng sai thông tin, bom hàng, lừa đảo hoặc giao dịch thiếu trách nhiệm.
+* Thứ năm, PassNow tổ chức bài đăng theo cấu trúc rõ ràng hơn so với hội nhóm mạng xã hội. Thay vì bài đăng bị trôi như trong Facebook/Zalo group, mỗi sản phẩm trên PassNow có thông tin riêng gồm tên món đồ, mô tả, giá bán, tình trạng sử dụng, hình ảnh, danh mục và vị trí giao dịch. Người dùng có thể tìm kiếm, lọc và theo dõi sản phẩm thuận tiện hơn.
+* Thứ sáu, PassNow gắn với giá trị tiết kiệm và tiêu dùng bền vững. Bên cạnh lợi ích kinh tế là giúp sinh viên tiết kiệm chi phí hoặc thanh lý đồ nhanh hơn, dự án còn góp phần giảm lãng phí tài nguyên bằng cách kéo dài vòng đời sử dụng của các món đồ cũ. Đây là điểm khác biệt về giá trị xã hội, phù hợp với xu hướng tiêu dùng tiết kiệm, tái sử dụng và sống bền vững trong cộng đồng người trẻ.
+   1. Bảng so sánh sản phẩm của nhóm với các giải pháp hiện có
+
+
+Tiêu chí so sánh
+	PassNow
+	Chợ Tốt
+	Facebook Marketplace / Hội nhóm
+	Shopee / Sàn TMĐT
+	Đối tượng tập trung
+	Sinh viên, người mới đi làm, người thuê trọ
+	Người dùng đại chúng
+	Người dùng đại chúng hoặc từng nhóm cộng đồng
+	Người mua sắm online đại chúng
+	Mục đích chính
+	Trao đổi, thanh lý, cho tặng đồ cũ trong cộng đồng sinh viên
+	Rao vặt, mua bán nhiều loại hàng hóa
+	Đăng bài mua bán tự do
+	Mua bán hàng hóa online, chủ yếu là hàng mới
+	Mức độ phù hợp với sinh viên
+	Cao, vì thiết kế riêng cho nhu cầu sinh viên
+	Trung bình, vì thị trường quá rộng
+	Trung bình, phụ thuộc từng nhóm
+	Thấp đến trung bình, vì không tập trung vào đồ cũ sinh viên
+	Giao dịch trong phạm vi gần
+	Ưu tiên cùng trường, ký túc xá, khu trọ, khu vực gần
+	Có yếu tố vị trí nhưng không chuyên biệt cho trường/ký túc xá
+	Có thể gần nếu nhóm đúng khu vực, nhưng khó lọc
+	Phụ thuộc vận chuyển, không tối ưu gặp trực tiếp
+	Hỗ trợ cho tặng miễn phí
+	Có mục riêng cho đồ tặng miễn phí
+	Không phải trọng tâm chính
+	Có thể đăng, nhưng không có cấu trúc riêng
+	Không phù hợp vì thiên về mua bán thương mại
+	Xác thực người dùng
+	Dự kiến xác thực bằng email trường học hoặc giấy tờ định danh
+	Có tài khoản người dùng nhưng không chuyên biệt cho sinh viên
+	Chủ yếu dựa vào tài khoản mạng xã hội
+	Có tài khoản người mua/người bán nhưng không xác thực theo trường
+	Đánh giá uy tín sau giao dịch
+	Có hệ thống đánh giá người mua/người bán
+	Có thể có yếu tố hồ sơ/tin đăng, nhưng không tập trung vào cộng đồng sinh viên
+	Phụ thuộc bình luận, cảm nhận và lịch sử cá nhân
+	Có đánh giá shop/sản phẩm, phù hợp với bán hàng chuyên nghiệp hơn
+	Quản lý bài đăng
+	Có cấu trúc sản phẩm, danh mục, tình trạng, vị trí
+	Có cấu trúc rao vặt rõ
+	Bài dễ bị trôi, khó tìm lại
+	Có cấu trúc tốt nhưng thiên về gian hàng và sản phẩm thương mại
+	Loại sản phẩm phù hợp
+	Giáo trình, đồ ký túc xá, đồ trọ, xe đạp, đồ học tập, đồ gia dụng nhỏ
+	Đa dạng, từ đồ cũ đến bất động sản, xe cộ
+	Đa dạng, tùy nhóm
+	Hàng mới, hàng tiêu dùng, sản phẩm thương mại
+	Mức độ cộng đồng
+	Cao, hướng đến cộng đồng sinh viên hỗ trợ nhau
+	Thấp đến trung bình
+	Cao trong từng nhóm nhưng thiếu hệ thống quản lý
+	Thấp, thiên về giao dịch thương mại
+	Khả năng giảm lãng phí
+	Cao, vì khuyến khích tái sử dụng và cho tặng
+	Có, nhưng không phải định vị chính
+	Có, nhưng rời rạc
+	Thấp hơn, vì tập trung mua sắm hàng hóa
+	Điểm mạnh nổi bật
+	Chuyên biệt cho sinh viên, gần, nhanh, có cho tặng, có xác thực và đánh giá
+	Lượng người dùng lớn, nhiều mặt hàng
+	Dễ tiếp cận, quen thuộc, nhiều nhóm có sẵn
+	Hệ sinh thái thương mại điện tử mạnh, thanh toán/vận chuyển tốt
+	Hạn chế chính
+	Cần xây dựng cộng đồng người dùng ban đầu
+	Không tối ưu riêng cho sinh viên
+	Thiếu cấu trúc, bài dễ trôi, khó kiểm chứng uy tín
+	Không phù hợp với đồ cũ nhỏ lẻ, giao dịch gần hoặc cho tặng
+	Từ bảng so sánh trên, có thể thấy PassNow không cạnh tranh trực tiếp bằng quy mô với các nền tảng lớn như Chợ Tốt, Facebook Marketplace hay Shopee. Thay vào đó, PassNow lựa chọn chiến lược tập trung vào một phân khúc cụ thể là sinh viên và người trẻ có nhu cầu trao đổi, thanh lý hoặc cho tặng đồ cũ trong phạm vi gần. Đây là hướng đi giúp PassNow tạo ra sự khác biệt rõ ràng, tránh cạnh tranh dàn trải và có khả năng xây dựng cộng đồng người dùng trung thành ngay từ giai đoạn đầu.
+8. Business Model
+9. Marketing and Go-to-Market Strategy
+   1. Mục tiêu Marketing
+Trong giai đoạn đầu, marketing của PassNow không hướng đến việc mở rộng đại trà ngay lập tức. Trọng tâm là xây dựng một cộng đồng thử nghiệm có nhu cầu thật, tạo đủ nguồn cung tin đăng ban đầu, hình thành niềm tin đối với nền tảng và kiểm chứng mức độ phù hợp của mô hình trước khi nhân rộng sang các trường hoặc khu vực khác.
+Các mục tiêu marketing được triển khai theo ba giai đoạn, gắn với các chỉ số có thể theo dõi để nhóm vừa thu hút người dùng, vừa thu thập dữ liệu phục vụ cải tiến MVP.
+Giai đoạn
+	Mục tiêu trọng tâm
+	Hoạt động marketing chính
+	Chỉ số kỳ vọng
+	Trước ra mắt
+	Tạo nhận diện ban đầu trong cộng đồng sinh viên và kiểm chứng nhu cầu mua, bán, trao đổi hoặc cho tặng đồ cũ.
+	Khảo sát người dùng; xây dựng thông điệp, poster, video ngắn và landing page; tiếp cận nhóm lớp, khoa, ký túc xá; chuẩn bị dữ liệu sản phẩm ban đầu.
+	Thu khoảng 100 phản hồi khảo sát; chuẩn bị 100–200 tin đăng thật trước ngày ra mắt; hình thành nhóm người dùng thử đầu tiên.
+	Ra mắt thử nghiệm MVP
+	Thu hút và kích hoạt người dùng đầu tiên, khuyến khích họ trải nghiệm đầy đủ các chức năng cốt lõi của PassNow.
+	Mở quyền truy cập; hướng dẫn đăng ký và xác thực; khuyến khích đăng tin, tìm kiếm, nhắn tin, gửi yêu cầu giao dịch và đánh giá sau giao dịch; hỗ trợ người dùng trong quá trình thử nghiệm.
+	Có khoảng 100–200 người dùng đầu tiên; ghi nhận tin đăng, lượt tìm kiếm, cuộc trò chuyện và yêu cầu giao dịch thực tế; thu thập phản hồi về trải nghiệm.
+	Sau khi có người dùng đầu tiên
+	Tăng tần suất quay lại, thúc đẩy giao dịch thực tế, củng cố niềm tin và xác định kênh tăng trưởng hiệu quả.
+	Triển khai chiến dịch theo mùa học; giới thiệu bạn bè; chia sẻ tin đăng và câu chuyện giao dịch thành công; nhắc người dùng cập nhật hoặc đăng thêm sản phẩm; cải tiến MVP theo dữ liệu sử dụng.
+	Số người dùng hoạt động, tin đăng, nhắn tin và giao dịch tăng ổn định; xuất hiện người dùng quay lại; xác định được các kênh và chiến dịch có hiệu quả tốt để tiếp tục đầu tư.
+	
+
+Tóm lại, mục tiêu marketing của PassNow trong giai đoạn Go-to-Market là tạo được “mật độ giao dịch” trong một cộng đồng nhỏ trước khi mở rộng. Nền tảng chỉ nên tăng phạm vi tiếp cận khi đã chứng minh được rằng người dùng sẵn sàng đăng tin, tìm đồ, trao đổi và quay lại sử dụng.
+   2. Khách hàng mục tiêu trong giai đoạn Go-to-Market
+Trong giai đoạn thử nghiệm, PassNow ưu tiên sinh viên đại học vì đây là nhóm có nhu cầu mua đồ giá hợp lý, thanh lý đồ sau mỗi học kỳ, chuyển trọ hoặc tốt nghiệp, đồng thời thường tập trung theo lớp, khoa, trường, ký túc xá và khu trọ. Đặc điểm tập trung theo cộng đồng giúp nhóm dễ tiếp cận, hỗ trợ và đo lường hiệu quả hơn so với việc triển khai trên phạm vi rộng.
+Phạm vi Go-to-Market nên bắt đầu tại một hoặc một vài cộng đồng sinh viên mà nhóm có khả năng tiếp cận trực tiếp, ưu tiên khu vực có mật độ sinh viên cao và thuận tiện cho giao dịch gặp mặt. Sau khi mô hình được kiểm chứng, PassNow mới mở rộng sang người mới đi làm và người thuê trọ thường xuyên thay đổi chỗ ở.
+Nhóm khách hàng ưu tiên
+	Nhu cầu chính
+	Vấn đề cần giải quyết
+	Cách tiếp cận phù hợp
+	Sinh viên năm nhất
+	Mua giáo trình, đồ học tập, đồ ký túc xá, bàn học, xe đạp hoặc đồ gia dụng nhỏ với chi phí hợp lý.
+	Chưa quen khu vực, ngân sách hạn chế và khó biết nơi mua đồ cũ đáng tin cậy gần trường.
+	Truyền thông đầu năm học; tiếp cận nhóm tân sinh viên, nhóm lớp, khoa, ký túc xá; nội dung “mua đồ cần thiết với giá sinh viên”.
+	Sinh viên năm cuối
+	Thanh lý nhanh giáo trình, đồ điện tử, nội thất phòng trọ và đồ dùng cá nhân trước khi tốt nghiệp.
+	Thời gian thanh lý ngắn, nhiều món còn tốt nhưng khó tìm đúng người cần.
+	Chiến dịch “Pass đồ trước khi tốt nghiệp”; phối hợp fanpage khoa, lớp và cộng đồng cựu sinh viên.
+	Sinh viên chuyển trọ hoặc rời ký túc xá
+	Bán hoặc cho tặng nhanh các món đồ cồng kềnh như bàn, ghế, quạt, nồi cơm, bếp điện, kệ sách.
+	Chi phí vận chuyển cao, khó mang theo và cần giao dịch trong phạm vi gần.
+	Truyền thông trong nhóm khu trọ, ký túc xá; chiến dịch “Dọn trọ cùng PassNow”; ưu tiên hiển thị theo vị trí.
+	Sinh viên có đồ không còn sử dụng
+	Bán lại hoặc cho tặng sách, quần áo, đồ học tập và vật dụng sinh hoạt còn dùng tốt.
+	Giá trị bán lại thấp, đăng trên mạng xã hội dễ bị trôi và không biết tặng cho ai phù hợp.
+	Chiến dịch “Đồ cũ còn tốt, pass lại cho người cần”; phát triển khu vực đồ tặng miễn phí và nội dung về tái sử dụng.
+	   3. Định vị thương hiệu và thông điệp truyền thông
+PassNow cần được ghi nhớ như một nền tảng trao đổi và thanh lý đồ cũ được thiết kế riêng cho sinh viên, không phải một chợ trực tuyến đại trà. Điểm khác biệt của thương hiệu nằm ở khả năng kết nối các giao dịch gần, tổ chức tin đăng rõ ràng, hỗ trợ đồ cho tặng miễn phí và xây dựng niềm tin thông qua xác thực cùng đánh giá sau giao dịch. Định vị mình là nền tảng gần hơn, nhanh hơn và đáng tin cậy hơn cho sinh viên khi pass và tìm đồ cũ.
+So với Facebook group, PassNow giúp bài đăng không bị trôi và hỗ trợ tìm kiếm, lọc theo danh mục, tình trạng và vị trí. So với Chợ Tốt, PassNow tập trung vào bối cảnh sinh viên và giao dịch nội khu. So với Shopee, PassNow phù hợp hơn với đồ cũ nhỏ lẻ, đồ cồng kềnh cần gặp trực tiếp và các món đồ được cho tặng miễn phí. 
+Bốn trụ cột truyền thông của thương hiệu:
+Trụ cột
+	Giá trị PassNow mang lại
+	Thông điệp diễn giải
+	Gần
+	Ưu tiên sản phẩm trong cùng trường, ký túc xá, khu trọ hoặc khu vực lân cận.
+	Tìm đồ gần hơn, hẹn gặp thuận tiện hơn và giảm chi phí vận chuyển.
+	Nhanh
+	Tin đăng có cấu trúc rõ ràng, hỗ trợ tìm kiếm và lọc theo nhu cầu.
+	Đăng món đồ nhanh, tìm đúng món cần và trao đổi trực tiếp trên cùng một nền tảng.
+	Đáng tin cậy
+	Xác thực người dùng, hồ sơ rõ ràng và đánh giá sau giao dịch.
+	Biết mình đang giao dịch với ai và có thêm cơ sở để lựa chọn người mua hoặc người bán phù hợp.
+	Tiết kiệm và bền vững
+	Hỗ trợ mua đồ cũ giá hợp lý, cho tặng miễn phí và kéo dài vòng đời sản phẩm.
+	Tiết kiệm chi phí sinh viên, giảm lãng phí và pass món đồ còn tốt cho đúng người cần.
+	
+
+Thông điệp truyền thông chính:
+“PassNow giúp sinh viên pass đồ cũ nhanh hơn, tìm đồ cần rẻ hơn 
+và giao dịch gần hơn trong một cộng đồng đáng tin cậy.”
+   4. Kênh Marketing chủ lực
+      1. Xác định khách hàng và thị trường mục tiêu
+Thị trường mục tiêu: Nền kinh tế tuần hoàn, mảng thanh lý và trao đổi đồ cũ tại các cụm khu vực giới hạn như làng đại học, khuôn viên trường học và khu dân cư lân cận.
+Khách hàng mục tiêu chính: Sinh viên đang theo học (đặc biệt là tân sinh viên có nhu cầu mua sắm ban đầu và sinh viên năm cuối có nhu cầu thanh lý đồ đạc).
+Đặc điểm hành vi: Nhạy cảm về giá, thích các giải pháp tiết kiệm (đặc biệt là đồ miễn phí), có tính cộng đồng cao, thời gian online trên mạng xã hội (Facebook, Zalo) nhiều.
+9.4.2        Các kênh Marketing chủ lực
+Kênh
+	Chiến lược và triển khai
+	Facebook group sinh viên
+	Chiến lược: Tận dụng tệp người dùng sẵn có lớn từ các hội nhóm sinh viên và cộng đồng địa phương.
+
+
+Triển khai: Đăng bài giới thiệu nền tảng PassNow vào các nhóm cộng đồng trường (Group chính thức, Hội đồng hương) và các nhóm đặc thù (Hội Review Phòng Trọ, Chợ Sinh viên Làng Đại Học, Hội Tân sinh viên Kxx). Nội dung bài viết tập trung kêu gọi trải nghiệm giải pháp "Pass đồ không lo bị trôi bài, tìm kiếm nhanh chóng ngay trong trường mình".
+	Fanpage/CLB sinh viên
+	Chiến lược: Mượn sự uy tín của các tổ chức sinh viên để tăng độ nhận diện thương hiệu.
+
+
+Triển khai: Trực tiếp liên hệ với các Đội Công tác xã hội, CLB Môi trường để đồng tổ chức các chiến dịch "Ngày hội Thu gom - Cho tặng đồ cũ trên PassNow". Nhờ các Fanpage confession, Fanpage đoàn hội chia sẻ bài viết giới thiệu app dưới dạng đánh giá  hoặc lan tỏa lối sống xanh.
+	Zalo/Messenger group
+	Chiến lược: Tiếp cận trực diện ở quy mô vi mô, đánh vào vòng tròn kết nối gần nhất.
+
+
+Triển khai: Đội ngũ phát triển và những người dùng đầu tiên sẽ chia sẻ trực tiếp link tải app hoặc link món đồ (đặc biệt là mục "Cho tặng miễn phí") vào các group Zalo lớp học phần, group quản lý khu trọ, hoặc group tầng ký túc xá.
+
+
+	Poster/QR code tại trường
+	Chiến lược: Chuyển đổi O2O (Offline to Online) ngay tại không gian sinh hoạt mỗi ngày của sinh viên.
+
+
+Triển khai: Xin phép Ban quản lý KTX và Nhà trường để dán các Poster nhỏ gọn, bắt mắt kèm Mã QR tải app trực tiếp. Vị trí đặt ưu tiên những nơi đông người qua lại: Bảng tin sảnh ký túc xá, khu vực thang máy, căn tin, khu tự học và trạm xe buýt quanh trường.
+
+
+	Referral/giới thiệu bạn bè
+	Chiến lược: Tận dụng mạng lưới quan hệ cá nhân để tạo đà tăng trưởng tự nhiên không tốn phí.
+
+
+Triển khai: Khuyến khích người dùng đang sử dụng rủ thêm bạn cùng phòng trọ, bạn cùng lớp tham gia để tạo vòng tuần hoàn trao đổi đồ dùng nội bộ. Thông điệp truyền tải: "Rủ bạn cùng phòng dùng PassNow để chia sẻ đồ đạc dễ dàng, dọn nhà nhàn tênh".
+	Content marketing
+	Chiến lược: Thu hút người dùng bằng giá trị nội dung hữu ích thay vì chỉ quảng cáo sản phẩm thuần túy.
+
+
+Triển khai: Sản xuất các bài viết ngắn, infographic hoặc video (Reels/TikTok) với chủ đề thiết thực như: "Top 5 món đồ Tân sinh viên không nên mua mới", "Mẹo dọn phòng trọ và thanh lý đồ trước khi về quê", "Cách tái sử dụng đồ cũ bảo vệ môi trường". PassNow sẽ được giới thiệu như một giải pháp phù hợp cho nhu cầu trao đổi, thanh lý và cho tặng đồ cũ trong cộng đồng sinh viên.
+
+
+	
+
+   5. Kế hoạch ra mắt sản phẩm theo từng giai đoạn
+Để tối ưu nguồn lực của nhóm và kiểm chứng nhu cầu thị trường trước khi mở rộng, PassNow triển khai kế hoạch ra mắt theo năm giai đoạn: chuẩn bị trước ra mắt, tạo sự chú ý trước ra mắt, ra mắt thử nghiệm MVP, kích thích giao dịch bằng các chiến dịch cụ thể, và thu thập phản hồi để tối ưu sản phẩm. Mỗi giai đoạn đều có mục tiêu, hoạt động và tiêu chí đánh giá riêng nhằm từng bước xây dựng cộng đồng người dùng trung thành.
+      2. Giai đoạn 1: Chuẩn bị trước ra mắt (2 tuần trước khi ra mắt)
+Mục tiêu:
+* Xây dựng nhận diện ban đầu cho PassNow.
+* Chuẩn bị dữ liệu sản phẩm và nhóm người dùng đầu tiên để đảm bảo trải nghiệm khi ra mắt.
+* Hoàn thiện các tài liệu truyền thông phục vụ giai đoạn launch.
+Hoạt động triển khai cụ thể:
+1. Xây dựng thông điệp truyền thông
+* Xác định thông điệp chính: "PassNow giúp sinh viên pass đồ cũ nhanh hơn, tìm đồ cần rẻ hơn và giao dịch gần hơn trong một cộng đồng đáng tin cậy."
+* Xây dựng bộ nhận diện cơ bản (logo, màu sắc, slogan, hình ảnh minh họa).
+* Xác định đối tượng truyền thông chính là sinh viên đại học.
+2. Chuẩn bị dữ liệu sản phẩm ban đầu
+* Mỗi thành viên đăng 20–30 sản phẩm thật lên nền tảng.
+* Ưu tiên các mặt hàng sinh viên có nhu cầu cao như:
+   * Giáo trình, sách tham khảo
+   * Dụng cụ học tập
+   * Phụ kiện máy tính
+   * Đồ điện nhỏ (quạt, đèn học...)
+   * Đồ dùng ký túc xá, phòng trọ
+   * Đồ miễn phí (Give Away)
+3. Xây dựng cộng đồng người dùng đầu tiên
+* Mời bạn bè trong lớp, khoa, ký túc xá hoặc khu trọ trải nghiệm nền tảng.
+* Khuyến khích mỗi người đăng ít nhất 3–5 sản phẩm.
+* Mục tiêu đạt khoảng 100–200 sản phẩm trước ngày ra mắt.
+4. Chuẩn bị tài liệu truyền thông
+* Thiết kế poster giới thiệu PassNow.
+* Thiết kế mã QR và đường dẫn đến website.
+* Chuẩn bị bài viết, video giới thiệu ngắn để đăng trên Facebook, TikTok và các nhóm sinh viên.
+* Chuẩn bị bộ hình ảnh minh họa sản phẩm.
+5. Khảo sát nhu cầu người dùng
+* Thiết kế biểu mẫu khảo sát trực tuyến (Google Forms).
+* Thu thập thông tin về:
+   * Loại đồ sinh viên thường muốn mua/bán.
+   * Tần suất thanh lý đồ cũ.
+   * Khó khăn khi sử dụng các nền tảng hiện tại.
+   * Mức độ sẵn sàng sử dụng PassNow.
+* Mục tiêu thu về khoảng 100 phản hồi để làm cơ sở điều chỉnh MVP và kế hoạch truyền thông.
+      1. Giai đoạn 2: Tạo sự chú ý trước ra mắt (1 tuần trước khi ra mắt)
+Mục tiêu:
+* Tạo sự nhận biết và tò mò về PassNow trong cộng đồng sinh viên.
+* Gợi ra nhu cầu thanh lý, trao đổi và nhận đồ cũ.
+* Thu hút người dùng quan tâm để sẵn sàng trải nghiệm khi sản phẩm ra mắt.
+Hoạt động triển khai cụ thể:
+1. Đăng tải nội dung truyền thông trên mạng xã hội
+* Đăng bài trên Facebook, TikTok, Instagram và mạng xã hội cá nhân của các thành viên.
+* Chia sẻ bài viết vào các nhóm lớp, nhóm khoa, ký túc xá, câu lạc bộ sinh viên.
+* Duy trì tần suất khoảng 1–2 bài viết hoặc video ngắn mỗi ngày.
+2. Xây dựng nội dung gần gũi với đời sống sinh viên
+* Đăng các bài viết gợi lên những tình huống quen thuộc như:
+   * "Học xong môn rồi, giáo trình cũ để đâu?"
+   * "Chuyển trọ mà còn nhiều đồ tốt, bỏ thì tiếc, bán thì khó."
+   * "Muốn tìm đồ cũ giá rẻ gần trường nhưng không biết tìm ở đâu?"
+   * "Có những món đồ còn dùng tốt nhưng không biết tặng cho ai."
+* Đăng các bài viết chia sẻ mẹo tiết kiệm chi phí và tái sử dụng đồ dùng sinh viên để tăng tính lan tỏa.
+3. Đa dạng hình thức truyền thông
+* Poster và infographic ngắn.
+* Video ngắn (TikTok, Facebook Reels) mô phỏng các tình huống thực tế của sinh viên.
+* Story đếm ngược (Countdown) đến ngày ra mắt.
+* Mini teaser giới thiệu các tính năng nổi bật của PassNow.
+* Bài viết giới thiệu lợi ích khi sử dụng nền tảng.
+4. Khuyến khích tương tác
+* Tổ chức khảo sát hoặc bình chọn trên Facebook Story/Instagram Story.
+* Đặt các câu hỏi mở để người dùng chia sẻ trải nghiệm thanh lý hoặc tìm mua đồ cũ.
+* Khuyến khích người dùng bình luận hoặc chia sẻ bài viết để tăng mức độ tiếp cận tự nhiên.
+5. Điều hướng đến trang giới thiệu sản phẩm
+* Mỗi bài viết đều gắn link hoặc mã QR dẫn đến landing page của PassNow.
+* Landing page giới thiệu ngắn gọn về sản phẩm, các tính năng nổi bật và thời gian ra mắt dự kiến.
+      1. Giai đoạn 3: Ra mắt thử nghiệm MVP (Tuần ra mắt)
+Mục tiêu:
+* Đưa MVP đến nhóm người dùng đầu tiên.
+* Kiểm tra trải nghiệm thực tế và mức độ sử dụng của người dùng.
+* Thu thập dữ liệu ban đầu về hành vi và các vấn đề của sản phẩm.
+Hoạt động triển khai cụ thể:
+1. Mở quyền truy cập cho nhóm người dùng thử 
+* Đăng công khai link hoặc mã QR truy cập PassNow đến người dùng.
+* Hướng dẫn người dùng tạo tài khoản và xác thực email.
+* Giới hạn phạm vi thử nghiệm trong cộng đồng sinh viên của một số lớp, khoa hoặc trường để dễ theo dõi và hỗ trợ.
+2. Khuyến khích sử dụng những tính năng cốt lõi
+* Khuyến khích người dùng đăng bán, trao tặng hoặc tìm kiếm các mặt hàng phù hợp với sinh viên.
+* Thực hiện các giao dịch thử nghiệm thông qua tính năng nhắn tin trên nền tảng.
+* Hướng dẫn người dùng đánh giá sau khi hoàn thành giao dịch để kiểm tra hệ thống đánh giá uy tín.
+3. Theo dõi và hỗ trợ người dùng
+* Thành viên nhóm trực tuyến để giải đáp thắc mắc và hỗ trợ khi người dùng gặp lỗi.
+* Ghi nhận các lỗi kỹ thuật, phản hồi và đề xuất cải thiện trong quá trình sử dụng.
+* Cập nhật và khắc phục các lỗi quan trọng trong thời gian thử nghiệm.
+4. Theo dõi các chỉ số sử dụng
+* Số lượng tài khoản đăng ký và xác thực.
+* Số lượng tin đăng mới.
+* Số lượt tìm kiếm và xem sản phẩm.
+* Số cuộc trò chuyện giữa người mua và người bán.
+* Số yêu cầu giao dịch được tạo.
+5. Thu thập đánh giá trải nghiệm người dùng
+* Sau khi trải nghiệm, người dùng được mời trả lời khảo sát ngắn hoặc đánh giá trực tiếp trên Google Forms.
+* Thu thập ý kiến về giao diện, quy trình sử dụng, tính năng và mức độ hài lòng để làm cơ sở cải thiện MVP.
+Kết quả mong đợi: 
+* Có 100–200 người dùng đầu tiên tham gia trải nghiệm.
+* Có các giao dịch và tương tác thực tế trên nền tảng.
+* Thu thập được dữ liệu về hành vi người dùng và các lỗi cần cải thiện.
+* Xác định được những tính năng hoạt động hiệu quả và những điểm cần tối ưu trước khi mở rộng.
+Chiến lược thu hút người dùng đầu tiên của PassNow tập trung vào nhóm người dùng mà nhóm có thể tiếp cận trực tiếp, gồm bạn bè trong lớp, sinh viên cùng khoa, nhóm ký túc xá, nhóm trọ và các câu lạc bộ sinh viên. Mục tiêu ban đầu là tạo được 100-200 người dùng thử và 100-200 tin đăng thật để nền tảng có đủ nội dung khi ra mắt. Nhóm sẽ ưu tiên hỗ trợ trực tiếp người dùng đầu tiên trong quá trình đăng ký, xác thực, đăng tin, nhắn tin và giao dịch thử nhằm giảm rào cản sử dụng và thu thập phản hồi nhanh.
+      2. Giai đoạn 4: Kích thích giao dịch bằng các chiến dịch cụ thể
+Mục tiêu:
+* Tăng số lượng tin đăng và giao dịch trên nền tảng.
+* Khuyến khích người dùng quay lại sử dụng PassNow.
+* Hình thành cộng đồng trao đổi, thanh lý đồ cũ trong sinh viên.
+Hoạt động triển khai cụ thể:
+1. Triển khai các chiến dịch theo nhu cầu của sinh viên
+* “Pass giáo trình đầu kỳ”: khuyến khích sinh viên khóa trên đăng bán giáo trình, tài liệu học tập đã sử dụng để sinh viên khóa dưới có thể mua lại với chi phí thấp hơn.
+* “Dọn trọ cùng PassNow”: tập trung vào nhóm sinh viên chuyển trọ, rời ký túc xá hoặc kết thúc năm học, giúp họ thanh lý nhanh các vật dụng như bàn, ghế, quạt, nồi cơm điện, kệ sách.
+* “Góc đồ tặng miễn phí”: khuyến khích người dùng đăng các món đồ còn sử dụng tốt nhưng không còn nhu cầu dùng, qua đó tăng tính cộng đồng và lan tỏa tinh thần tái sử dụng.
+* “Pass đồ trước khi tốt nghiệp”: tiếp cận sinh viên năm cuối có nhu cầu thanh lý đồ dùng cá nhân, giáo trình, thiết bị học tập hoặc đồ nội thất phòng trọ trước khi ra trường.
+2. Khuyến khích người dùng đăng sản phẩm
+* Gửi thông báo nhắc người dùng bổ sung tin đăng mới.
+* Gợi ý các danh mục được quan tâm nhiều như giáo trình, đồ điện tử, đồ dùng phòng trọ và phụ kiện học tập.
+* Khuyến khích người dùng cập nhật hình ảnh và mô tả để tăng khả năng giao dịch.
+3. Tăng tương tác trong cộng đồng
+* Chia sẻ các tin đăng nổi bật lên fanpage hoặc nhóm sinh viên.
+* Đăng các bài viết tổng hợp sản phẩm theo chủ đề như "Top giáo trình đang được pass", "Đồ ký túc xá giá tốt", "Đồ miễn phí hôm nay".
+* Khuyến khích người dùng chia sẻ trải nghiệm mua bán thành công trên PassNow.
+4. Triển khai chương trình giới thiệu bạn bè
+* Khuyến khích người dùng mời bạn bè cùng tham gia PassNow.
+* Tặng huy hiệu hoặc điểm thưởng (nếu hệ thống hỗ trợ) khi giới thiệu thành công người dùng mới.
+* Mở rộng cộng đồng theo từng lớp, khoa hoặc câu lạc bộ.
+5. Theo dõi hiệu quả chiến dịch
+* Theo dõi số lượng tin đăng mới.
+* Theo dõi số lượng giao dịch và lượt nhắn tin phát sinh.
+* Đánh giá hiệu quả của từng chiến dịch để lựa chọn hình thức truyền thông phù hợp cho giai đoạn tiếp theo.
+Kết quả mong đợi:
+* Số lượng tin đăng và người dùng hoạt động tăng ổn định.
+* Xuất hiện nhiều giao dịch thực tế giữa sinh viên.
+* Hình thành cộng đồng người dùng ban đầu và tăng tỷ lệ người dùng quay lại sử dụng PassNow.
+* Xác định được các chiến dịch truyền thông mang lại hiệu quả cao để tiếp tục mở rộng nền tảng.
+      1. Giai đoạn 5: Thu thập phản hồi và tối ưu (Sau 2–3 tuần thử nghiệm)
+        Mục tiêu:
+* Đánh giá hiệu quả hoạt động của MVP.
+* Thu thập phản hồi từ người dùng để cải thiện sản phẩm.
+* Xác định những tính năng cần ưu tiên phát triển trong giai đoạn tiếp theo.
+Hoạt động triển khai cụ thể: 
+1. Theo dõi các chỉ số hoạt động:
+* Thống kê số lượng người đăng ký và người dùng hoạt động.
+* Theo dõi số lượng tin đăng, lượt tìm kiếm, lượt nhắn tin và số giao dịch thành công.
+* Đánh giá tỷ lệ người dùng quay lại sử dụng nền tảng.
+2. Thu thập phản hồi từ người dùng
+* Gửi khảo sát trực tuyến sau khi người dùng trải nghiệm PassNow.
+* Phỏng vấn ngắn một số người dùng tiêu biểu để tìm hiểu về trải nghiệm sử dụng.
+* Thu thập ý kiến về giao diện, quy trình đăng tin, tìm kiếm, nhắn tin và mức độ tin cậy khi giao dịch.
+3. Phân tích và đánh giá kết quả
+* Tổng hợp các phản hồi và phân loại theo mức độ ưu tiên.
+* Xác định những tính năng được đánh giá cao và những điểm còn gây khó khăn cho người dùng.
+* Đánh giá mức độ đáp ứng nhu cầu của PassNow đối với nhóm khách hàng mục tiêu.
+4. Cải thiện sản phẩm và kế hoạch triển khai
+* Khắc phục các lỗi kỹ thuật và tối ưu trải nghiệm người dùng.
+* Điều chỉnh giao diện hoặc quy trình sử dụng nếu cần thiết.
+* Cập nhật kế hoạch phát triển và chiến lược truyền thông dựa trên kết quả thử nghiệm.
+        Kết quả mong đợi:
+* Thu thập được dữ liệu và phản hồi thực tế từ người dùng.
+* Xác định rõ điểm mạnh, điểm yếu của MVP và các tính năng cần ưu tiên cải thiện.
+* Hoàn thiện phiên bản PassNow ổn định hơn, đáp ứng tốt nhu cầu của người dùng, làm cơ sở cho việc triển khai, phát triển sản phẩm trong tương lai
+   1. Chiến dịch Marketing đề xuất
+Tên chiến dịch
+	Mục tiêu
+	Nội dung triển khai
+	“Pass giáo trình đầu kỳ”
+	Khuyến khích sinh viên mua và bán giáo trình cũ 
+	Vào đầu mỗi học kỳ, PassNow triển khai chiến dịch kêu gọi sinh viên khóa trên đăng bán giáo trình, tài liệu đã sử dụng với giá ưu đãi để sinh viên khóa dưới dễ dàng tìm mua, giúp tiết kiệm chi phí học tập. 
+	“Dọn trọ cùng PassNow”
+	Thu hút người dùng có nhu cầu thanh lý đồ dùng 
+	Triển khai vào các thời điểm sinh viên chuyển phòng hoặc kết thúc năm học. Khuyến khích người dùng đăng bán các vật dụng như bàn học, ghế, quạt, nồi cơm điện, bếp từ, kệ sách,... nhằm đáp ứng nhu cầu mua đồ giá rẻ của sinh viên khác. 
+	“Góc đồ tặng miễn phí”
+	Xây dựng cộng đồng và tăng mức độ tương tác 
+	Tạo chuyên mục dành riêng cho các bài đăng tặng miễn phí sách, quần áo, đồ dùng học tập hoặc vật dụng sinh hoạt còn sử dụng tốt. Hoạt động này giúp lan tỏa tinh thần chia sẻ trong cộng đồng sinh viên và tăng lượng truy cập ứng dụng. 
+	“Pass đồ trước khi tốt nghiệp”
+	Thu hút sinh viên năm cuối tham gia 
+	Trước mùa tốt nghiệp, PassNow tổ chức chiến dịch khuyến khích sinh viên năm cuối thanh lý các vật dụng còn sử dụng tốt như laptop, sách chuyên ngành, đồ điện tử, nội thất ký túc xá,... với mức giá phù hợp cho các khóa sau. 
+	“Mời bạn cùng pass đồ”
+	Tăng số lượng người dùng mới 
+	Áp dụng chương trình giới thiệu bạn bè. Người dùng chia sẻ liên kết hoặc mã giới thiệu cho bạn học; khi người được giới thiệu đăng ký và thực hiện giao dịch đầu tiên, cả hai sẽ nhận được điểm thưởng hoặc voucher ưu đãi trên nền tảng. 
+	Kỳ vọng hiệu quả:
+Các chiến dịch trên được thiết kế phù hợp với nhu cầu thực tế của sinh viên trong từng thời điểm của năm học. Việc triển khai đồng bộ sẽ giúp PassNow:
+* Tăng số lượng người dùng mới thông qua các chương trình giới thiệu
+* Gia tăng số lượng bài đăng và giao dịch trên nền tảng
+* Xây dựng cộng đồng sinh viên tích cực, khuyến khích tái sử dụng đồ dùng và giảm lãng phí
+* Nâng cao mức độ nhận diện thương hiệu PassNow trong các trường đại học
+   1. Chiến lược xây dựng cộng đồng và đối tác
+Đối tác/cộng đồng
+	Vai trò
+	Fanpage sinh viên của các trường
+	Hỗ trợ truyền thông, giới thiệu PassNow đến sinh viên thông qua các bài đăng hoặc chia sẻ trải nghiệm sử dụng. 
+	CLB sinh viên
+	Là nhóm người dùng trải nghiệm sớm, góp ý cải thiện ứng dụng và lan tỏa PassNow trong cộng đồng sinh viên. 
+	Nhóm ký túc xá/khu trọ
+	Tiếp cận nhóm người dùng có nhu cầu mua bán, trao đổi và cho tặng đồ dùng học tập, đồ sinh hoạt cao. 
+	Hội nhóm mua bán đồ cũ
+	Thu hút người dùng từ các kênh mua bán truyền thống sang sử dụng PassNow để giao dịch thuận tiện hơn. 
+	Ban quản lý ký túc xá nếu có thể tiếp cận
+	Hỗ trợ truyền thông chính thức, tăng độ tin cậy và khả năng tiếp cận sinh viên đang sinh sống tại ký túc xá. 
+	Kỳ vọng:
+Việc hợp tác với các cộng đồng và tổ chức trên giúp PassNow tiếp cận đúng đối tượng khách hàng mục tiêu, xây dựng niềm tin trong cộng đồng sinh viên và hình thành mạng lưới người dùng ổn định. Khi số lượng người dùng tăng lên, nền tảng sẽ có nhiều bài đăng hơn, đa dạng sản phẩm hơn và tạo ra hiệu ứng lan truyền, giúp hoạt động mua bán giữa sinh viên diễn ra thuận tiện và hiệu quả. 
+   2. Chỉ số đo lường hiệu quả Marketing
+Để đánh giá hiệu quả của các hoạt động marketing và go-to-market trong giai đoạn MVP, PassNow xây dựng bộ chỉ số đo lường (KPI) bám theo toàn bộ hành trình người dùng: từ nhận diện, đăng ký, xác thực, đến khi tạo tin đăng, tương tác qua chat và hoàn tất giao dịch, cùng khả năng giữ chân người dùng quay lại. Các chỉ số được lựa chọn ở mức đơn giản, có thể theo dõi thủ công trên Google Sheets chung của nhóm (đã đề cập tại mục Cơ cấu tổ chức nhóm/startup dự kiến), phù hợp với quy mô một dự án khởi nghiệp sinh viên chưa có công cụ phân tích chuyên sâu.
+
+
+Nhóm chỉ số
+	Chỉ số cụ thể & cách đo
+	Mục tiêu trong giai đoạn MVP (6 tháng đầu)
+	Nhận diện
+	Số lượt tiếp cận bài đăng, số lượt tương tác (like/share/comment), số lượt quét mã QR.
+	Tối thiểu 5.000 lượt tiếp cận và 300 lượt quét QR trong 2 tuần Pre-launch.
+	Đăng ký
+	Số tài khoản đăng ký mới theo tuần/tháng.
+	Trung bình 150-200 tài khoản/tháng trong 3 tháng đầu; tăng lên 250-300 tài khoản/tháng khi mở rộng sang trường thứ 2-3.
+	Xác thực
+	Tỷ lệ tài khoản hoàn tất xác thực email trường trên tổng số đăng ký.
+	Tối thiểu 80% tài khoản đăng ký hoàn tất xác thực trong vòng 48 giờ.
+	Tin đăng
+	Số tin đăng mới theo tuần; tỷ lệ tin đăng có đầy đủ hình ảnh, mô tả và danh mục.
+	Tối thiểu 50 tin đăng mới/tuần từ tháng thứ 2; tỷ lệ tin đăng đầy đủ thông tin đạt trên 90%.
+	Lượt chat
+	Số cuộc trò chuyện phát sinh/tuần; tỷ lệ tin đăng nhận được ít nhất 1 lượt liên hệ.
+	Tối thiểu 40% tin đăng có ít nhất 1 cuộc trò chuyện trong vòng 7 ngày kể từ khi đăng.
+	Giao dịch thành công
+	Số giao dịch được xác nhận hoàn tất (đã bán/đã tặng)/tháng; tỷ lệ chuyển đổi từ yêu cầu giao dịch sang giao dịch hoàn tất.
+	Tối thiểu 100 giao dịch thành công/tháng vào tháng thứ 4-6; tỷ lệ chuyển đổi request → giao dịch đạt trên 30%.
+	Retention (giữ chân người dùng)
+	Tỷ lệ người dùng quay lại sau 7 ngày (D7) và sau 30 ngày (D30); tỷ lệ người dùng đăng từ 2 tin trở lên.
+	D7 retention đạt tối thiểu 25%, D30 retention đạt tối thiểu 15%; tỷ lệ người dùng đăng từ 2 tin trở lên đạt 15% trong 3 tháng đầu.
+	Hiệu quả kênh
+	Kênh mang lại nhiều người dùng/tin đăng nhất: Facebook group, Fanpage/CLB, Zalo, Poster/QR, Referral.
+	Xác định được 2 kênh hiệu quả nhất sau tháng thứ 2 để ưu tiên phân bổ ngân sách marketing.
+	
+
+Toàn bộ chỉ số trên được cập nhật hằng tuần để Marketing Lead và Finance Lead cùng theo dõi, làm cơ sở điều chỉnh kịp thời kênh truyền thông và ngân sách marketing được trình bày ở phần tiếp theo.
+   3. Ngân sách cho Marketing
+Ngân sách marketing trong giai đoạn Pre-launch và Soft Launch MVP được xây dựng ở mức tối thiểu, sử dụng nguồn tự có của 5 thành viên sáng lập trước khi dự án gọi vốn chính thức. Ngân sách này tập trung vào các hoạt động chi phí thấp nhưng tiếp cận đúng cộng đồng sinh viên mục tiêu, khác với ngân sách marketing quy mô lớn hơn (54.000.000 VNĐ) được đề xuất trong Fundraising Plan (mục Kế hoạch sử dụng vốn theo từng hạng mục) cho giai đoạn mở rộng sau khi nhận vốn.
+Hạng mục
+	Mô tả
+	Chi phí ước tính (VNĐ)
+	Poster & standee
+	Thiết kế và in poster A3/A4, standee nhỏ dán tại bảng tin ký túc xá, căn tin, khu tự học.
+	500.000 - 800.000
+	Mã QR & Landing page
+	Tạo mã QR dẫn về ứng dụng, chi phí duy trì domain/landing page giới thiệu cơ bản.
+	200.000 - 300.000
+	Quà tặng chương trình giới thiệu bạn bè (Referral)
+	Voucher nhỏ, quà lưu niệm hoặc điểm thưởng cho người giới thiệu thành công người dùng mới.
+	1.000.000 - 1.500.000
+	Quảng cáo thử nghiệm trên mạng xã hội
+	Chạy thử quảng cáo Facebook/TikTok Ads nhắm mục tiêu sinh viên trong khu vực trường/ký túc xá.
+	1.000.000 - 2.000.000
+	Chi phí phát sinh & dự phòng
+	In ấn bổ sung, chi phí tổ chức các hoạt động nhỏ đi kèm chiến dịch (nếu có).
+	500.000
+	
+
+Tổng ngân sách marketing dự kiến cho giai đoạn Pre-launch và Soft Launch MVP (khoảng 4-6 tuần đầu) rơi vào khoảng 3.200.000 - 5.100.000 VNĐ. Đây là mức ngân sách tối thiểu để kiểm chứng các kênh marketing trước khi quyết định phân bổ ngân sách lớn hơn ở giai đoạn mở rộng, đồng thời là cơ sở thực tế để đối chiếu với các chỉ số hiệu quả kênh đã nêu ở phần Chỉ số đo lường hiệu quả Marketing
+10. Team
+   1. Danh sách thành viên và vai trò cụ thể trong dự án.
+        
+STT
+	Tên
+	Vai trò
+	Vai trò cụ thể
+	1
+	Nguyễn Lê Thiên Lý
+	Project Lead
+	- Chịu trách nhiệm điều phối toàn bộ dự án, xây dựng định hướng phát triển
+- Phân chia công việc, quản lý tiến độ và đảm bảo sự liên kết giữa các mảng
+- Hỗ trợ xử lý các vấn đề phát sinh và đảm bảo sản phẩm, các tài liệu đầu ra được hoàn thiện đúng mục tiêu
+	2
+	Nguyễn Văn Minh
+	Product Lead
+	- Phụ trách phát triển sản phẩm (ứng dụng) PassNow và định hướng MVP 
+- Xây dựng yêu cầu tính năng, trải nghiệm người dùng 
+- Quản lý quá trình thiết kế, phát triển và hoàn thiện sản phẩm
+- Đảm bảo sản phẩm đáp ứng đúng nhu cầu người dùng mục tiêu 
+	3
+	Lê Minh Trí
+	Marketing Lead
+	- Xây dựng chiến lược truyền thông và tiếp cận người dùng
+- Nghiên cứu khách hàng mục tiêu và thị trường
+- Phát triển kế hoạch marketing, kế hoạch ra mắt sản phẩm
+- Đo lường hiệu quả các hoạt động quảng bá
+	4
+	Lê Quang Phúc
+	Finance Lead
+	- Xây dựng kế hoạch tài chính cho dự án
+- Phân tích chi phí, doanh thu và mô hình kinh doanh
+- Lập kế hoạch gọi vốn và sử dụng nguồn vốn
+- Đánh giá rủi ro tài chính và phương án giảm thiểu rủi ro trong quá trình phát triển
+	5
+	Huỳnh Hoàng Gia Uy
+	Operations Lead
+	- Xây dựng quy trình vận hành nền tảng
+- Quản lý hoạt động giao dịch và trải nghiệm người dùng
+- Đề xuất quy trình kiểm duyệt, xác thực, xử lý tranh chấp, đánh giá uy tín người dùng
+- Hỗ trợ xây dựng cộng đồng và mở rộng hệ sinh thái 
+	
+
+   2. Năng lực, kinh nghiệm, kỹ năng liên quan của từng thành viên
+      1. Nguyễn Lê Thiên Lý - Project Lead
+* Năng lực & kinh nghiệm: Có kinh nghiệm trong việc điều phối công việc nhóm, lập kế hoạch và quản lý tiến độ triển khai. Là người đề xuất ý tưởng PassNow nên có sự hiểu biết xuyên suốt về định hướng và mục tiêu của dự án. Ngoài ra, có kinh nghiệm tổ chức, phối hợp nhiều nhóm nhân sự trong các hoạt động tập thể.
+* Kỹ năng liên quan: Có kỹ năng quản lý dự án, giao tiếp và phối hợp đội nhóm; khả năng phân chia công việc, theo dõi tiến độ và xử lý các vấn đề phát sinh trong quá trình triển khai.
+* Đóng góp: Định hướng ý tưởng ban đầu của PassNow, điều phối hoạt động của nhóm, kết nối các bộ phận và đảm bảo tiến độ hoàn thiện Business Plan Document, sản phẩm và các yêu cầu của dự án.
+      1. Nguyễn Văn Minh - Product Lead
+* Năng lực & kinh nghiệm: Có nền tảng kiến ​​trúc và khả năng phát triển toàn diện phần mềm. Từng tham gia các khóa học về phát triển ứng dụng Web và ứng dụng Di động. 
+* Kỹ năng liên quan: Lập trình Web (Frontend/Backend), Lập trình ứng dụng di động, Thiết kế kiến ​​trúc phần mềm. 
+* Đóng góp: Xác định các tính năng cốt lõi (Specs/BDD), và đảm bảo sản phẩm giải quyết đúng bài toán của người dùng. Trực tiếp tham gia hệ thống kiến ​​trúc thiết kế, viết mã xây dựng các tính năng quan trọng nhất, xem xét mã và đảm bảo chất lượng kỹ thuật của toàn bộ dự án.
+      1. Lê Minh Trí - Marketing Lead
+* Năng lực & kinh nghiệm: Có khả năng nắm bắt thị trường, phân tích hành vi khách hàng và xây dựng định hướng truyền thông. Có tư duy sáng tạo trong việc kể câu chuyện thương hiệu, phát triển nội dung quảng bá và truyền tải giá trị sản phẩm đến đúng nhóm khách hàng mục tiêu.
+* Kỹ năng liên quan: Lập kế hoạch marketing, nghiên cứu thị trường, phân tích khách hàng mục tiêu, xây dựng nội dung truyền thông, quản lý kênh mạng xã hội, thiết kế hình ảnh cơ bản và phối hợp triển khai các hoạt động quảng bá sản phẩm.
+* Đóng góp: Phụ trách xây dựng chiến lược truyền thông cho dự án, xác định chân dung khách hàng mục tiêu, đề xuất thông điệp quảng bá và phát triển nội dung marketing cho thương hiệu. Đồng thời hỗ trợ khảo sát thị trường, phân tích đối thủ cạnh tranh và phối hợp với các thành viên khác để hoàn thiện hình ảnh thương hiệu cũng như kế hoạch tiếp cận khách hàng.
+      1. Lê Quang Phúc - Finance Lead
+* Năng lực & kinh nghiệm: Có thế mạnh về tư duy logic, tính toán cẩn thận và quản lý số liệu tốt. Bản thân có kinh nghiệm trong việc sắp xếp, tối ưu hóa các quy trình công việc và luôn tiếp cận mọi bài toán một cách thực tế, rõ ràng.
+* Kỹ năng liên quan:
+   * Tư duy phân tích, xử lý dữ liệu và tính toán số liệu trên Excel/Google Sheets.
+   * Khả năng lập kế hoạch thu chi, quản lý và phân bổ ngân sách một cách chặt chẽ.
+   * Nghiên cứu thị trường để dự báo các chi phí phát sinh khi vận hành.
+* Đóng góp: Chịu trách nhiệm theo dõi và quản lý toàn bộ thu chi của nhóm, đảm bảo các chi phí cho hoạt động Marketing hay làm sản phẩm không bị vượt quá giới hạn. Đồng thời, tham gia xây dựng mô hình doanh thu, tính toán điểm hòa vốn và chuẩn bị các số liệu tài chính cần thiết nếu dự án cần gọi vốn. 
+      1. Huỳnh Hoàng Gia Uy - Operations Lead
+* Năng lực & kinh nghiệm: Hiểu quy trình vận hành của nền tảng thương mại/trao đổi trực tuyến. Có khả năng xây dựng và chuẩn hóa quy trình vận hành
+* Kỹ năng liên quan: 
+   * Thiết kế và quản lý quy trình vận hành
+   * Theo dõi và xử lý các vấn đề phát sinh trong quá trình giao dịch
+   * Phân tích dữ liệu vận hành và đề xuất cải tiến
+* Đóng góp:
+   * Thiết kế và quản lý quy trình vận hành
+   * Xây dựng các quy định của nền tảng
+   * Theo dõi các chỉ số vận hành 
+   * Đề xuất cải thiện quy trình và tính năng của nền tảng
+   3. Lý do đội ngũ phù hợp để triển khai ý tưởng
+Đội ngũ phù hợp để triển khai ý tưởng vì các thành viên đều là sinh viên, hiểu rõ nhu cầu và những khó khăn thực tế trong việc mua bán, trao đổi và thanh lý đồ cũ trong môi trường học tập. Nhờ trải nghiệm trực tiếp, nhóm có khả năng xác định chính xác các vấn đề của người dùng và đề xuất giải pháp phù hợp.
+Bên cạnh đó, nhóm sở hữu kiến thức và kỹ năng về công nghệ thông tin, phát triển phần mềm, thiết kế giao diện và quản lý dự án, đáp ứng yêu cầu xây dựng và vận hành nền tảng số. Các thành viên có khả năng làm việc nhóm hiệu quả, chủ động nghiên cứu công nghệ mới và tiếp nhận phản hồi từ người dùng để cải tiến sản phẩm.
+Ngoài mục tiêu kinh doanh, đội ngũ còn mong muốn xây dựng một cộng đồng sinh viên hỗ trợ lẫn nhau, giúp tiết kiệm chi phí học tập và thúc đẩy thói quen tiêu dùng bền vững. Đây là động lực quan trọng giúp nhóm kiên trì phát triển và hoàn thiện dự án trong dài hạn.
+   4. Cơ cấu tổ chức nhóm / startup dự kiến
+Trong giai đoạn đầu (phát triển sản phẩm khả dụng tối thiểu - MVP và thử nghiệm thị trường), PassNow lựa chọn mô hình Cơ cấu tổ chức phẳng (Flat Organization) kết hợp với phân vùng trách nhiệm theo Chức năng chuyên môn (Functional Structure). Mô hình này giúp tối ưu hóa tốc độ ra quyết định, giảm thiểu thủ tục hành chính, tăng tính linh hoạt và thúc đẩy sự phối hợp trực tiếp giữa các thành viên.
+Sơ đồ cơ cấu tổ chức và luồng phối hợp dự kiến:
+* Hội đồng Quản trị / Định hướng Chiến lược (Core Team): Gồm toàn bộ 5 thành viên sáng lập. Các quyết định lớn mang tính chiến lược (như chuyển hướng sản phẩm, gọi vốn, mở rộng thị trường) sẽ được thảo luận tập thể và thông qua dựa trên sự đồng thuận, dưới sự dẫn dắt của Project Lead.
+* Điều phối Tổng thể (Project Management):
+   * Project Lead: Giữ vai trò hạt nhân trung tâm, chịu trách nhiệm kết nối, giám sát tiến độ tổng thể của tất cả các khối và đảm bảo các mảng hoạt động không bị rời rạc.
+* Các Khối Chuyên môn Độc lập (Operational Pillars): Các vị trí Lead sẽ toàn quyền quyết định chuyên môn trong bộ phận của mình và chủ động phối hợp chéo khi cần thiết:
+   * Khối Sản phẩm (Product): Do Product Lead điều hành, tập trung vào việc hiện thực hóa ý tưởng thành ứng dụng PWA, quản lý thiết kế UI/UX và kỹ thuật. Khối này sẽ nhận phản hồi từ khối Vận hành và yêu cầu từ khối Marketing để tối ưu hóa tính năng.
+   * Khối Thị trường (Marketing): Do Marketing Lead phụ trách, chịu trách nhiệm tiếp cận sinh viên, chạy chiến dịch và xây dựng cộng đồng. Khối này làm việc chặt chẽ với Khối Sản phẩm để định hình thông điệp truyền thông phù hợp với tính năng ứng dụng.
+   * Khối Vận hành (Operations): Do Operations Lead kiểm soát, chịu trách nhiệm thiết lập quy trình kiểm duyệt tin đăng, xác thực tài khoản sinh viên và xử lý khiếu nại. Khối này là cầu nối trực tiếp nhận phản hồi từ người dùng để chuyển giao cho Khối Sản phẩm cải tiến.
+   * Khối Tài chính (Finance): Do Finance Lead đảm nhiệm, đóng vai trò "hậu cần vững chắc", kiểm soát ngân sách chi tiêu của các khối Marketing/Product, thẩm định hiệu quả chi phí và chuẩn bị hồ sơ tài chính cho các kế hoạch gọi vốn.
+Cơ chế tương tác và làm việc:
+* Họp định kỳ: Nhóm duy trì lịch họp cố định 1 lần/tuần (linh hoạt giữa hình thức gặp trực tiếp tại trường hoặc thảo luận trực tuyến qua Google Meet tùy theo lịch học). Buổi họp này là không gian để từng bộ phận báo cáo tiến độ, nhìn nhận lại các đầu việc đã hoàn thành và thẳng thắn chia sẻ những khó khăn, nút thắt đang gặp phải. Từ đó, cả nhóm có thể cùng nhau tìm giải pháp tháo gỡ kịp thời, đảm bảo dự án không bị chậm tiến độ chung.
+* Công cụ quản lý: Để tối ưu hóa hiệu suất làm việc từ xa và lưu trữ thông tin, nhóm tận dụng các nền tảng số quen thuộc như:
+   * Google Sheets/ Google Drive: sử dụng làm công cụ chính để phân chia công việc, cập nhật trạng thái task của từng thành viên. Đồng thời dùng Google Drive để lưu trữ toàn bộ dữ liệu dự án, giúp mọi thành viên đều dễ dàng theo dõi và nắm được bức tranh tổng thể.
+   * Messenger: Dùng làm kênh liên lạc chính thức để trao đổi nhanh, thông báo các đầu việc khẩn cấp, đồng thời thống nhất lịch họp hàng tuần nếu có sự cố xảy ra sau buổi họp và duy trì kết nối liên tục giữa các thành viên trong suốt quá trình triển khai dự án.
+   5. Các vị trí/năng lực còn thiếu trong đội ngũ
+Ở giai đoạn hiện tại, đội ngũ PassNow đã có các vai trò cốt lõi về quản lý dự án, sản phẩm, marketing, tài chính và vận hành. Tuy nhiên, để phát triển nền tảng theo hướng ổn định, an toàn và có khả năng mở rộng, nhóm vẫn còn thiếu một số năng lực chuyên sâu sau:
+Các vị trí / năng lực còn thiếu gồm:
+* Kỹ thuật phát triển hệ thống chuyên sâu: Nhóm cần bổ sung thêm năng lực về backend, bảo mật dữ liệu, quản lý cơ sở dữ liệu và tối ưu hiệu năng để nền tảng có thể xử lý đăng tin, tìm kiếm, nhắn tin, xác thực người dùng và quản lý giao dịch một cách ổn định.
+* UI/UX Design chuyên nghiệp: Mặc dù nhóm có định hướng sản phẩm rõ ràng, PassNow vẫn cần thêm năng lực thiết kế trải nghiệm người dùng nhằm giúp quy trình đăng bán, tìm kiếm, liên hệ và đánh giá người dùng trở nên đơn giản, trực quan và phù hợp với thói quen của sinh viên.
+* Pháp lý và bảo vệ dữ liệu người dùng: Vì nền tảng có thể liên quan đến xác thực email trường học, CCCD hoặc thông tin cá nhân, nhóm cần có thêm hiểu biết về quy định bảo mật dữ liệu, điều khoản sử dụng, chính sách quyền riêng tư và trách nhiệm của nền tảng trong quá trình giao dịch.
+* Phân tích dữ liệu và tăng trưởng người dùng: Nhóm còn thiếu năng lực chuyên sâu trong việc theo dõi dữ liệu hành vi người dùng, đo lường tỷ lệ chuyển đổi, phân tích hiệu quả chiến dịch marketing và đề xuất cải tiến dựa trên số liệu thực tế.
+* Quan hệ đối tác và phát triển cộng đồng: Để mở rộng nhanh trong môi trường sinh viên, nhóm cần bổ sung năng lực kết nối với các trường đại học, ký túc xá, câu lạc bộ sinh viên, hội nhóm cộng đồng và các đơn vị hỗ trợ truyền thông.
+
+
+   6. Kế hoạch bổ sung nhân sự, cố vấn hoặc đối tác nếu cần
+Để bù đắp các năng lực còn thiếu, PassNow dự kiến triển khai kế hoạch bổ sung nhân sự, cố vấn và đối tác theo từng giai đoạn, ưu tiên những nguồn lực linh hoạt, phù hợp với quy mô của một dự án khởi nghiệp sinh viên.
+Kế hoạch bổ sung dự kiến:
+* Giai đoạn phát triển MVP: Nhóm sẽ ưu tiên tự học, phân chia lại công việc theo thế mạnh từng thành viên và tận dụng các công cụ hỗ trợ như Figma, Trello/Notion, Google Forms, Google Sheets hoặc các nền tảng no-code/low-code nếu cần để rút ngắn thời gian phát triển sản phẩm thử nghiệm.
+* Bổ sung cộng tác viên kỹ thuật và UI/UX: Khi cần triển khai các tính năng phức tạp hơn, nhóm sẽ tìm kiếm thêm cộng tác viên là sinh viên có kinh nghiệm về lập trình web, thiết kế giao diện, kiểm thử phần mềm hoặc bảo mật cơ bản để hỗ trợ Product Lead hoàn thiện nền tảng.
+* Tìm cố vấn chuyên môn: Nhóm dự kiến kết nối với giảng viên, anh chị khóa trên hoặc mentor có kinh nghiệm về khởi nghiệp, phát triển sản phẩm số, thương mại điện tử, pháp lý dữ liệu và quản trị cộng đồng để nhận phản hồi định kỳ, tránh các sai sót trong quá trình triển khai.
+* Hợp tác với trường học và cộng đồng sinh viên: PassNow sẽ tiếp cận các câu lạc bộ, ban quản lý ký túc xá, fanpage sinh viên và hội nhóm mua bán đồ cũ trong trường để thử nghiệm sản phẩm, thu hút người dùng đầu tiên và xây dựng niềm tin cho nền tảng.
+* Thiết lập đối tác hỗ trợ vận hành: Trong giai đoạn mở rộng, nhóm có thể hợp tác với các đơn vị hỗ trợ thanh toán, giao nhận nội khu, cửa hàng đồ cũ hoặc điểm thu gom đồ dùng sinh viên nhằm tăng tính tiện lợi và giảm rủi ro trong giao dịch.
+* Tuyển thêm nhân sự khi dự án tăng trưởng: Nếu lượng người dùng và số lượng giao dịch tăng, nhóm sẽ xem xét bổ sung các vị trí như Technical Lead, Customer Support/Community Moderator, Growth Marketing Executive và Business Development để đảm bảo PassNow vận hành ổn định và có khả năng mở rộng lâu dài.
+11. Financial Plan
+   1. Mô hình doanh thu
+Mô tả mô hình doanh thu tổng thể của PassNow, làm rõ giai đoạn MVP miễn phí hoàn toàn và lộ trình chuyển sang mô hình kết hợp freemium, dịch vụ giá trị gia tăng và quảng cáo cục bộ, đồng thời giải thích lý do chưa thu phí trực tiếp trên giao dịch mua bán ở giai đoạn đầu. 
+   2. Các nguồn doanh thu dự kiến
+Liệt kê và mô tả chi tiết từng nguồn doanh thu (tin đăng nổi bật, tài khoản Premium, quảng cáo/đối tác cục bộ, phí giao dịch qua ví điện tử), nêu rõ giai đoạn áp dụng của từng nguồn để thể hiện tính khả thi theo thời gian. 
+   3. Các nhóm chi phí chính
+Xác định và mô tả các nhóm chi phí của dự án gồm chi phí phát triển sản phẩm, marketing, vận hành, nhân sự và pháp lý/dự phòng, làm cơ sở cho phần dự kiến doanh thu-chi phí và kế hoạch sử dụng vốn. 
+   4. Dự kiến doanh thu và chi phí giai đoạn đầu 
+Xây dựng bảng dự kiến theo tháng trong 6 tháng đầu sau khi nhận vốn, kèm giả định về tốc độ tăng người dùng và thời điểm bắt đầu có doanh thu, làm căn cứ cho nhu cầu gọi vốn. 
+   5. Điểm hòa vốn sơ bộ
+Ước tính điểm hòa vốn dựa trên chi phí vận hành cố định và doanh thu bình quân mỗi đơn vị dịch vụ trả phí, ghi rõ đây là số liệu ước lượng sẽ hiệu chỉnh theo dữ liệu thực tế. 
+
+
+12. Fundraising Plan
+   1. Nhu cầu gọi vốn
+Xác định số vốn cần gọi và giải thích căn cứ tính toán dựa trên tổng chi phí giai đoạn đầu cộng khoản dự phòng, cũng như thời gian vốn dự kiến duy trì được hoạt động.
+   2. Mục đích sử dụng vốn
+Trình bày mục đích sử dụng vốn ở cấp tổng quan theo bốn nhóm chính là kỹ thuật, marketing, vận hành và pháp lý.
+   3. Kế hoạch sử dụng vốn theo từng hạng mục
+Xây dựng bảng phân bổ vốn chi tiết với tỷ lệ phần trăm, số tiền cụ thể và mục đích sử dụng của từng hạng mục.
+   4. Các cột mốc phát triển sau khi nhận vốn
+Xác định cột mốc cụ thể theo các mốc 3 tháng, 6 tháng và 9-12 tháng, gắn với chỉ số đo lường được như số người dùng, số trường mở rộng, thời điểm doanh thu bắt đầu phát sinh.
+   5. Giá trị đề xuất cho nhà đầu tư
+Viết phần giá trị đề xuất, làm rõ lợi thế cạnh tranh, hiệu ứng mạng lưới cục bộ, khả năng nhân rộng mô hình và giá trị xã hội như những yếu tố thuyết phục nhà đầu tư.
+
+
+13. Risks and Mitigation
+Nhận diện các nhóm rủi ro chính của dự án (thị trường, vận hành, tài chính, pháp lý/dữ liệu, nhân sự đội ngũ) và xây dựng phương án giảm thiểu tương ứng cho từng rủi ro, trình bày dưới dạng bảng để dễ đối chiếu.
+
+
+14. Development Roadmap
+* Tuần 1: Khởi tạo dự án & Phân tích yêu cầu (Khảo sát & Lên kế hoạch)
+   * Khảo sát nhu cầu và thói quen thanh lý đồ cũ của sinh viên. 
+   * Phân tích yêu cầu và định hình các luồng người dùng.
+   * Lập tài liệu đặc tả dự án (SDD/BDD), phân loại tính năng theo mức độ ưu tiên (P0: Nền tảng, P1: Giao dịch, P2: Chat/Nâng cao).
+   * Khởi tạo môi trường phát triển (Setup Repository, Vite, React, Tailwind, cấu trúc thư mục) và phân công nhiệm vụ.
+* Tuần 2: Thiết kế hệ thống & Cơ sở dữ liệu (UI/UX & Data Model) 
+   * Thiết kế Wireframe và UI/UX (ưu tiên giao diện Mobile-first).
+   * Xây dựng hệ thống UI Components tái sử dụng (shadcn/ui, Tailwind).
+   * Thiết kế cấu trúc cơ sở dữ liệu NoSQL (Cloud Firestore Schema) cho Users, Listings, Transactions.
+   * Thiết lập Firebase Services và viết các quy tắc bảo mật dữ liệu cơ bản.
+* Tuần 3: Phát triển Sản phẩm - Sprint 1
+   * Hoàn thiện luồng Đăng ký / Đăng nhập / Đăng xuất (Firebase Auth).
+   * Xây dựng luồng thiết lập Hồ sơ cá nhân (User Profile) - Chọn Trường học, Khu vực.
+   * Phát triển tính năng Tạo / Chỉnh sửa / Xóa tin đăng bán & cho tặng
+   * Kiểm thử nội bộ các chức năng vừa hoàn thiện.
+* Tuần 4: Phát triển Sản phẩm - Sprint 2
+   * Xây dựng Trang chủ.
+   * Phát triển tính năng Tìm kiếm, Lọc sản phẩm (theo Giá, Danh mục, Tình trạng).
+   * Xây dựng Trang chi tiết sản phẩm.
+   * Tích hợp luồng Xác nhận giao dịch (Buyer/Seller Confirm) và Đánh giá (Rating/Review)
+* Tuần 5: Kiểm thử, Tối ưu & Hoàn thiện
+   * Kiểm thử toàn bộ hệ thống (End-to-End Testing) theo các kịch bản BDD.
+   * Tinh chỉnh giao diện, thêm các hiệu ứng mượt mà và tối ưu trải nghiệm.
+   * Hoàn thiện giao diện và trải nghiệm người dùng. 
+* Tuần 6: Triển khai & Thu thập phản hồi 
+   * Triển khai ứng dụng thực tế.
+   * Thu thập phản hồi, đánh giá thực tế và điều chỉnh nhanh các vấn đề phát sinh.
+   * Chuẩn bị kịch bản và Demo sản phẩm cuối kỳ.
+15. Source Code, Prototype and Technical Appendix
+16. Conclusion
+17. Appendices
+   1. Appendix A: Khảo sát nhu cầu người dùng
+        
+Nội dung
+	Thông tin
+	Tên khảo sát
+	Khảo sát Nhu cầu Sinh viên mua bán, thanh lý và cho tặng đồ cũ
+	Đối tượng khảo sát
+	Sinh viên, người mới tốt nghiệp/người đi làm trẻ
+	Thời gian thực hiện
+	Tháng 7/2026
+	Số lượng phản hồi
+	58 phản hồi
+	Hình thức khảo sát
+	Google Form
+	Link khảo sát
+	Khảo sát Nhu cầu Sinh viên mua bán, thanh lý và cho tặng đồ cũ (Responses)
+	Mục đích sử dụng
+	Làm căn cứ cho các phần Problem and Opportunity, Target Customers, Market Analysis, Product Features, Business Model và Marketing Strategy
+	
+
+   2. Appendix B:
