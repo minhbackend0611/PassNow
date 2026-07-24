@@ -28,11 +28,13 @@ export const useChatNotifications = () => {
         const isNewMessage = prevLastMessageAt && conv.metadata.lastMessageAt > prevLastMessageAt;
         const hasUnread = conv.metadata.unreadCount?.[user.uid] && conv.metadata.unreadCount[user.uid] > 0;
         
-        // If we are currently on the chat page for this conversation, we don't want an annoying system push notification
-        // because the user is actively chatting. However, if they are on a different page, we show it.
+        // If we are currently on the chat page for this conversation AND the page is visible, 
+        // we don't want an annoying system push notification.
+        // If they are on a different page OR the tab is hidden (in background), we show it.
         const isCurrentChatPage = window.location.pathname === `/chat/${conv.id}`;
+        const isPageVisible = !document.hidden;
 
-        if (isNewMessage && hasUnread && !isCurrentChatPage) {
+        if (isNewMessage && hasUnread && (!isCurrentChatPage || !isPageVisible)) {
           const showNotification = async () => {
             const participants = Object.keys(conv.metadata.participants || {});
             const senderId = participants.find(id => id !== user.uid) || participants[0];
@@ -51,9 +53,12 @@ export const useChatNotifications = () => {
 
             const text = conv.metadata.lastMessage;
             const displayMsg = text === 'Đã gửi một ảnh' ? '📷 Đã gửi một ảnh' : text;
+            const chatUrl = `/chat/${conv.id}`;
             
             // In-app toast
-            addToast(`Tin nhắn từ ${senderName}: ${displayMsg.substring(0, 30)}${displayMsg.length > 30 ? '...' : ''}`, 'info');
+            addToast(`Tin nhắn từ ${senderName}: ${displayMsg.substring(0, 30)}${displayMsg.length > 30 ? '...' : ''}`, 'info', () => {
+              window.location.href = chatUrl;
+            });
             
             // Browser push notification
             if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {

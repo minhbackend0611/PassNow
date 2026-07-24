@@ -40,9 +40,15 @@ const ToastItem = ({ toast }: { toast: Toast }) => {
 
   return (
     <div
+      onClick={() => {
+        if (toast.onClick) {
+          toast.onClick();
+          handleClose();
+        }
+      }}
       className={`pointer-events-auto w-full max-w-md overflow-hidden rounded-2xl border backdrop-blur-xl shadow-lg transition-all duration-300 ease-out transform ${
         isVisible ? 'translate-y-0 opacity-100 scale-100' : '-translate-y-4 opacity-0 scale-95'
-      } ${getBorderColor()}`}
+      } ${getBorderColor()} ${toast.onClick ? 'cursor-pointer hover:scale-[1.02] active:scale-[0.98]' : ''}`}
     >
       <div className="p-4 flex items-start gap-3">
         <div className="flex-shrink-0 mt-0.5">{getIcon()}</div>

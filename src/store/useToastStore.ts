@@ -6,20 +6,21 @@ export interface Toast {
   id: string;
   message: string;
   type: ToastType;
+  onClick?: () => void;
 }
 
 interface ToastStore {
   toasts: Toast[];
-  addToast: (message: string, type?: ToastType) => void;
+  addToast: (message: string, type?: ToastType, onClick?: () => void) => void;
   removeToast: (id: string) => void;
 }
 
 export const useToastStore = create<ToastStore>((set) => ({
   toasts: [],
-  addToast: (message, type = 'info') => {
+  addToast: (message, type = 'info', onClick) => {
     const id = Math.random().toString(36).substring(2, 9);
     set((state) => ({
-      toasts: [...state.toasts, { id, message, type }],
+      toasts: [...state.toasts, { id, message, type, onClick }],
     }));
 
     // Auto remove after 5 seconds
