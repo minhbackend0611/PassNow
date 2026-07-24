@@ -197,18 +197,24 @@ export default function ChatDetailPage() {
                       className={`max-w-[75%] md:max-w-[60%] flex flex-col gap-1 ${isMine ? 'items-end' : 'items-start'}`}
                     >
                       <div 
-                        className={`px-4 py-2.5 rounded-2xl ${
-                          isMine 
-                            ? 'bg-primary text-on-primary rounded-tr-sm' 
-                            : 'bg-surface-container-high text-on-surface rounded-tl-sm'
-                        }`}
+                        className={
+                          msg.imageUrl && msg.text === 'Đã gửi một ảnh'
+                            ? 'px-0 py-0'
+                            : `px-4 py-2.5 rounded-2xl ${
+                                isMine 
+                                  ? 'bg-primary text-on-primary rounded-tr-sm' 
+                                  : 'bg-surface-container-high text-on-surface rounded-tl-sm'
+                              }`
+                        }
                       >
                         {msg.imageUrl && (
-                          <div className="mb-2 w-full max-w-[250px] overflow-hidden rounded-lg">
+                          <div className={`w-full max-w-[250px] overflow-hidden rounded-2xl shadow-sm border ${isMine ? 'border-primary/20' : 'border-surface-container-high'}`}>
                             <img src={msg.imageUrl} alt="Chat image" className="w-full h-auto object-cover cursor-pointer hover:opacity-90 transition-opacity" onClick={() => window.open(msg.imageUrl, '_blank')} />
                           </div>
                         )}
-                        <p className="text-body-md font-body-md whitespace-pre-wrap break-words">{msg.text}</p>
+                        {!(msg.imageUrl && msg.text === 'Đã gửi một ảnh') && (
+                          <p className="text-body-md font-body-md whitespace-pre-wrap break-words">{msg.text}</p>
+                        )}
                       </div>
                       <div className="flex items-center gap-1">
                         <span className="text-[11px] text-on-surface-variant px-1">{timeString}</span>
