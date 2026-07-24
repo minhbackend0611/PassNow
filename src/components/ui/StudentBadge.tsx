@@ -12,10 +12,10 @@ export default function StudentBadge({ email, variant = 'full', className = '' }
   if (variant === 'minimal') {
     return (
       <span 
-        className={`flex items-center justify-center w-5 h-5 bg-primary rounded-full text-white shadow-sm border-[1.5px] border-white ${className}`}
+        className={`flex items-center justify-center w-5 h-5 bg-surface text-primary rounded-full shadow-sm border border-primary/20 ${className}`}
         title="Verified Student"
       >
-        <span className="material-symbols-outlined text-[12px] font-bold">check</span>
+        <span className="material-symbols-outlined text-[16px]">verified</span>
       </span>
     );
   }
