@@ -5,8 +5,10 @@ import BottomNavBar from './BottomNavBar';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useChatStore } from '../../store/useChatStore';
 import { useTransactionStore } from '../../store/useTransactionStore';
+import { useChatNotifications } from '../../hooks/useChatNotifications';
 
 export default function MainLayout() {
+  useChatNotifications();
   const { user } = useAuthStore();
   const { initializeChatListener } = useChatStore();
   const { initializeTransactionListener } = useTransactionStore();

@@ -97,6 +97,7 @@ export interface Conversation {
     listingId: string;
     lastMessage: string;
     lastMessageAt: number; // unix timestamp
+    lastRead?: Record<string, number>; // e.g., { [userId1]: timestamp, [userId2]: timestamp }
   };
 }
 
@@ -104,5 +105,6 @@ export interface Message {
   id: string; // key from Realtime DB
   senderId: string;
   text: string;
+  imageUrl?: string;
   createdAt: number; // unix timestamp
 }

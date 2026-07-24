@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../../store/useAuthStore';
 import { useToastStore } from '../../../store/useToastStore';
-import { subscribeToMessages, getConversationMetadata, sendMessage, markAsRead } from '../../../services/chatService';
+import { subscribeToMessages, getConversationMetadata, sendMessage, markAsRead, uploadChatImage } from '../../../services/chatService';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../lib/firebase';
 import type { Message, Conversation } from '../../../types';
@@ -16,12 +16,14 @@ export default function ChatDetailPage() {
   
   const [messages, setMessages] = useState<Message[]>([]);
   const [metadata, setMetadata] = useState<Conversation['metadata'] | null>(null);
-  const [otherUser, setOtherUser] = useState<{ displayName: string; avatarUrl: string | null; email: string | null } | null>(null);
+  const [otherUser, setOtherUser] = useState<{ id: string; displayName: string; avatarUrl: string | null; email: string | null } | null>(null);
   const [listingData, setListingData] = useState<{ title: string; image: string | null } | null>(null);
   
   const [inputText, setInputText] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!conversationId || !user) return;
@@ -39,7 +41,7 @@ export default function ChatDetailPage() {
       const userSnap = await getDoc(doc(db, 'users', otherUserId));
       if (userSnap.exists()) {
         const uData = userSnap.data();
-        setOtherUser({ displayName: uData.displayName, avatarUrl: uData.avatarUrl, email: uData.email || null });
+        setOtherUser({ id: otherUserId, displayName: uData.displayName, avatarUrl: uData.avatarUrl, email: uData.email || null });
       }
 
       // Fetch listing
@@ -85,6 +87,29 @@ export default function ChatDetailPage() {
       addToast('Failed to send message', 'error');
     } finally {
       setIsSending(false);
+    }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !conversationId || !user) return;
+    
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      addToast('Image must be less than 5MB', 'error');
+      return;
+    }
+
+    try {
+      setIsUploadingImage(true);
+      const imageUrl = await uploadChatImage(file);
+      await sendMessage(conversationId, user.uid, 'Đã gửi một ảnh', imageUrl);
+    } catch (err) {
+      console.error(err);
+      addToast('Failed to upload image', 'error');
+    } finally {
+      setIsUploadingImage(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 
@@ -178,9 +203,22 @@ export default function ChatDetailPage() {
                             : 'bg-surface-container-high text-on-surface rounded-tl-sm'
                         }`}
                       >
+                        {msg.imageUrl && (
+                          <div className="mb-2 w-full max-w-[250px] overflow-hidden rounded-lg">
+                            <img src={msg.imageUrl} alt="Chat image" className="w-full h-auto object-cover cursor-pointer hover:opacity-90 transition-opacity" onClick={() => window.open(msg.imageUrl, '_blank')} />
+                          </div>
+                        )}
                         <p className="text-body-md font-body-md whitespace-pre-wrap break-words">{msg.text}</p>
                       </div>
-                      <span className="text-[11px] text-on-surface-variant px-1">{timeString}</span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-[11px] text-on-surface-variant px-1">{timeString}</span>
+                        {isMine && index === messages.length - 1 && otherUser?.id && metadata?.lastRead?.[otherUser.id] && msg.createdAt <= metadata.lastRead[otherUser.id] && (
+                          <span className="text-[11px] text-primary font-medium flex items-center gap-0.5">
+                            <span className="material-symbols-outlined text-[14px]">done_all</span>
+                            Đã xem
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                   )}
@@ -193,21 +231,45 @@ export default function ChatDetailPage() {
 
         {/* Input Area */}
         <div className="bg-surface-container-lowest p-stack-sm md:p-stack-md border-t border-outline-variant/30 shrink-0">
-          <form onSubmit={handleSend} className="flex gap-2">
+          <form onSubmit={handleSend} className="flex gap-2 items-center">
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              ref={fileInputRef}
+              onChange={handleImageUpload}
+              disabled={isUploadingImage || isSending}
+            />
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isUploadingImage || isSending}
+              className="w-12 h-12 rounded-full flex items-center justify-center bg-surface-container hover:bg-surface-container-high text-on-surface-variant transition-colors disabled:opacity-50 shrink-0"
+            >
+              {isUploadingImage ? (
+                <span className="material-symbols-outlined animate-spin">progress_activity</span>
+              ) : (
+                <span className="material-symbols-outlined">image</span>
+              )}
+            </button>
             <input
               type="text"
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               placeholder="Type a message..."
-              disabled={isSending}
-              className="flex-1 bg-surface-container rounded-full px-5 py-3 text-body-md font-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 border border-outline-variant/50 transition-all disabled:opacity-50"
+              disabled={isSending || isUploadingImage}
+              className="flex-1 bg-surface-container hover:bg-surface-container-high focus:bg-surface-container-high outline-none px-4 py-3 rounded-full text-body-lg font-body-lg text-on-surface placeholder:text-on-surface-variant transition-colors"
             />
             <button
               type="submit"
-              disabled={!inputText.trim() || isSending}
-              className="w-12 h-12 rounded-full bg-primary text-on-primary flex items-center justify-center shrink-0 hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:bg-surface-container-highest disabled:text-on-surface-variant"
+              disabled={!inputText.trim() || isSending || isUploadingImage}
+              className="w-12 h-12 rounded-full flex items-center justify-center bg-primary text-on-primary hover:bg-primary/90 transition-colors disabled:opacity-50 shrink-0 shadow-sm"
             >
-              <span className="material-symbols-outlined ml-1">send</span>
+              {isSending ? (
+                <span className="material-symbols-outlined animate-spin">progress_activity</span>
+              ) : (
+                <span className="material-symbols-outlined translate-x-[1px]">send</span>
+              )}
             </button>
           </form>
         </div>
