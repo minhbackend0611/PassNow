@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react';
 import { useAuthStore } from '../store/useAuthStore';
 import { subscribeToConversations } from '../services/chatService';
 import { useToastStore } from '../store/useToastStore';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 
 export const useChatNotifications = () => {
   const { user } = useAuthStore();
@@ -31,25 +33,43 @@ export const useChatNotifications = () => {
         const isCurrentChatPage = window.location.pathname === `/chat/${conv.id}`;
 
         if (isNewMessage && hasUnread && !isCurrentChatPage) {
-          const text = conv.metadata.lastMessage;
-          const displayMsg = text === 'Đã gửi một ảnh' ? '📷 Đã gửi một ảnh' : text;
-          
-          // In-app toast
-          addToast(`Tin nhắn mới: ${displayMsg.substring(0, 30)}${displayMsg.length > 30 ? '...' : ''}`, 'info');
-          
-          // Browser push notification
-          if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
-            const notification = new Notification('PassNow - Tin nhắn mới', {
-              body: displayMsg,
-              icon: '/vite.svg', // generic icon
-              tag: `chat-${conv.id}`
-            });
+          const showNotification = async () => {
+            const participants = Object.keys(conv.metadata.participants || {});
+            const senderId = participants.find(id => id !== user.uid) || participants[0];
             
-            notification.onclick = () => {
-              window.focus();
-              window.location.href = `/chat/${conv.id}`;
-            };
-          }
+            let senderName = 'Ai đó';
+            if (senderId) {
+              try {
+                const userDoc = await getDoc(doc(db, 'users', senderId));
+                if (userDoc.exists()) {
+                  senderName = userDoc.data().displayName || 'Ai đó';
+                }
+              } catch (e) {
+                console.error("Failed to fetch sender name for notification", e);
+              }
+            }
+
+            const text = conv.metadata.lastMessage;
+            const displayMsg = text === 'Đã gửi một ảnh' ? '📷 Đã gửi một ảnh' : text;
+            
+            // In-app toast
+            addToast(`Tin nhắn từ ${senderName}: ${displayMsg.substring(0, 30)}${displayMsg.length > 30 ? '...' : ''}`, 'info');
+            
+            // Browser push notification
+            if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+              const notification = new Notification(`PassNow - Tin nhắn từ ${senderName}`, {
+                body: displayMsg,
+                icon: '/vite.svg', // generic icon
+                tag: `chat-${conv.id}`
+              });
+              
+              notification.onclick = () => {
+                window.focus();
+                window.location.href = `/chat/${conv.id}`;
+              };
+            }
+          };
+          showNotification();
         }
         
         // Update ref with new timestamp
