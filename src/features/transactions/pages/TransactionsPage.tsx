@@ -82,7 +82,7 @@ function TransactionItem({
   };
 
   return (
-    <div id={`tx-${tx.id}`} className={`glass-panel bg-surface-container-lowest/80 backdrop-blur-xl border border-white/60 rounded-[32px] p-6 md:p-8 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-1 flex flex-col gap-6 group ${displayStatus === 'cancelled' || displayStatus === 'rejected' ? 'opacity-75 grayscale-[0.2]' : ''}`}>
+    <div id={`tx-${tx.id}`} className={`glass-panel bg-surface-container-lowest/80 backdrop-blur-xl border border-white/60 rounded-[32px] p-6 md:p-8 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-1 flex flex-col gap-6 group ${displayStatus === 'cancelled' ? 'opacity-75 grayscale-[0.2]' : ''}`}>
       
       {/* Header & Title */}
       <div className="flex flex-col md:flex-row justify-between items-start gap-4">
@@ -242,19 +242,7 @@ function TransactionItem({
   );
 }
 
-        <span className="material-symbols-outlined text-[18px] transition-transform duration-300" style={{ transform: isExpanded ? 'rotate(180deg)' : 'none' }}>expand_more</span>
-      </button>
-      
-      {isExpanded && (
-        <div className="flex flex-col gap-3 mt-4 animate-in slide-in-from-top-2 fade-in duration-300">
-          {txs.map(tx => (
-            <CancelledTransactionItem key={tx.id} tx={tx} isBuyer={isBuyer} />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
+
 
 interface ListingQueueHeaderProps {
   listingId: string;
@@ -711,7 +699,7 @@ export default function TransactionsPage() {
               })
               .map(([listingId, group]) => {
             const firstTx = group.all[0];
-            const activeCount = group.all.filter(tx => tx.status !== 'cancelled' && tx.status !== 'rejected').length;
+            const activeCount = group.all.filter(tx => tx.status !== 'cancelled').length;
             
             return (
               <div key={listingId} className="flex flex-col gap-4 mb-4 bg-surface-container-lowest/30 p-6 rounded-[32px] border border-outline-variant/30 shadow-inner">
@@ -730,7 +718,7 @@ export default function TransactionsPage() {
                   ) : (
                     group.all.map((tx, index) => {
                       const isBuyer = tx.buyerId === user.uid;
-                      const isCancelled = tx.status === 'cancelled' || tx.status === 'rejected';
+                      const isCancelled = tx.status === 'cancelled';
                       return (
                         <div key={tx.id} className="relative group/queue">
                           <div className={`absolute -left-3 -top-3 w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-[0_2px_10px_rgba(0,166,126,0.3)] z-10 border-2 border-surface transition-transform group-hover/queue:scale-110 ${isCancelled ? 'bg-surface-variant text-on-surface-variant' : 'bg-gradient-to-br from-primary to-secondary text-white'}`}>
