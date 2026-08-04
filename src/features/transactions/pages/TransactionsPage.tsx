@@ -154,7 +154,7 @@ function TransactionItem({
       </div>
 
       {/* Visual Stepper */}
-      <div className="relative grid grid-cols-2 w-full max-w-md mx-auto mt-2 mb-2">
+      <div className="relative grid grid-cols-2 w-full max-w-xl mx-auto mt-4 mb-4">
         {/* Connecting Line spanning exactly from center of left column (25%) to center of right column (75%) */}
         <div className="absolute top-[24px] left-[25%] right-[25%] h-1.5 bg-surface-variant rounded-full z-0 -translate-y-1/2 overflow-hidden">
           <div 
