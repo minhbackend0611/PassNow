@@ -18,6 +18,23 @@ test.describe('PassNow Core Smoke Test', () => {
     const sellerPage = await sellerContext.newPage();
     const buyerPage = await buyerContext.newPage();
 
+    async function handleSetupProfile(page: any, name: string) {
+        await page.waitForURL('**/setup-profile', { timeout: 10000 }).catch(() => {});
+        if (page.url().includes('setup-profile')) {
+            await page.fill('input[name="displayName"]', name);
+            await page.selectOption('select[name="school"]', { index: 1 });
+            
+            await page.waitForSelector('select[name="province"] option:nth-child(2)', { state: 'attached', timeout: 15000 });
+            await page.selectOption('select[name="province"]', { index: 1 });
+            
+            await page.waitForSelector('select[name="district"] option:nth-child(2)', { state: 'attached', timeout: 15000 });
+            await page.selectOption('select[name="district"]', { index: 1 });
+            
+            await page.click('button:has-text("Complete Setup")');
+            await page.waitForURL((url: URL) => !url.toString().includes('setup-profile'), { timeout: 15000 });
+        }
+    }
+
     // ==========================================
     // 1. SELLER FLOW: Register & Create Listing
     // ==========================================
@@ -30,12 +47,7 @@ test.describe('PassNow Core Smoke Test', () => {
     await sellerPage.click('button:has-text("Register")');
 
     // Might redirect to setup profile
-    await sellerPage.waitForURL('**/profile/setup', { timeout: 10000 }).catch(() => {});
-    if (sellerPage.url().includes('setup')) {
-        await sellerPage.fill('input[name="displayName"]', 'Test Seller');
-        // Select random options for school, etc. if required
-        await sellerPage.click('button:has-text("Complete Setup")');
-    }
+    await handleSetupProfile(sellerPage, 'Test Seller');
 
     // Go to list page
     await sellerPage.goto('/list');
@@ -79,6 +91,8 @@ test.describe('PassNow Core Smoke Test', () => {
     await buyerPage.fill('input[type="password"]', password);
     await buyerPage.fill('input[placeholder="Repeat password"]', password);
     await buyerPage.click('button:has-text("Register")');
+
+    await handleSetupProfile(buyerPage, 'Test Buyer');
 
     await expect(buyerPage.locator('nav')).toBeVisible({ timeout: 10000 });
 
