@@ -360,6 +360,8 @@ export const subscribeToUserTransactions = (
       ...document.data()
     } as Transaction));
     updateAndNotify();
+  }, (error) => {
+    console.error("Buyer transactions snapshot error:", error);
   });
 
   const unsubSeller = onSnapshot(sellerQuery, (snapshot) => {
@@ -384,6 +386,8 @@ export const subscribeToUserTransactions = (
         void sellerConfirmTransaction(transaction.id)
           .finally(() => legacyReconciliationsInFlight.delete(transaction.id));
       });
+  }, (error) => {
+    console.error("Seller transactions snapshot error:", error);
   });
 
   return () => {
