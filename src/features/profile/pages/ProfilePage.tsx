@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -40,6 +41,7 @@ export default function ProfilePage() {
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   // Data states
   const [provinces, setProvinces] = useState<Province[]>([]);
@@ -240,10 +242,20 @@ export default function ProfilePage() {
 
         {/* Profile Card */}
         <div className="glass-panel p-stack-lg mb-stack-lg rounded-[32px] hover:shadow-lg transition-all duration-500 border border-white/20 dark:border-white/5 bg-gradient-to-br from-surface-container-low/80 to-primary/5">
-          <h3 className="text-headline-md font-headline-md mb-stack-md border-b border-outline-variant/50 pb-stack-sm flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary">badge</span>
-            Public Profile
-          </h3>
+          <div className="flex items-center justify-between mb-stack-md border-b border-outline-variant/50 pb-stack-sm">
+            <h3 className="text-headline-md font-headline-md flex items-center gap-2">
+              <span className="material-symbols-outlined text-primary">badge</span>
+              Public Profile Settings
+            </h3>
+            <button
+              type="button"
+              onClick={() => navigate(`/profile/${authUser?.uid}`)}
+              className="px-4 py-2 bg-primary/10 text-primary hover:bg-primary/20 rounded-xl text-label-md font-bold transition-colors flex items-center gap-2"
+            >
+              <span className="material-symbols-outlined text-[18px]">visibility</span>
+              View as others
+            </button>
+          </div>
           
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col md:flex-row gap-stack-lg items-start">
