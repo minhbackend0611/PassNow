@@ -14,6 +14,7 @@ describe('useChatStore', () => {
 
   it('initializes chat listener and calculates total unread count correctly', () => {
     const mockUnsubscribe = vi.fn();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let callback: any = null;
 
     vi.mocked(chatService.subscribeToConversations).mockImplementation((_userId, cb) => {

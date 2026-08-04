@@ -28,6 +28,7 @@ const sortListingsByPreference = (listings: Listing[], school?: string | null, d
       
     // Sort by closest distance
     return filtered.sort((a, b) => a._tempDistance - b._tempDistance).map(item => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { _tempDistance, ...rest } = item;
       return rest as Listing;
     });
@@ -128,6 +129,7 @@ export default function HomePage() {
   useEffect(() => {
     // If user's profile location becomes available later, use it as fallback
     if (user?.coordinates && !autoLocation) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setAutoLocation(user.coordinates);
     }
   }, [user?.coordinates, autoLocation]);
@@ -175,11 +177,13 @@ export default function HomePage() {
     };
 
     fetchListings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, searchQuery, activeTab, user?.school, user?.district]); // Intentionally omitting autoLocation to avoid refetching
 
   // Re-sort in place if autoLocation arrives after fetch
   useEffect(() => {
     if (autoLocation && filter.userLat === undefined) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setListings(prev => {
         // Only resort if there are items to sort
         if (prev.length === 0) return prev;

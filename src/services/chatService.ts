@@ -48,7 +48,7 @@ export const sendMessage = async (conversationId: string, senderId: string, text
 
   const metadataRef = ref(rtdb, `chats/${conversationId}/metadata`);
   const metaSnap = await get(metadataRef);
-  let unreadCountUpdate: Record<string, number> = {};
+  const unreadCountUpdate: Record<string, number> = {};
   
   if (metaSnap.exists()) {
     const meta = metaSnap.val();

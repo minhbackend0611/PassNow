@@ -9,7 +9,7 @@ interface HomeDiscoveryViewProps {
   user: User | null;
   userLat?: number;
   userLng?: number;
-  onNavigateToSearch: (filters: any) => void;
+  onNavigateToSearch: (filters: Record<string, unknown>) => void;
 }
 
 const CATEGORIES = [

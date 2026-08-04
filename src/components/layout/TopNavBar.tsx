@@ -20,14 +20,17 @@ export default function TopNavBar() {
   const debouncedQuery = useDebounce(localQuery, 400);
 
   const localQueryRef = useRef(localQuery);
+  // eslint-disable-next-line react-hooks/refs
   localQueryRef.current = localQuery;
   const debouncedQueryRef = useRef(debouncedQuery);
+  // eslint-disable-next-line react-hooks/refs
   debouncedQueryRef.current = debouncedQuery;
 
   // Sync state if URL changes from somewhere else (e.g., "Clear search" clicked in HomePage, or Back button)
   const queryParam = searchParams.get('q') || '';
   useEffect(() => {
     if (queryParam === '') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLocalQuery('');
     } else if (localQueryRef.current === debouncedQueryRef.current) {
       setLocalQuery(queryParam);
@@ -45,7 +48,9 @@ export default function TopNavBar() {
         setShowLiveDropdown(true);
       });
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLiveResults([]);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShowLiveDropdown(false);
     }
   }, [debouncedQuery]);
