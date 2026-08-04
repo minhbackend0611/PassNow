@@ -6,6 +6,7 @@ import { getListings } from '../../../services/listingService';
 import type { User, Listing } from '../../../types';
 import ListingCard from '../../feed/components/ListingCard';
 import StudentBadge from '../../../components/ui/StudentBadge';
+import ReviewList from '../../reviews/components/ReviewList';
 
 export default function PublicProfilePage() {
   const { userId } = useParams<{ userId: string }>();
@@ -15,6 +16,7 @@ export default function PublicProfilePage() {
   const [user, setUser] = useState<User | null>(null);
   const [listings, setListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'listings' | 'reviews'>('listings');
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -214,26 +216,56 @@ export default function PublicProfilePage() {
         </div>
       </div>
 
-      {/* User Listings Section */}
-      <section className="flex flex-col gap-stack-md">
-        <h2 className="text-headline-md font-headline-md text-on-surface">
+      {/* Tabs Navigation */}
+      <div className="flex border-b border-outline-variant gap-8">
+        <button
+          onClick={() => setActiveTab('listings')}
+          className={`pb-4 text-title-md font-bold transition-all relative ${
+            activeTab === 'listings' 
+              ? 'text-primary' 
+              : 'text-on-surface-variant hover:text-on-surface'
+          }`}
+        >
           Active Listings ({listings.length})
-        </h2>
+          {activeTab === 'listings' && (
+            <div className="absolute bottom-0 left-0 w-full h-1 bg-primary rounded-t-full"></div>
+          )}
+        </button>
+        <button
+          onClick={() => setActiveTab('reviews')}
+          className={`pb-4 text-title-md font-bold transition-all relative ${
+            activeTab === 'reviews' 
+              ? 'text-primary' 
+              : 'text-on-surface-variant hover:text-on-surface'
+          }`}
+        >
+          Reviews ({reviewsCount})
+          {activeTab === 'reviews' && (
+            <div className="absolute bottom-0 left-0 w-full h-1 bg-primary rounded-t-full"></div>
+          )}
+        </button>
+      </div>
 
-        {listings.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-stack-md md:gap-gutter">
-            {listings.map(listing => (
-              <ListingCard key={listing.id} listing={listing} />
-            ))}
-          </div>
-        ) : (
-          <div className="py-16 flex flex-col items-center justify-center text-center glass-panel border-dashed rounded-[32px] bg-gradient-to-br from-surface-container-low/50 to-primary/5 hover:shadow-md transition-all duration-300">
-            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined text-3xl text-primary" style={{ fontVariationSettings: "'wght' 300" }}>shopping_basket</span>
+      {/* Tab Content */}
+      <section className="flex flex-col gap-stack-md pt-4">
+        {activeTab === 'listings' ? (
+          listings.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-stack-md md:gap-gutter">
+              {listings.map(listing => (
+                <ListingCard key={listing.id} listing={listing} />
+              ))}
             </div>
-            <h3 className="text-title-lg font-title-lg text-on-surface mb-2">No active listings</h3>
-            <p className="text-body-md font-body-md text-on-surface-variant max-w-xs">This user hasn't posted any items yet. Check back later!</p>
-          </div>
+          ) : (
+            <div className="py-16 flex flex-col items-center justify-center text-center glass-panel border-dashed rounded-[32px] bg-gradient-to-br from-surface-container-low/50 to-primary/5 hover:shadow-md transition-all duration-300">
+              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <span className="material-symbols-outlined text-3xl text-primary" style={{ fontVariationSettings: "'wght' 300" }}>shopping_basket</span>
+              </div>
+              <h3 className="text-title-lg font-title-lg text-on-surface mb-2">No active listings</h3>
+              <p className="text-body-md font-body-md text-on-surface-variant max-w-xs">This user hasn't posted any items yet. Check back later!</p>
+            </div>
+          )
+        ) : (
+          <ReviewList userId={user.uid} />
         )}
       </section>
     </main>
