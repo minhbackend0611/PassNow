@@ -7,12 +7,14 @@ import {
   Navigation,
   Search,
   School,
+  Library,
 } from 'lucide-react';
 import {
   reverseGeocodeLocation,
   searchLocations,
 } from '../../services/locationService';
-import { getUniversityByName } from '../../constants/universities';
+import { getUniversityByName, VIETNAM_UNIVERSITIES } from '../../constants/universities';
+import { UniversityBrowserModal } from './UniversityBrowserModal';
 import type { LocationProvider, LocationSuggestion } from '../../services/locationService';
 
 interface Coordinates {
@@ -76,9 +78,10 @@ export default function LocationPicker({
 }: LocationPickerProps) {
   const [draftQuery, setDraftQuery] = useState(address);
   const [isEditing, setIsEditing] = useState(!address);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showUniBrowser, setShowUniBrowser] = useState(false);
   const [suggestions, setSuggestions] = useState<LocationSuggestion[]>([]);
   const [searchState, setSearchState] = useState<SearchState>('idle');
-  const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
   const [selectionMeta, setSelectionMeta] = useState<SelectionMeta | null>(
     address ? { source: 'saved' } : null,
@@ -371,6 +374,36 @@ export default function LocationPicker({
        setStatusMessage('Failed to find university location.');
     } finally {
        setIsLocating(false);
+    }
+  };
+
+  const handleBrowseSelect = (uni: typeof VIETNAM_UNIVERSITIES[0]) => {
+    setShowUniBrowser(false);
+    if (uni.campuses.length === 1) {
+      const campus = uni.campuses[0];
+      commitLocation({
+        address: campus.address,
+        coordinates: (campus.lat && campus.lng) ? { lat: campus.lat, lng: campus.lng } : undefined,
+        meta: { source: 'campus', campusId: campus.id, provider: 'local' },
+      });
+    } else {
+      const localSuggestions = uni.campuses.map(campus => ({
+        id: `local-${uni.id}-${campus.id}`,
+        title: campus.name,
+        subtitle: `${uni.name} • ${campus.address}`,
+        address: campus.address,
+        lat: campus.lat || 0,
+        lng: campus.lng || 0,
+        provider: 'local' as const
+      }));
+      setDraftQuery(uni.name);
+      setIsEditing(true);
+      setSuggestions(localSuggestions);
+      setSearchState('success');
+      setShowSuggestions(true);
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
     }
   };
 
@@ -678,8 +711,29 @@ export default function LocationPicker({
             <span className="block text-label-sm text-on-surface-variant">{isLocating ? 'Locating…' : 'Use device GPS'}</span>
           </span>
         </button>
+
+        <button
+          type="button"
+          onClick={() => setShowUniBrowser(true)}
+          className="flex min-h-14 items-center gap-3 rounded-2xl border border-tertiary/20 bg-tertiary/10 px-4 py-3 text-left transition-colors hover:border-tertiary/40 hover:bg-tertiary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:col-span-2"
+        >
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-tertiary-container/30 text-tertiary">
+            <Library className="h-4 w-4" aria-hidden="true" />
+          </span>
+          <span className="min-w-0">
+            <span className="block text-label-md font-semibold text-on-surface">Browse universities</span>
+            <span className="block truncate text-label-sm text-on-surface-variant">
+              Select from our list of {VIETNAM_UNIVERSITIES.length} verified universities
+            </span>
+          </span>
+        </button>
       </div>
 
+      <UniversityBrowserModal
+        isOpen={showUniBrowser}
+        onClose={() => setShowUniBrowser(false)}
+        onSelect={handleBrowseSelect}
+      />
     </div>
   );
 }
