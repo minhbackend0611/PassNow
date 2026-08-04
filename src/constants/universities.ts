@@ -251,7 +251,13 @@ export const VIETNAM_UNIVERSITIES: University[] = [
  * Helper to normalize string for searching: lowercase, remove diacritics
  */
 export const normalizeString = (str: string): string => {
-  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+  return str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+    .toLowerCase()
+    .trim();
 };
 
 export const findUniversitiesByName = (rawName: string): University[] => {

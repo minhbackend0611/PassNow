@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   findUniversitiesByName,
   getUniversityByName,
-  normalizeUniversityName,
+  normalizeString,
   VIETNAM_UNIVERSITIES,
 } from './universities';
 
@@ -37,10 +37,10 @@ describe('university campus registry', () => {
     }
   });
 
-  it('normalizes Vietnamese diacritics, punctuation, casing, and generic school words', () => {
-    expect(normalizeUniversityName('  TRƯỜNG Đại-học BÁCH KHOA  ')).toBe('bach khoa');
-    expect(normalizeUniversityName('Ho Chi Minh City University of Technology')).toBe(
-      'ho chi minh city technology',
+  it('normalizes Vietnamese diacritics and casing', () => {
+    expect(normalizeString('  TRƯỜNG Đại-học BÁCH KHOA  ')).toBe('truong dai-hoc bach khoa');
+    expect(normalizeString('Ho Chi Minh City University of Technology')).toBe(
+      'ho chi minh city university of technology',
     );
   });
 
