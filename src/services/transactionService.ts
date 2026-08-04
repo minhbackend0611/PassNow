@@ -153,12 +153,12 @@ const cancelRemainingPendingTransactions = async (
   const pendingQuery = query(
     collection(db, TRANSACTIONS_COLLECTION),
     where('listingId', '==', listingId),
-    where('sellerId', '==', auth.currentUser?.uid),
-    where('status', '==', 'pending')
+    where('sellerId', '==', auth.currentUser?.uid)
   );
-  const pendingSnaps = await getDocs(pendingQuery);
+  const allSnaps = await getDocs(pendingQuery);
+  const pendingSnaps = allSnaps.docs.filter(doc => doc.data().status === 'pending');
 
-  await Promise.all(pendingSnaps.docs.map(async (pendingSnap) => {
+  await Promise.all(pendingSnaps.map(async (pendingSnap) => {
     if (pendingSnap.id === completedTransactionId) return;
 
     const cancelledTransaction = await runTransaction(db, async (firestoreTransaction) => {
