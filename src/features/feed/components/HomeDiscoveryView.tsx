@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import type { Listing, User } from '../../../types';
+import type { Listing, User, ListingFilter } from '../../../types';
 import ListingCard from './ListingCard';
 import { calculateDistanceKm } from '../../../utils/geo';
 import { useToastStore } from '../../../store/useToastStore';
@@ -9,7 +9,7 @@ interface HomeDiscoveryViewProps {
   user: User | null;
   userLat?: number;
   userLng?: number;
-  onNavigateToSearch: (filters: Record<string, unknown>) => void;
+  onNavigateToSearch: (filters: Partial<ListingFilter>) => void;
 }
 
 const CATEGORIES = [
