@@ -558,19 +558,25 @@ export default function TransactionsPage() {
 
   // Group selling transactions by listing to show queues
   const groupedSellingTxs = sellingTxs.reduce((acc, tx) => {
-    if (!acc[tx.listingId]) acc[tx.listingId] = { active: [], cancelled: [], fallbackListing: null };
+    if (!acc[tx.listingId]) {
+      acc[tx.listingId] = { 
+        active: [], 
+        cancelled: [], 
+        listing: myListings.find(l => l.id === tx.listingId) || null 
+      };
+    }
     if (tx.status === 'cancelled') {
       acc[tx.listingId].cancelled.push(tx);
     } else {
       acc[tx.listingId].active.push(tx);
     }
     return acc;
-  }, {} as Record<string, { active: Transaction[], cancelled: Transaction[], fallbackListing: Listing | null }>);
+  }, {} as Record<string, { active: Transaction[], cancelled: Transaction[], listing: Listing | null }>);
 
   // Inject empty queues for active/pending listings with no requests
   myListings.forEach(listing => {
     if (listing.status !== 'sold' && !groupedSellingTxs[listing.id]) {
-      groupedSellingTxs[listing.id] = { active: [], cancelled: [], fallbackListing: listing };
+      groupedSellingTxs[listing.id] = { active: [], cancelled: [], listing };
     }
   });
 
@@ -708,13 +714,32 @@ export default function TransactionsPage() {
             {Object.entries(groupedSellingTxs)
               .filter(([listingId, group]) => {
                 if (sellingFilter === 'all') return true;
-                const finalStatus = group.fallbackListing?.status || myListings.find(l => l.id === listingId)?.status;
+                const finalStatus = group.listing?.status;
                 if (sellingFilter === 'reserved') {
                   return finalStatus
-                    ? ['reserved', 'completed', 'sold'].includes(finalStatus)
+                    ? ['reserved', 'completed', 'sold', 'hidden'].includes(finalStatus)
                     : false;
                 }
                 return finalStatus === sellingFilter;
+              })
+              .sort(([, groupA], [, groupB]) => {
+                const getPriority = (group: { active: Transaction[], listing: Listing | null }) => {
+                  if (group.active.some(tx => tx.status === 'pending' && !tx.sellerConfirmed)) return 1; // Needs action
+                  if (group.active.some(tx => tx.status === 'pending' && tx.sellerConfirmed)) return 2; // Waiting for buyer
+                  const status = group.listing?.status || 'available';
+                  if (status === 'available') return 3;
+                  if (status === 'hidden' || status === 'reserved') return 4;
+                  return 5; // sold, completed
+                };
+                
+                const priorityA = getPriority(groupA);
+                const priorityB = getPriority(groupB);
+                
+                if (priorityA !== priorityB) return priorityA - priorityB;
+                
+                const timeA = groupA.listing?.createdAt || 0;
+                const timeB = groupB.listing?.createdAt || 0;
+                return timeB - timeA;
               })
               .map(([listingId, group]) => {
             const firstTx = group.active[0] || group.cancelled[0];
@@ -723,7 +748,7 @@ export default function TransactionsPage() {
                 <ListingQueueHeader 
                   listingId={listingId} 
                   firstTx={firstTx} 
-                  fallbackListing={group.fallbackListing}
+                  fallbackListing={group.listing}
                   activeCount={group.active.length} 
                 />
                 
