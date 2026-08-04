@@ -154,25 +154,25 @@ function TransactionItem({
       </div>
 
       {/* Visual Stepper */}
-      <div className="relative flex items-start justify-between w-full max-w-2xl mt-2 mb-2 self-center">
-        {/* Background Line */}
-        <div className="absolute left-6 right-6 top-[24px] -translate-y-1/2 h-1.5 bg-surface-variant rounded-full z-0"></div>
-        {/* Progress Line */}
-        <div 
-          className="absolute left-6 top-[24px] -translate-y-1/2 h-1.5 bg-gradient-to-r from-primary to-secondary rounded-full z-0 transition-all duration-1000"
-          style={{ width: isSellerConfirmed ? 'calc(100% - 48px)' : '0' }}
-        ></div>
-
+      <div className="flex items-start justify-center w-full max-w-2xl mt-2 mb-2 self-center px-2">
         {/* Step 1: Requested */}
-        <div className="relative z-10 flex flex-col items-center gap-2 px-1">
+        <div className="relative z-10 flex flex-col items-center gap-2 flex-shrink-0">
           <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center shadow-md">
             <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
           </div>
-          <div className="inline-block text-label-sm font-bold text-on-surface bg-surface-container-lowest/80 px-2 py-0.5 rounded-xl text-center leading-tight max-w-[80px] sm:max-w-none">Requested</div>
+          <div className="text-label-sm font-bold text-on-surface text-center leading-tight">Requested</div>
         </div>
 
-        {/* Step 2: Seller confirms and completes the transaction */}
-        <div className="relative z-10 flex flex-col items-center gap-2 px-1">
+        {/* Connecting Line */}
+        <div className="relative flex-grow mt-[24px] h-1.5 bg-surface-variant rounded-full mx-2 -translate-y-1/2 overflow-hidden">
+          <div 
+            className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-primary to-secondary rounded-full transition-all duration-1000"
+            style={{ width: isSellerConfirmed ? '100%' : '0%' }}
+          ></div>
+        </div>
+
+        {/* Step 2: Seller confirms */}
+        <div className="relative z-10 flex flex-col items-center gap-2 flex-shrink-0">
           <div className={`w-12 h-12 rounded-full flex items-center justify-center shadow-sm transition-colors duration-500 ${
             isSellerConfirmed
               ? 'bg-primary text-white'
@@ -182,7 +182,7 @@ function TransactionItem({
               verified
             </span>
           </div>
-          <div className={`inline-block text-label-sm font-bold bg-surface-container-lowest/80 px-2 py-0.5 rounded-xl text-center leading-tight max-w-[110px] sm:max-w-none ${isSellerConfirmed ? 'text-primary' : 'text-on-surface-variant'}`}>
+          <div className={`text-label-sm font-bold text-center leading-tight ${isSellerConfirmed ? 'text-primary' : 'text-on-surface-variant'}`}>
             {isCompleted ? 'Completed' : tx.sellerConfirmed ? 'Seller Confirmed' : 'Awaiting Seller'}
           </div>
         </div>
@@ -332,21 +332,52 @@ export default function TransactionsPage() {
   const { user } = useAuthStore();
   const { addToast } = useToastStore();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const targetTxId = searchParams.get('id');
   const { transactions, sellingActionRequiredCount } = useTransactionStore();
   
-  const [activeTab, setActiveTab] = useState<'buying' | 'selling'>('buying');
+  const [activeTab, setActiveTab] = useState<'buying' | 'selling'>(
+    searchParams.get('tab') === 'selling' ? 'selling' : 'buying'
+  );
   const [showActionRequiredOnly, setShowActionRequiredOnly] = useState(false);
   const [sellingFilter, setSellingFilter] = useState<'all' | 'available' | 'reserved'>('all');
+  const [buyingFilter, setBuyingFilter] = useState<'all' | 'active' | 'completed' | 'cancelled'>('all');
   
   const [myListings, setMyListings] = useState<Listing[]>([]);
+  const [buyingListings, setBuyingListings] = useState<Record<string, Listing>>({});
+
+  const switchTab = (tab: 'buying' | 'selling') => {
+    setActiveTab(tab);
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev);
+      newParams.set('tab', tab);
+      return newParams;
+    }, { replace: true });
+  };
 
   useEffect(() => {
     if (user && activeTab === 'selling') {
       getListings({ sellerId: user.uid, includeAllStatuses: true }).then(setMyListings);
     }
   }, [user, activeTab]);
+
+  useEffect(() => {
+    if (user && activeTab === 'buying') {
+      const buyingTxs = transactions.filter(t => t.buyerId === user.uid);
+      const listingIds = Array.from(new Set(buyingTxs.map(t => t.listingId)));
+      if (listingIds.length > 0) {
+        Promise.all(listingIds.map(id => getListingById(id))).then(results => {
+          const newMap = { ...buyingListings };
+          results.forEach(res => {
+            if (res && res.listing) {
+              newMap[res.listing.id] = res.listing;
+            }
+          });
+          setBuyingListings(newMap);
+        });
+      }
+    }
+  }, [user, activeTab, transactions]);
   const [isLoading, setIsLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
   
@@ -388,9 +419,9 @@ export default function TransactionsPage() {
         // Auto switch tab if necessary
         setTimeout(() => {
           if (tx.sellerId === user?.uid && activeTab !== 'selling') {
-            setActiveTab('selling');
+            switchTab('selling');
           } else if (tx.buyerId === user?.uid && activeTab !== 'buying') {
-            setActiveTab('buying');
+            switchTab('buying');
           }
         }, 0);
 
@@ -512,7 +543,21 @@ export default function TransactionsPage() {
       })
     : transactions;
 
-  const buyingTxs = filteredTransactions.filter(t => t.buyerId === user?.uid);
+  const allBuyingTxs = filteredTransactions.filter(t => t.buyerId === user?.uid);
+  const buyingTxs = allBuyingTxs.filter(tx => {
+    if (buyingFilter === 'all') return true;
+    
+    let effectiveStatus = tx.status;
+    const listing = buyingListings[tx.listingId];
+    if (listing && tx.status === 'pending' && (listing.completedCount || 0) >= (listing.quantity || 1)) {
+      effectiveStatus = 'cancelled';
+    }
+
+    if (buyingFilter === 'active') return effectiveStatus === 'pending';
+    if (buyingFilter === 'completed') return effectiveStatus === 'completed';
+    if (buyingFilter === 'cancelled') return effectiveStatus === 'cancelled';
+    return true;
+  });
   // Sort buying txs newest first
   buyingTxs.sort((a, b) => b.createdAt - a.createdAt);
 
@@ -746,26 +791,55 @@ export default function TransactionsPage() {
           })}
           </div>
         ) : (
-          <div className="flex flex-col gap-4">
-            {buyingTxs.length === 0 && (
-               <p className="text-body-md text-on-surface-variant italic py-10 text-center bg-surface-variant/20 rounded-[32px] border border-outline-variant/20">
-                 You have no active purchases.
-               </p>
-            )}
-            {buyingTxs.map(tx => (
-              <TransactionItem
-                key={tx.id}
-                tx={tx}
-                user={user}
-                isBuyer={true}
-                navigate={navigate}
-                processingId={processingId}
-                reviewedTxIds={reviewedTxIds}
-                handleCancel={handleCancel}
-                handleSellerConfirm={handleSellerConfirm}
-                setReviewModalTx={setReviewModalTx}
-              />
-            ))}
+          <div className="flex flex-col w-full">
+            <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-2 -mx-2 px-2 md:mx-0 md:px-0 scrollbar-hide">
+               <button 
+                 onClick={() => setBuyingFilter('all')} 
+                 className={`px-4 py-1.5 rounded-full text-label-md font-bold whitespace-nowrap transition-colors ${buyingFilter === 'all' ? 'bg-on-surface text-surface' : 'bg-surface-variant/30 text-on-surface-variant hover:bg-surface-variant/50 border border-outline-variant/20'}`}
+               >
+                 All Purchases
+               </button>
+               <button 
+                 onClick={() => setBuyingFilter('active')} 
+                 className={`px-4 py-1.5 rounded-full text-label-md font-bold whitespace-nowrap transition-colors ${buyingFilter === 'active' ? 'bg-primary text-white shadow-[0_2px_10px_rgba(0,166,126,0.3)]' : 'bg-surface-variant/30 text-on-surface-variant hover:bg-surface-variant/50 border border-outline-variant/20'}`}
+               >
+                 Active
+               </button>
+               <button 
+                 onClick={() => setBuyingFilter('completed')} 
+                 className={`px-4 py-1.5 rounded-full text-label-md font-bold whitespace-nowrap transition-colors ${buyingFilter === 'completed' ? 'bg-on-surface text-surface' : 'bg-surface-variant/30 text-on-surface-variant hover:bg-surface-variant/50 border border-outline-variant/20'}`}
+               >
+                 Completed
+               </button>
+               <button 
+                 onClick={() => setBuyingFilter('cancelled')} 
+                 className={`px-4 py-1.5 rounded-full text-label-md font-bold whitespace-nowrap transition-colors ${buyingFilter === 'cancelled' ? 'bg-on-surface text-surface' : 'bg-surface-variant/30 text-on-surface-variant hover:bg-surface-variant/50 border border-outline-variant/20'}`}
+               >
+                 Cancelled
+               </button>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              {buyingTxs.length === 0 && (
+                 <p className="text-body-md text-on-surface-variant italic py-10 text-center bg-surface-variant/20 rounded-[32px] border border-outline-variant/20">
+                   You have no purchases matching this filter.
+                 </p>
+              )}
+              {buyingTxs.map(tx => (
+                <TransactionItem
+                  key={tx.id}
+                  tx={tx}
+                  user={user}
+                  isBuyer={true}
+                  navigate={navigate}
+                  processingId={processingId}
+                  reviewedTxIds={reviewedTxIds}
+                  handleCancel={handleCancel}
+                  handleSellerConfirm={handleSellerConfirm}
+                  setReviewModalTx={setReviewModalTx}
+                />
+              ))}
+            </div>
           </div>
         )}
       </div>
