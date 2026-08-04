@@ -1,4 +1,4 @@
-export type LocationProvider = 'geoapify' | 'photon';
+export type LocationProvider = 'geoapify' | 'photon' | 'nominatim';
 
 export interface LocationSuggestion {
   id: string;
@@ -233,6 +233,42 @@ const searchWithPhoton = async (
   return dedupeSuggestions(suggestions, limit);
 };
 
+const searchWithNominatim = async (
+  query: string,
+  { signal, limit = DEFAULT_LIMIT }: SearchLocationOptions,
+) => {
+  const url = new URL('https://nominatim.openstreetmap.org/search');
+  url.searchParams.set('q', query);
+  url.searchParams.set('format', 'jsonv2');
+  url.searchParams.set('countrycodes', 'vn');
+  url.searchParams.set('accept-language', 'vi');
+  url.searchParams.set('limit', String(limit));
+
+  const response = await fetch(url, {
+    signal,
+    headers: { 'User-Agent': 'PassNow/1.0 (contact@passnow.example.com)' },
+  });
+  
+  if (!response.ok) {
+    const error = new Error('Nominatim search failed');
+    (error as any).status = response.status;
+    throw error;
+  }
+  
+  const data = await response.json();
+  const suggestions = (data || []).map((item: any) => ({
+    id: `nominatim-${item.place_id}`,
+    title: item.name || item.display_name.split(',')[0],
+    subtitle: item.display_name,
+    address: item.display_name,
+    lat: Number(item.lat),
+    lng: Number(item.lon),
+    provider: 'nominatim' as const,
+  }));
+  
+  return dedupeSuggestions(suggestions, limit);
+};
+
 /**
  * Searches user-entered locations. Geoapify is preferred when configured;
  * Photon remains a best-effort fallback so local development still works.
@@ -255,7 +291,15 @@ export const searchLocations = async (
     }
   }
 
-  return searchWithPhoton(query, options);
+  try {
+    const photonResults = await searchWithPhoton(query, options);
+    if (photonResults && photonResults.length > 0) return photonResults;
+  } catch (error) {
+    if (isAbortError(error)) throw error;
+    console.warn('Photon location search failed; using Nominatim fallback.', error);
+  }
+
+  return searchWithNominatim(query, options);
 };
 
 const reverseWithGeoapify = async (
@@ -293,6 +337,35 @@ const reverseWithPhoton = async (
   return result ? { address: result.address, provider: 'photon' } : null;
 };
 
+interface NominatimResponse {
+  display_name?: string;
+  error?: string;
+}
+
+const reverseWithNominatim = async (
+  lat: number,
+  lng: number,
+  signal?: AbortSignal,
+): Promise<ReverseGeocodeResult | null> => {
+  const url = new URL(`https://nominatim.openstreetmap.org/reverse`);
+  url.searchParams.set('format', 'jsonv2');
+  url.searchParams.set('lat', String(lat));
+  url.searchParams.set('lon', String(lng));
+  url.searchParams.set('accept-language', 'vi');
+
+  // Nominatim requires a valid user-agent per their terms of use
+  const response = await fetch(url, {
+    signal,
+    headers: { 'User-Agent': 'PassNow/1.0 (contact@passnow.example.com)' },
+  });
+  
+  if (!response.ok) return null;
+  const data = (await response.json()) as NominatimResponse;
+  
+  if (data.error || !data.display_name) return null;
+  return { address: data.display_name, provider: 'nominatim' };
+};
+
 export const reverseGeocodeLocation = async (
   lat: number,
   lng: number,
@@ -308,10 +381,23 @@ export const reverseGeocodeLocation = async (
     }
   }
 
-  return reverseWithPhoton(lat, lng, signal);
+  try {
+    const photonResult = await reverseWithPhoton(lat, lng, signal);
+    if (photonResult) return photonResult;
+  } catch (error) {
+    if (isAbortError(error)) throw error;
+    console.warn('Photon reverse geocoding failed; using Nominatim fallback.', error);
+  }
+
+  return reverseWithNominatim(lat, lng, signal);
 };
 
-export const getLocationProviderLabel = (provider: LocationProvider) =>
-  provider === 'geoapify' ? 'Geoapify · OpenStreetMap' : 'Photon · OpenStreetMap';
+export const getLocationProviderLabel = (provider: LocationProvider) => {
+  switch (provider) {
+    case 'geoapify': return 'Geoapify · OpenStreetMap';
+    case 'photon': return 'Photon · OpenStreetMap';
+    case 'nominatim': return 'Nominatim · OpenStreetMap';
+  }
+};
 
 export const isGeoapifyConfigured = Boolean(geoapifyApiKey);
