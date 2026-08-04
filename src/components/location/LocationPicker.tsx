@@ -495,7 +495,7 @@ export default function LocationPicker({
             {showSuggestions && draftQuery && (
               <div
                 id="location-suggestions"
-                className="absolute inset-x-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-outline-variant/50 bg-surface-container-lowest shadow-2xl"
+                className="mt-2 overflow-hidden rounded-2xl border border-outline-variant/50 bg-surface-container-lowest shadow-sm animate-in fade-in slide-in-from-top-2"
               >
                 <div className="flex items-center justify-between border-b border-outline-variant/40 px-4 py-3">
                   <span className="text-label-sm font-semibold text-on-surface">Suggested places</span>
