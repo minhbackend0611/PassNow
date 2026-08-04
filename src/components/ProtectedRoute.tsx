@@ -18,7 +18,9 @@ export default function ProtectedRoute({ requireCompleteProfile = false, require
   }
 
   if (requireEmailVerification && !user.emailVerified) {
-    return <Navigate to="/verify-email" replace />;
+    if (import.meta.env.VITE_USE_FIREBASE_EMULATOR !== 'true') {
+      return <Navigate to="/verify-email" replace />;
+    }
   }
 
   if (requireCompleteProfile && !user.isProfileComplete) {

@@ -52,10 +52,20 @@ function TransactionItem({
     });
   }, [tx.sellerId, tx.buyerId, isBuyer, tx.listingId]);
 
-  const isCompleted = tx.status === 'completed';
+  // Override status if it's pending but the listing is sold out
+  let effectiveStatus = tx.status;
+  if (effectiveStatus === 'pending' && listing && (listing.completedCount || 0) >= (listing.quantity || 1)) {
+    effectiveStatus = 'cancelled';
+  }
+
+  const isCompleted = effectiveStatus === 'completed';
   const isSellerConfirmed = isCompleted || tx.sellerConfirmed;
   const canBuyerReview = isBuyer && isSellerConfirmed;
-  const displayStatus = isSellerConfirmed ? 'completed' : tx.status;
+  const displayStatus = isSellerConfirmed ? 'completed' : effectiveStatus;
+  
+  const displayLabel = displayStatus === 'cancelled' && tx.status === 'pending' 
+      ? 'CANCELLED (SOLD OUT)' 
+      : displayStatus.toUpperCase();
 
   const handleChat = async () => {
     if (!partner || !user) return;
@@ -72,7 +82,7 @@ function TransactionItem({
   };
 
   return (
-    <div id={`tx-${tx.id}`} className="glass-panel bg-surface-container-lowest/80 backdrop-blur-xl border border-white/60 rounded-[32px] p-6 md:p-8 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-1 flex flex-col gap-6 group">
+    <div id={`tx-${tx.id}`} className={`glass-panel bg-surface-container-lowest/80 backdrop-blur-xl border border-white/60 rounded-[32px] p-6 md:p-8 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-1 flex flex-col gap-6 group ${displayStatus === 'cancelled' || displayStatus === 'rejected' ? 'opacity-75 grayscale-[0.2]' : ''}`}>
       
       {/* Header & Title */}
       <div className="flex flex-col md:flex-row justify-between items-start gap-4">
@@ -85,7 +95,7 @@ function TransactionItem({
                 ? 'bg-error/10 text-error border border-error/20 shadow-sm'
                 : 'bg-secondary/10 text-secondary border border-secondary/20 shadow-sm'
             }`}>
-              {displayStatus.toUpperCase()}
+              {displayLabel}
             </span>
             <span className="text-label-sm text-on-surface-variant bg-surface-variant/30 px-3 py-1 rounded-full border border-outline-variant/20">
               {new Date(tx.createdAt).toLocaleDateString()}
@@ -232,43 +242,6 @@ function TransactionItem({
   );
 }
 
-function CancelledTransactionItem({ tx, isBuyer }: { tx: Transaction, isBuyer: boolean }) {
-  const [partnerName, setPartnerName] = useState<string>('Loading...');
-  useEffect(() => {
-    const partnerId = isBuyer ? tx.sellerId : tx.buyerId;
-    getUserById(partnerId).then(p => {
-      if (p) setPartnerName(p.displayName || 'Unknown');
-    });
-  }, [tx, isBuyer]);
-
-  return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-surface-container-lowest/50 p-4 rounded-2xl border border-outline-variant/30 hover:border-outline-variant/60 transition-colors">
-      <div className="flex items-center gap-3">
-         <div className="w-10 h-10 rounded-full bg-surface-variant/50 text-on-surface-variant flex items-center justify-center font-bold text-sm border border-outline-variant/30">
-            <span className="material-symbols-outlined text-[18px]">cancel</span>
-         </div>
-         <div className="flex flex-col">
-           <span className="text-label-md text-on-surface opacity-80">{partnerName}</span>
-           <span className="text-label-sm text-on-surface-variant font-bold">Cancelled</span>
-         </div>
-      </div>
-      <span className="text-label-sm text-on-surface-variant bg-surface-variant/40 px-3 py-1 rounded-full self-start sm:self-auto border border-outline-variant/20">{new Date(tx.createdAt).toLocaleDateString()}</span>
-    </div>
-  );
-}
-
-function CancelledRequestsList({ txs, isBuyer }: { txs: Transaction[], isBuyer: boolean }) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  if (txs.length === 0) return null;
-
-  return (
-    <div className="mt-4 pt-4 border-t border-outline-variant/20">
-      <button 
-        onClick={() => setIsExpanded(!isExpanded)} 
-        className="flex items-center gap-2 text-label-sm font-bold text-on-surface-variant hover:text-on-surface transition-colors w-fit px-3 py-1.5 rounded-lg hover:bg-surface-variant/30"
-      >
-        <span className="material-symbols-outlined text-[18px]">history</span>
-        {txs.length} Cancelled Request{txs.length > 1 ? 's' : ''}
         <span className="material-symbols-outlined text-[18px] transition-transform duration-300" style={{ transform: isExpanded ? 'rotate(180deg)' : 'none' }}>expand_more</span>
       </button>
       
@@ -552,39 +525,33 @@ export default function TransactionsPage() {
     : transactions;
 
   const buyingTxs = filteredTransactions.filter(t => t.buyerId === user?.uid);
-  const sellingTxs = filteredTransactions.filter(t => t.sellerId === user?.uid);
+  // Sort buying txs newest first
+  buyingTxs.sort((a, b) => b.createdAt - a.createdAt);
 
-  const activeBuyingTxs = buyingTxs.filter(t => t.status !== 'cancelled');
-  const cancelledBuyingTxs = buyingTxs.filter(t => t.status === 'cancelled');
+  const sellingTxs = filteredTransactions.filter(t => t.sellerId === user?.uid);
 
   // Group selling transactions by listing to show queues
   const groupedSellingTxs = sellingTxs.reduce((acc, tx) => {
     if (!acc[tx.listingId]) {
       acc[tx.listingId] = { 
-        active: [], 
-        cancelled: [], 
+        all: [], 
         listing: myListings.find(l => l.id === tx.listingId) || null 
       };
     }
-    if (tx.status === 'cancelled') {
-      acc[tx.listingId].cancelled.push(tx);
-    } else {
-      acc[tx.listingId].active.push(tx);
-    }
+    acc[tx.listingId].all.push(tx);
     return acc;
-  }, {} as Record<string, { active: Transaction[], cancelled: Transaction[], listing: Listing | null }>);
+  }, {} as Record<string, { all: Transaction[], listing: Listing | null }>);
 
   // Inject empty queues for active/pending listings with no requests
   myListings.forEach(listing => {
     if (listing.status !== 'sold' && !groupedSellingTxs[listing.id]) {
-      groupedSellingTxs[listing.id] = { active: [], cancelled: [], listing };
+      groupedSellingTxs[listing.id] = { all: [], listing };
     }
   });
 
   // Sort each group ascending (oldest first = highest priority in queue)
   Object.values(groupedSellingTxs).forEach(group => {
-    group.active.sort((a, b) => a.createdAt - b.createdAt);
-    group.cancelled.sort((a, b) => b.createdAt - a.createdAt); // newest cancelled first
+    group.all.sort((a, b) => a.createdAt - b.createdAt);
   });
 
   const displayTxsLength = activeTab === 'buying' ? buyingTxs.length : sellingTxs.length;
@@ -724,9 +691,9 @@ export default function TransactionsPage() {
                 return finalStatus === sellingFilter;
               })
               .sort(([, groupA], [, groupB]) => {
-                const getPriority = (group: { active: Transaction[], listing: Listing | null }) => {
-                  if (group.active.some(tx => tx.status === 'pending' && !tx.sellerConfirmed)) return 1; // Needs action
-                  if (group.active.some(tx => tx.status === 'pending' && tx.sellerConfirmed)) return 2; // Waiting for buyer
+                const getPriority = (group: { all: Transaction[], listing: Listing | null }) => {
+                  if (group.all.some(tx => tx.status === 'pending' && !tx.sellerConfirmed)) return 1; // Needs action
+                  if (group.all.some(tx => tx.status === 'pending' && tx.sellerConfirmed)) return 2; // Waiting for buyer
                   const status = group.listing?.status || 'available';
                   if (status === 'available') return 3;
                   if (status === 'reserved') return 4;
@@ -743,27 +710,30 @@ export default function TransactionsPage() {
                 return timeB - timeA;
               })
               .map(([listingId, group]) => {
-            const firstTx = group.active[0] || group.cancelled[0];
+            const firstTx = group.all[0];
+            const activeCount = group.all.filter(tx => tx.status !== 'cancelled' && tx.status !== 'rejected').length;
+            
             return (
               <div key={listingId} className="flex flex-col gap-4 mb-4 bg-surface-container-lowest/30 p-6 rounded-[32px] border border-outline-variant/30 shadow-inner">
                 <ListingQueueHeader 
                   listingId={listingId} 
                   firstTx={firstTx} 
                   fallbackListing={group.listing}
-                  activeCount={group.active.length} 
+                  activeCount={activeCount} 
                 />
                 
                 <div className="flex flex-col gap-4 mt-2">
-                  {group.active.length === 0 ? (
+                  {group.all.length === 0 ? (
                     <p className="text-body-md text-on-surface-variant italic py-4 text-center bg-surface-variant/20 rounded-2xl">
                       No active requests for this listing.
                     </p>
                   ) : (
-                    group.active.map((tx, index) => {
+                    group.all.map((tx, index) => {
                       const isBuyer = tx.buyerId === user.uid;
+                      const isCancelled = tx.status === 'cancelled' || tx.status === 'rejected';
                       return (
                         <div key={tx.id} className="relative group/queue">
-                          <div className="absolute -left-3 -top-3 w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center font-bold shadow-[0_2px_10px_rgba(0,166,126,0.3)] z-10 border-2 border-surface transition-transform group-hover/queue:scale-110">
+                          <div className={`absolute -left-3 -top-3 w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-[0_2px_10px_rgba(0,166,126,0.3)] z-10 border-2 border-surface transition-transform group-hover/queue:scale-110 ${isCancelled ? 'bg-surface-variant text-on-surface-variant' : 'bg-gradient-to-br from-primary to-secondary text-white'}`}>
                             #{index + 1}
                           </div>
                           <TransactionItem
@@ -783,20 +753,18 @@ export default function TransactionsPage() {
                     })
                   )}
                 </div>
-
-                <CancelledRequestsList txs={group.cancelled} isBuyer={false} />
               </div>
             );
           })}
           </div>
         ) : (
           <div className="flex flex-col gap-4">
-            {activeBuyingTxs.length === 0 && cancelledBuyingTxs.length > 0 && (
+            {buyingTxs.length === 0 && (
                <p className="text-body-md text-on-surface-variant italic py-10 text-center bg-surface-variant/20 rounded-[32px] border border-outline-variant/20">
                  You have no active purchases.
                </p>
             )}
-            {activeBuyingTxs.map(tx => (
+            {buyingTxs.map(tx => (
               <TransactionItem
                 key={tx.id}
                 tx={tx}
@@ -810,20 +778,6 @@ export default function TransactionsPage() {
                 setReviewModalTx={setReviewModalTx}
               />
             ))}
-            
-            {cancelledBuyingTxs.length > 0 && (
-              <div className="mt-8 bg-surface-container-lowest/30 p-6 rounded-[32px] border border-outline-variant/30 shadow-sm">
-                 <h3 className="text-title-md font-bold text-on-surface-variant mb-4 flex items-center gap-2">
-                    <span className="material-symbols-outlined text-[20px]">history</span>
-                    Cancelled Purchases
-                 </h3>
-                 <div className="flex flex-col gap-3">
-                   {cancelledBuyingTxs.map(tx => (
-                     <CancelledTransactionItem key={tx.id} tx={tx} isBuyer={true} />
-                   ))}
-                 </div>
-              </div>
-            )}
           </div>
         )}
       </div>
