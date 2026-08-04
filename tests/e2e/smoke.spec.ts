@@ -27,14 +27,14 @@ test.describe('PassNow Core Smoke Test', () => {
     await sellerPage.fill('input[type="email"]', sellerEmail);
     await sellerPage.fill('input[type="password"]', password);
     await sellerPage.fill('input[placeholder="Repeat password"]', password);
-    await sellerPage.click('button:has-text("Create Account")');
+    await sellerPage.click('button:has-text("Register")');
 
     // Might redirect to setup profile
     await sellerPage.waitForURL('**/profile/setup', { timeout: 10000 }).catch(() => {});
     if (sellerPage.url().includes('setup')) {
         await sellerPage.fill('input[name="displayName"]', 'Test Seller');
         // Select random options for school, etc. if required
-        await sellerPage.click('button:has-text("Save Profile")');
+        await sellerPage.click('button:has-text("Complete Setup")');
     }
 
     // Go to list page
@@ -62,7 +62,7 @@ test.describe('PassNow Core Smoke Test', () => {
     await expect(sellerPage.locator('img[alt="Preview 0"]')).toBeVisible({ timeout: 5000 });
     
     // Click submit
-    await sellerPage.click('button:has-text("Publish Listing")');
+    await sellerPage.click('button:has-text("Post Listing")');
     
     // Wait for redirect to listing detail
     await sellerPage.waitForURL('**/item/*', { timeout: 15000 });
@@ -78,7 +78,7 @@ test.describe('PassNow Core Smoke Test', () => {
     await buyerPage.fill('input[type="email"]', buyerEmail);
     await buyerPage.fill('input[type="password"]', password);
     await buyerPage.fill('input[placeholder="Repeat password"]', password);
-    await buyerPage.click('button:has-text("Create Account")');
+    await buyerPage.click('button:has-text("Register")');
 
     await expect(buyerPage.locator('nav')).toBeVisible({ timeout: 10000 });
 
