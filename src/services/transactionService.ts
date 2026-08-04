@@ -153,6 +153,7 @@ const cancelRemainingPendingTransactions = async (
   const pendingQuery = query(
     collection(db, TRANSACTIONS_COLLECTION),
     where('listingId', '==', listingId),
+    where('sellerId', '==', auth.currentUser?.uid),
     where('status', '==', 'pending')
   );
   const pendingSnaps = await getDocs(pendingQuery);
