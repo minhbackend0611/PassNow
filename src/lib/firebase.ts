@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-import { getDatabase } from 'firebase/database';
+import { getAuth, connectAuthEmulator } from 'firebase/auth';
+import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
+import { getDatabase, connectDatabaseEmulator } from 'firebase/database';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -20,5 +20,13 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const rtdb = getDatabase(app);
+
+// Connect to emulators if flag is set
+if (import.meta.env.VITE_USE_FIREBASE_EMULATOR === 'true') {
+  console.log('Connecting to Firebase Local Emulators...');
+  connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
+  connectFirestoreEmulator(db, '127.0.0.1', 8080);
+  connectDatabaseEmulator(rtdb, '127.0.0.1', 9000);
+}
 
 export default app;
