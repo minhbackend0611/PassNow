@@ -12,6 +12,7 @@ import {
   reverseGeocodeLocation,
   searchLocations,
 } from '../../services/locationService';
+import { getUniversityByName } from '../../constants/universities';
 import type { LocationProvider, LocationSuggestion } from '../../services/locationService';
 
 interface Coordinates {
@@ -277,7 +278,7 @@ export default function LocationPicker({
     commitLocation({
       address: suggestion.address,
       coordinates: { lat: suggestion.lat, lng: suggestion.lng },
-      meta: { source: 'search', provider: suggestion.provider },
+      meta: { source: suggestion.provider === 'local' ? 'campus' : 'search', provider: suggestion.provider },
     });
   };
 
@@ -323,6 +324,35 @@ export default function LocationPicker({
     setIsLocating(true);
     setStatusMessage('');
     try {
+      const matchedUni = getUniversityByName(school);
+      if (matchedUni && matchedUni.campuses.length > 0) {
+        if (matchedUni.campuses.length === 1) {
+          const campus = matchedUni.campuses[0];
+          commitLocation({
+            address: campus.address,
+            coordinates: (campus.lat && campus.lng) ? { lat: campus.lat, lng: campus.lng } : undefined,
+            meta: { source: 'campus', campusId: campus.id, provider: 'local' },
+          });
+          return;
+        } else {
+          const localSuggestions = matchedUni.campuses.map(campus => ({
+            id: `local-${matchedUni.id}-${campus.id}`,
+            title: campus.name,
+            subtitle: `${matchedUni.name} • ${campus.address}`,
+            address: campus.address,
+            lat: campus.lat || 0,
+            lng: campus.lng || 0,
+            provider: 'local' as const
+          }));
+          setDraftQuery(matchedUni.name);
+          setIsEditing(true);
+          setSuggestions(localSuggestions);
+          setSearchState('success');
+          setShowSuggestions(true);
+          return;
+        }
+      }
+
       const results = await searchLocations(school, { limit: 1 });
       if (results && results.length > 0) {
         const campus = results[0];
@@ -335,7 +365,8 @@ export default function LocationPicker({
         setStatusTone('error');
         setStatusMessage('Could not find location for your university. Please search manually.');
       }
-    } catch (error) {
+    } catch (err) {
+       console.error('Failed to find university location:', err);
        setStatusTone('error');
        setStatusMessage('Failed to find university location.');
     } finally {
@@ -543,12 +574,27 @@ export default function LocationPicker({
                           }}
                         >
                           <div className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
-                            isActive ? 'bg-primary text-on-primary' : 'bg-surface-container-high text-on-surface-variant'
+                            isActive 
+                              ? 'bg-primary text-on-primary' 
+                              : suggestion.provider === 'local'
+                                ? 'bg-secondary/10 text-secondary'
+                                : 'bg-surface-container-high text-on-surface-variant'
                           }`}>
-                            <MapPin className="h-4 w-4" aria-hidden="true" />
+                            {suggestion.provider === 'local' ? (
+                              <School className="h-4 w-4" aria-hidden="true" />
+                            ) : (
+                              <MapPin className="h-4 w-4" aria-hidden="true" />
+                            )}
                           </div>
                           <div className="min-w-0 flex-1">
-                            <p className="text-body-md font-semibold text-on-surface">{suggestion.title}</p>
+                            <div className="flex flex-wrap items-center gap-2">
+                              <p className="text-body-md font-semibold text-on-surface">{suggestion.title}</p>
+                              {suggestion.provider === 'local' && (
+                                <span className="rounded-full bg-secondary/10 px-2 py-0.5 text-[10px] font-semibold text-secondary">
+                                  Verified Campus
+                                </span>
+                              )}
+                            </div>
                             <p className="mt-0.5 break-words text-body-sm leading-5 text-on-surface-variant">
                               {suggestion.subtitle}
                             </p>

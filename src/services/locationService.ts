@@ -1,4 +1,6 @@
-export type LocationProvider = 'geoapify' | 'photon' | 'nominatim';
+import { findUniversitiesByName } from '../constants/universities';
+
+export type LocationProvider = 'geoapify' | 'photon' | 'nominatim' | 'local';
 
 export interface LocationSuggestion {
   id: string;
@@ -251,12 +253,12 @@ const searchWithNominatim = async (
   
   if (!response.ok) {
     const error = new Error('Nominatim search failed');
-    (error as any).status = response.status;
+    (error as Error & { status: number }).status = response.status;
     throw error;
   }
   
   const data = await response.json();
-  const suggestions = (data || []).map((item: any) => ({
+  const suggestions = (data || []).map((item: { place_id: number; name?: string; display_name: string; lat: string; lon: string }) => ({
     id: `nominatim-${item.place_id}`,
     title: item.name || item.display_name.split(',')[0],
     subtitle: item.display_name,
@@ -280,10 +282,31 @@ export const searchLocations = async (
   const query = rawQuery.trim();
   if (query.length < 3) return [];
 
+  const limit = options.limit || DEFAULT_LIMIT;
+
+  // 1. Local Search (Universities)
+  let localSuggestions: LocationSuggestion[] = [];
+  const localUniversities = findUniversitiesByName(query);
+  localUniversities.forEach((uni) => {
+    uni.campuses.forEach((campus) => {
+      localSuggestions.push({
+        id: `local-${uni.id}-${campus.id}`,
+        title: campus.name,
+        subtitle: `${uni.name} • ${campus.address}`,
+        address: campus.address,
+        lat: campus.lat || 0,
+        lng: campus.lng || 0,
+        provider: 'local',
+      });
+    });
+  });
+  // Filter out any local campuses without coordinates, just in case
+  localSuggestions = localSuggestions.filter((s) => s.lat !== 0 && s.lng !== 0).slice(0, 5);
+
   if (geoapifyApiKey) {
     try {
       const results = await searchWithGeoapify(query, options);
-      if (results) return results;
+      if (results) return dedupeSuggestions([...localSuggestions, ...results], limit);
     } catch (error) {
       if (isAbortError(error)) throw error;
       // Fall through to the open demo provider when the configured provider is unavailable.
@@ -293,13 +316,22 @@ export const searchLocations = async (
 
   try {
     const photonResults = await searchWithPhoton(query, options);
-    if (photonResults && photonResults.length > 0) return photonResults;
+    if (photonResults && photonResults.length > 0) {
+      return dedupeSuggestions([...localSuggestions, ...photonResults], limit);
+    }
   } catch (error) {
     if (isAbortError(error)) throw error;
     console.warn('Photon location search failed; using Nominatim fallback.', error);
   }
 
-  return searchWithNominatim(query, options);
+  try {
+    const nominatimResults = await searchWithNominatim(query, options);
+    return dedupeSuggestions([...localSuggestions, ...nominatimResults], limit);
+  } catch (error) {
+    if (isAbortError(error)) throw error;
+    console.warn('Nominatim fallback failed.', error);
+    return dedupeSuggestions(localSuggestions, limit); // Return local if all APIs fail
+  }
 };
 
 const reverseWithGeoapify = async (
