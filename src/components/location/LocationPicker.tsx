@@ -8,7 +8,6 @@ import {
   Search,
   School,
 } from 'lucide-react';
-import { getUniversityByName } from '../../constants/universities';
 import {
   reverseGeocodeLocation,
   searchLocations,
@@ -318,27 +317,6 @@ export default function LocationPicker({
     if (!school) {
       setStatusTone('error');
       setStatusMessage('No university found in your profile.');
-      return;
-    }
-
-    const university = getUniversityByName(school);
-    if (university && university.campuses.length > 0) {
-      const campus = university.campuses[0];
-      const campusAddress = `${campus.name}, ${campus.address}`;
-      const campusCoordinates =
-        campus.lat !== undefined && campus.lng !== undefined
-          ? { lat: campus.lat, lng: campus.lng }
-          : undefined;
-
-      commitLocation({
-        address: campusAddress,
-        coordinates: campusCoordinates,
-        meta: { source: 'campus', campusId: campus.id },
-      });
-      if (!campusCoordinates) {
-        setStatusTone('info');
-        setStatusMessage('Official address selected; distance estimates are unavailable for this campus.');
-      }
       return;
     }
 
