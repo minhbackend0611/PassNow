@@ -42,10 +42,8 @@ service cloud.firestore {
         request.auth.uid == resource.data.buyerId || 
         request.auth.uid == resource.data.sellerId
       );
-      allow list: if request.auth != null && (
-        request.auth.uid == resource.data.buyerId || 
-        request.auth.uid == resource.data.sellerId
-      );
+      allow list: if request.auth != null && request.auth.uid == resource.data.buyerId;
+      allow list: if request.auth != null && request.auth.uid == resource.data.sellerId;
       
       // Cho phép người mua tạo yêu cầu giao dịch
       allow create: if request.auth != null && request.auth.uid == request.resource.data.buyerId;
