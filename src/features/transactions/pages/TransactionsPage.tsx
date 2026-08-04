@@ -712,12 +712,12 @@ export default function TransactionsPage() {
             </div>
             
             {Object.entries(groupedSellingTxs)
-              .filter(([listingId, group]) => {
+              .filter(([, group]) => {
                 if (sellingFilter === 'all') return true;
                 const finalStatus = group.listing?.status;
                 if (sellingFilter === 'reserved') {
                   return finalStatus
-                    ? ['reserved', 'completed', 'sold', 'hidden'].includes(finalStatus)
+                    ? ['reserved', 'completed', 'sold'].includes(finalStatus)
                     : false;
                 }
                 return finalStatus === sellingFilter;
@@ -728,7 +728,7 @@ export default function TransactionsPage() {
                   if (group.active.some(tx => tx.status === 'pending' && tx.sellerConfirmed)) return 2; // Waiting for buyer
                   const status = group.listing?.status || 'available';
                   if (status === 'available') return 3;
-                  if (status === 'hidden' || status === 'reserved') return 4;
+                  if (status === 'reserved') return 4;
                   return 5; // sold, completed
                 };
                 
@@ -737,8 +737,8 @@ export default function TransactionsPage() {
                 
                 if (priorityA !== priorityB) return priorityA - priorityB;
                 
-                const timeA = groupA.listing?.createdAt || 0;
-                const timeB = groupB.listing?.createdAt || 0;
+                const timeA = Number(groupA.listing?.createdAt || 0);
+                const timeB = Number(groupB.listing?.createdAt || 0);
                 return timeB - timeA;
               })
               .map(([listingId, group]) => {
