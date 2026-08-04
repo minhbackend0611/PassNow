@@ -154,25 +154,25 @@ function TransactionItem({
       </div>
 
       {/* Visual Stepper */}
-      <div className="flex items-start justify-center w-full max-w-2xl mt-2 mb-2 self-center px-2">
-        {/* Step 1: Requested */}
-        <div className="relative z-10 flex flex-col items-center gap-2 flex-shrink-0">
-          <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center shadow-md">
-            <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-          </div>
-          <div className="text-label-sm font-bold text-on-surface text-center leading-tight">Requested</div>
-        </div>
-
-        {/* Connecting Line */}
-        <div className="relative flex-grow mt-[24px] h-1.5 bg-surface-variant rounded-full mx-2 -translate-y-1/2 overflow-hidden">
+      <div className="relative grid grid-cols-2 w-full max-w-sm mx-auto mt-2 mb-2">
+        {/* Connecting Line spanning exactly from center of left column (25%) to center of right column (75%) */}
+        <div className="absolute top-[24px] left-[25%] right-[25%] h-1.5 bg-surface-variant rounded-full z-0 -translate-y-1/2 overflow-hidden">
           <div 
             className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-primary to-secondary rounded-full transition-all duration-1000"
             style={{ width: isSellerConfirmed ? '100%' : '0%' }}
           ></div>
         </div>
 
+        {/* Step 1: Requested */}
+        <div className="relative z-10 flex flex-col items-center gap-2">
+          <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center shadow-md">
+            <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+          </div>
+          <div className="text-label-sm font-bold text-on-surface text-center leading-tight">Requested</div>
+        </div>
+
         {/* Step 2: Seller confirms */}
-        <div className="relative z-10 flex flex-col items-center gap-2 flex-shrink-0">
+        <div className="relative z-10 flex flex-col items-center gap-2">
           <div className={`w-12 h-12 rounded-full flex items-center justify-center shadow-sm transition-colors duration-500 ${
             isSellerConfirmed
               ? 'bg-primary text-white'
@@ -587,7 +587,7 @@ export default function TransactionsPage() {
     group.all.sort((a, b) => a.createdAt - b.createdAt);
   });
 
-  const displayTxsLength = activeTab === 'buying' ? buyingTxs.length : sellingTxs.length;
+  const displayTxsLength = activeTab === 'buying' ? allBuyingTxs.length : sellingTxs.length;
 
   return (
     <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-gutter py-stack-lg pb-24 md:pb-stack-lg flex flex-col gap-stack-lg relative">
@@ -632,7 +632,7 @@ export default function TransactionsPage() {
           />
           
           <button
-            onClick={() => { setActiveTab('buying'); setShowActionRequiredOnly(false); }}
+            onClick={() => { switchTab('buying'); setShowActionRequiredOnly(false); }}
             aria-label="Buying"
             className={`relative flex-1 flex justify-center items-center gap-2 py-2.5 px-6 rounded-xl text-label-lg font-bold transition-colors duration-300 z-10 ${
               activeTab === 'buying' ? 'text-primary' : 'text-on-surface-variant hover:text-on-surface'
@@ -643,7 +643,7 @@ export default function TransactionsPage() {
           </button>
           
           <button
-            onClick={() => { setActiveTab('selling'); setShowActionRequiredOnly(false); }}
+            onClick={() => { switchTab('selling'); setShowActionRequiredOnly(false); }}
             aria-label="Selling"
             className={`relative flex-1 flex justify-center items-center gap-2 py-2.5 px-6 rounded-xl text-label-lg font-bold transition-colors duration-300 z-10 ${
               activeTab === 'selling' ? 'text-primary' : 'text-on-surface-variant hover:text-on-surface'
@@ -700,13 +700,13 @@ export default function TransactionsPage() {
                </button>
                <button 
                  onClick={() => setSellingFilter('available')} 
-                 className={`px-4 py-1.5 rounded-full text-label-md font-bold whitespace-nowrap transition-colors ${sellingFilter === 'available' ? 'bg-success/10 text-success border border-success/20' : 'bg-surface-variant/30 text-on-surface-variant hover:bg-surface-variant/50 border border-outline-variant/20'}`}
+                 className={`px-4 py-1.5 rounded-full text-label-md font-bold whitespace-nowrap transition-colors ${sellingFilter === 'available' ? 'bg-on-surface text-surface' : 'bg-surface-variant/30 text-on-surface-variant hover:bg-surface-variant/50 border border-outline-variant/20'}`}
                >
                  Available
                </button>
                <button 
                  onClick={() => setSellingFilter('reserved')} 
-                 className={`px-4 py-1.5 rounded-full text-label-md font-bold whitespace-nowrap transition-colors ${sellingFilter === 'reserved' ? 'bg-warning/10 text-warning border border-warning/20' : 'bg-surface-variant/30 text-on-surface-variant hover:bg-surface-variant/50 border border-outline-variant/20'}`}
+                 className={`px-4 py-1.5 rounded-full text-label-md font-bold whitespace-nowrap transition-colors ${sellingFilter === 'reserved' ? 'bg-on-surface text-surface' : 'bg-surface-variant/30 text-on-surface-variant hover:bg-surface-variant/50 border border-outline-variant/20'}`}
                >
                  Hidden
                </button>
@@ -801,7 +801,7 @@ export default function TransactionsPage() {
                </button>
                <button 
                  onClick={() => setBuyingFilter('active')} 
-                 className={`px-4 py-1.5 rounded-full text-label-md font-bold whitespace-nowrap transition-colors ${buyingFilter === 'active' ? 'bg-primary text-white shadow-[0_2px_10px_rgba(0,166,126,0.3)]' : 'bg-surface-variant/30 text-on-surface-variant hover:bg-surface-variant/50 border border-outline-variant/20'}`}
+                 className={`px-4 py-1.5 rounded-full text-label-md font-bold whitespace-nowrap transition-colors ${buyingFilter === 'active' ? 'bg-on-surface text-surface' : 'bg-surface-variant/30 text-on-surface-variant hover:bg-surface-variant/50 border border-outline-variant/20'}`}
                >
                  Active
                </button>
