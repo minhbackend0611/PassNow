@@ -202,7 +202,7 @@ function TransactionItem({
         {tx.status === 'pending' && !isBuyer && !tx.sellerConfirmed && (
           <button 
             onClick={() => handleSellerConfirm(tx)}
-            disabled={processingId === tx.id || (listing && (listing.completedCount || 0) >= (listing.quantity || 1))}
+            disabled={processingId === tx.id || (!!listing && (listing.completedCount || 0) >= (listing.quantity || 1))}
             title={listing && (listing.completedCount || 0) >= (listing.quantity || 1) ? 'This item is already sold out.' : ''}
             className="flex-1 sm:flex-none px-2 py-2.5 bg-gradient-to-r from-primary to-primary/90 text-white rounded-xl text-[11px] sm:text-label-md font-bold shadow-[0_4px_14px_rgba(0,166,126,0.3)] hover:shadow-[0_8px_25px_rgba(0,166,126,0.4)] hover:-translate-y-0.5 active:scale-95 transition-all flex flex-col sm:flex-row justify-center items-center gap-1 sm:gap-1.5 text-center leading-tight disabled:opacity-50 disabled:transform-none disabled:shadow-none disabled:cursor-not-allowed cursor-pointer"
           >
