@@ -26,7 +26,7 @@ test.describe('PassNow Core Smoke Test', () => {
     // Fill out registration
     await sellerPage.fill('input[type="email"]', sellerEmail);
     await sellerPage.fill('input[type="password"]', password);
-    await sellerPage.fill('input[placeholder="Confirm Password"]', password);
+    await sellerPage.fill('input[placeholder="Repeat password"]', password);
     await sellerPage.click('button:has-text("Create Account")');
 
     // Might redirect to setup profile
@@ -77,7 +77,7 @@ test.describe('PassNow Core Smoke Test', () => {
     // Fill out registration
     await buyerPage.fill('input[type="email"]', buyerEmail);
     await buyerPage.fill('input[type="password"]', password);
-    await buyerPage.fill('input[placeholder="Confirm Password"]', password);
+    await buyerPage.fill('input[placeholder="Repeat password"]', password);
     await buyerPage.click('button:has-text("Create Account")');
 
     await expect(buyerPage.locator('nav')).toBeVisible({ timeout: 10000 });
