@@ -1,19 +1,14 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import ReactDOM from 'react-dom';
+import { useEffect, useRef, useState } from 'react';
 import {
   AlertCircle,
   Check,
-  ExternalLink,
   LoaderCircle,
   MapPin,
   Navigation,
   Search,
-  ShieldCheck,
   School,
-  X,
 } from 'lucide-react';
 import { getUniversityByName } from '../../constants/universities';
-import type { Campus, University } from '../../constants/universities';
 import {
   reverseGeocodeLocation,
   searchLocations,
@@ -94,12 +89,6 @@ export default function LocationPicker({
   const [isLocating, setIsLocating] = useState(false);
 
   const [showCampusModal, setShowCampusModal] = useState(false);
-  const [matchedUniversity, setMatchedUniversity] = useState<University | null>(null);
-  const [selectedCampusId, setSelectedCampusId] = useState<string | null>(null);
-  const [campusQuery, setCampusQuery] = useState('');
-  const [discoveredCampuses, setDiscoveredCampuses] = useState<LocationSuggestion[]>([]);
-  const [isDiscoveringCampuses, setIsDiscoveringCampuses] = useState(false);
-  const [campusDiscoveryError, setCampusDiscoveryError] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -112,15 +101,6 @@ export default function LocationPicker({
   const campusDiscoveryAbortRef = useRef<AbortController | null>(null);
   const committedByPickerRef = useRef<string | null>(null);
   const previousAddressRef = useRef(address);
-
-  const filteredCampuses = useMemo(() => {
-    const campuses = matchedUniversity?.campuses || [];
-    const query = campusQuery.trim().toLocaleLowerCase('vi');
-    if (!query) return campuses;
-    return campuses.filter((campus) =>
-      `${campus.name} ${campus.address} ${campus.region}`.toLocaleLowerCase('vi').includes(query),
-    );
-  }, [campusQuery, matchedUniversity]);
 
   // The form can hydrate an existing listing after this component mounts.
   useEffect(() => {
@@ -333,107 +313,56 @@ export default function LocationPicker({
     });
   };
 
-  const closeCampusModal = () => {
-    setShowCampusModal(false);
-  };
-
-  const discoverUniversityLocations = async (school: string) => {
-    campusDiscoveryAbortRef.current?.abort();
-    const controller = new AbortController();
-    campusDiscoveryAbortRef.current = controller;
-    setIsDiscoveringCampuses(true);
-    setCampusDiscoveryError(false);
-    setDiscoveredCampuses([]);
-    try {
-      const results = await searchLocations(school, {
-        signal: controller.signal,
-        limit: 8,
-        bias: coordinates,
-      });
-      if (!controller.signal.aborted) setDiscoveredCampuses(results);
-    } catch (discoveryError) {
-      if (!isAbortError(discoveryError)) {
-        console.error('Unable to discover university locations', discoveryError);
-        setCampusDiscoveryError(true);
-      }
-    } finally {
-      if (!controller.signal.aborted) setIsDiscoveringCampuses(false);
-    }
-  };
-
-  const handleUseMyUniversity = () => {
+  const handleUseMyUniversity = async () => {
     const school = userSchool?.trim();
-    setCampusQuery('');
-    setSelectedCampusId(null);
-    setDiscoveredCampuses([]);
-    setCampusDiscoveryError(false);
-
     if (!school) {
-      setMatchedUniversity(null);
-      setShowCampusModal(true);
+      setStatusTone('error');
+      setStatusMessage('No university found in your profile.');
       return;
     }
 
-    const university = getUniversityByName(school) || null;
-    setMatchedUniversity(university);
-    if (university?.campuses.length === 1) {
-      setSelectedCampusId(university.campuses[0].id);
-    } else if (selectionMeta?.source === 'campus' && selectionMeta.campusId) {
-      setSelectedCampusId(selectionMeta.campusId);
+    const university = getUniversityByName(school);
+    if (university && university.campuses.length > 0) {
+      const campus = university.campuses[0];
+      const campusAddress = `${campus.name}, ${campus.address}`;
+      const campusCoordinates =
+        campus.lat !== undefined && campus.lng !== undefined
+          ? { lat: campus.lat, lng: campus.lng }
+          : undefined;
+
+      commitLocation({
+        address: campusAddress,
+        coordinates: campusCoordinates,
+        meta: { source: 'campus', campusId: campus.id },
+      });
+      if (!campusCoordinates) {
+        setStatusTone('info');
+        setStatusMessage('Official address selected; distance estimates are unavailable for this campus.');
+      }
+      return;
     }
-    setShowCampusModal(true);
-    if (!university) void discoverUniversityLocations(school);
-  };
 
-  const startAddressSearch = (query: string) => {
-    closeCampusModal();
-    setIsEditing(true);
-    setDraftQuery(query);
-    setShowSuggestions(Boolean(query));
-    setStatusTone('info');
-    setStatusMessage('Select a search result and verify its address before posting.');
-    scheduleSearch(query);
-    window.requestAnimationFrame(() => inputRef.current?.focus());
-  };
-
-  const startSchoolAddressSearch = () => {
-    startAddressSearch(userSchool?.trim() || '');
-  };
-
-  const startSelectedCampusAddressSearch = () => {
-    const campus = matchedUniversity?.campuses.find((item) => item.id === selectedCampusId);
-    startAddressSearch(campus?.address || matchedUniversity?.name || '');
-  };
-
-  const commitCampus = () => {
-    const campus = matchedUniversity?.campuses.find((item) => item.id === selectedCampusId);
-    if (!campus) return;
-
-    const campusAddress = `${campus.name}, ${campus.address}`;
-    const campusCoordinates = campus.lat !== undefined && campus.lng !== undefined
-      ? { lat: campus.lat, lng: campus.lng }
-      : undefined;
-    commitLocation({
-      address: campusAddress,
-      coordinates: campusCoordinates,
-      meta: { source: 'campus', campusId: campus.id },
-    });
-    closeCampusModal();
-    if (!campusCoordinates) {
-      setStatusTone('info');
-      setStatusMessage('Official address selected; distance estimates are unavailable for this campus.');
+    setIsLocating(true);
+    setStatusMessage('');
+    try {
+      const results = await searchLocations(school, { limit: 1 });
+      if (results && results.length > 0) {
+        const campus = results[0];
+        commitLocation({
+          address: campus.address,
+          coordinates: { lat: campus.lat, lng: campus.lng },
+          meta: { source: 'search', provider: campus.provider },
+        });
+      } else {
+        setStatusTone('error');
+        setStatusMessage('Could not find location for your university. Please search manually.');
+      }
+    } catch (error) {
+       setStatusTone('error');
+       setStatusMessage('Failed to find university location.');
+    } finally {
+       setIsLocating(false);
     }
-  };
-
-  const commitDiscoveredCampus = () => {
-    const campus = discoveredCampuses.find((item) => item.id === selectedCampusId);
-    if (!campus) return;
-    commitLocation({
-      address: campus.address,
-      coordinates: { lat: campus.lat, lng: campus.lng },
-      meta: { source: 'search', provider: campus.provider },
-    });
-    closeCampusModal();
   };
 
   const handleGetCurrentLocation = () => {
@@ -486,7 +415,6 @@ export default function LocationPicker({
     );
   };
 
-  const selectedCampus = matchedUniversity?.campuses.find((campus) => campus.id === selectedCampusId);
   const activeDescendant = activeSuggestionIndex >= 0
     ? `location-suggestion-${activeSuggestionIndex}`
     : undefined;
@@ -728,225 +656,6 @@ export default function LocationPicker({
         </button>
       </div>
 
-      {showCampusModal && typeof document !== 'undefined' && ReactDOM.createPortal(
-        <div className="fixed inset-0 z-[110] flex items-end justify-center sm:items-center sm:p-4">
-          <button
-            type="button"
-            aria-label="Close campus picker"
-            className="absolute inset-0 h-full w-full bg-black/45 backdrop-blur-sm"
-            onClick={closeCampusModal}
-          />
-          <div
-            id="campus-picker-dialog"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="campus-picker-title"
-            aria-describedby="campus-picker-description"
-            className="relative z-10 flex max-h-[92dvh] w-full flex-col overflow-hidden rounded-t-[28px] border border-outline-variant/40 bg-surface-container-lowest shadow-2xl sm:max-w-2xl sm:rounded-[28px]"
-          >
-            <div className="mx-auto mt-2 h-1 w-10 rounded-full bg-outline-variant sm:hidden" aria-hidden="true" />
-            <header className="flex items-start gap-3 border-b border-outline-variant/40 px-5 py-4 sm:px-6 sm:py-5">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                <School className="h-5 w-5" aria-hidden="true" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <h2 id="campus-picker-title" className="text-headline-md font-bold text-on-surface">
-                  {matchedUniversity ? 'Choose a meetup campus' : 'Your university campus'}
-                </h2>
-                <p id="campus-picker-description" className="mt-1 break-words text-body-sm text-on-surface-variant">
-                  {matchedUniversity?.name || userSchool || 'No university is set in your profile.'}
-                </p>
-              </div>
-              <button
-                ref={campusCloseRef}
-                type="button"
-                onClick={closeCampusModal}
-                aria-label="Close"
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              >
-                <X className="h-5 w-5" aria-hidden="true" />
-              </button>
-            </header>
-
-            {matchedUniversity ? (
-              <>
-                <div className="border-b border-outline-variant/40 px-5 py-3 sm:px-6">
-                  <div className="flex items-start gap-2 rounded-xl bg-primary/5 px-3 py-2.5 text-label-sm text-on-surface-variant">
-                    <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-                    <span className="flex-1">
-                      Addresses verified against the university's official website · {matchedUniversity.source.verifiedAt}
-                    </span>
-                    <a
-                      href={matchedUniversity.source.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label={`Open source: ${matchedUniversity.source.label}`}
-                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-primary hover:bg-primary/10"
-                    >
-                      <ExternalLink className="h-4 w-4" aria-hidden="true" />
-                    </a>
-                  </div>
-                  {matchedUniversity.campuses.length > 6 && (
-                    <div className="relative mt-3">
-                      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" aria-hidden="true" />
-                      <input
-                        type="search"
-                        value={campusQuery}
-                        onChange={(event) => setCampusQuery(event.target.value)}
-                        placeholder="Filter by campus name or city"
-                        className="w-full rounded-xl border border-outline-variant bg-surface py-2.5 pl-9 pr-3 text-body-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
-                      />
-                    </div>
-                  )}
-                </div>
-
-                <div className="min-h-0 flex-1 overflow-y-auto bg-surface p-3 custom-scrollbar sm:p-4">
-                  <div role="radiogroup" aria-label="Campus list" className="space-y-2">
-                    {filteredCampuses.map((campus: Campus) => {
-                      const selected = campus.id === selectedCampusId;
-                      return (
-                        <button
-                          key={campus.id}
-                          type="button"
-                          role="radio"
-                          aria-checked={selected}
-                          onClick={() => {
-                            setSelectedCampusId(campus.id);
-                          }}
-                          className={`flex w-full items-start gap-3 rounded-2xl border p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                            selected
-                              ? 'border-primary bg-primary/5'
-                              : 'border-outline-variant/50 bg-surface-container-lowest hover:border-primary/40 hover:bg-surface-container'
-                          }`}
-                        >
-                          <span className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 ${
-                            selected ? 'border-primary bg-primary text-on-primary' : 'border-outline bg-surface'
-                          }`}>
-                            {selected && <Check className="h-3.5 w-3.5" aria-hidden="true" />}
-                          </span>
-                          <span className="min-w-0 flex-1">
-                            <span className="flex flex-wrap items-center gap-2">
-                              <span className="text-body-md font-bold text-on-surface">{campus.name}</span>
-                              <span className="rounded-full bg-surface-container-high px-2 py-0.5 text-[11px] font-semibold text-on-surface-variant">{campus.region}</span>
-                            </span>
-                            <span className="mt-1 block break-words text-body-sm leading-5 text-on-surface-variant">{campus.address}</span>
-                            {campus.lat === undefined && (
-                              <span className="mt-1.5 block text-label-sm text-secondary">Official address only · distance unavailable</span>
-                            )}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                  {!filteredCampuses.length && (
-                    <div className="px-4 py-8 text-center text-body-sm text-on-surface-variant">
-                      No campuses match this filter.
-                    </div>
-                  )}
-                </div>
-
-                <footer className="border-t border-outline-variant/40 bg-surface-container-lowest px-5 py-4 sm:px-6">
-                  {selectedCampus && (
-                    <p className="mb-3 text-body-sm text-on-surface-variant">
-                      Selected: <strong className="text-on-surface">{selectedCampus.name}</strong>
-                    </p>
-                  )}
-                  <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-between">
-                    <button
-                      type="button"
-                      onClick={startSelectedCampusAddressSearch}
-                      className="min-h-12 rounded-full px-5 text-label-md font-semibold text-primary hover:bg-primary/10"
-                    >
-                      {selectedCampus ? 'Search this address' : 'Search another address'}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={commitCampus}
-                      disabled={!selectedCampusId}
-                      className="flex min-h-12 items-center justify-center gap-2 rounded-full bg-primary px-6 text-label-md font-bold text-on-primary hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      Use this campus
-                    </button>
-                  </div>
-                </footer>
-              </>
-            ) : userSchool ? (
-              <>
-                <div className="border-b border-outline-variant/40 bg-secondary-container/10 px-5 py-3 sm:px-6">
-                  <div className="flex items-start gap-2 text-label-sm text-on-surface-variant">
-                    <Search className="mt-0.5 h-4 w-4 shrink-0 text-secondary" aria-hidden="true" />
-                    <span>Campus candidates from location search. Please verify the address before posting.</span>
-                  </div>
-                </div>
-                <div className="min-h-[220px] flex-1 overflow-y-auto bg-surface p-3 custom-scrollbar sm:p-4">
-                  {isDiscoveringCampuses ? (
-                    <div className="flex h-48 flex-col items-center justify-center text-on-surface-variant">
-                      <LoaderCircle className="h-7 w-7 animate-spin text-primary" aria-hidden="true" />
-                      <p className="mt-3 text-body-sm">Finding locations for your university…</p>
-                    </div>
-                  ) : campusDiscoveryError ? (
-                    <div className="flex h-48 flex-col items-center justify-center text-center">
-                      <AlertCircle className="h-7 w-7 text-error" aria-hidden="true" />
-                      <p className="mt-3 text-body-sm text-on-surface-variant">Unable to load university locations.</p>
-                      <button type="button" onClick={() => void discoverUniversityLocations(userSchool.trim())} className="mt-2 rounded-full px-4 py-2 font-semibold text-primary hover:bg-primary/10">Try again</button>
-                    </div>
-                  ) : discoveredCampuses.length ? (
-                    <div role="radiogroup" aria-label="University location candidates" className="space-y-2">
-                      {discoveredCampuses.map((campus) => {
-                        const selected = campus.id === selectedCampusId;
-                        return (
-                          <button key={campus.id} type="button" role="radio" aria-checked={selected} onClick={() => setSelectedCampusId(campus.id)} className={`flex w-full items-start gap-3 rounded-2xl border p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${selected ? 'border-primary bg-primary/5' : 'border-outline-variant/50 bg-surface-container-lowest hover:border-primary/40 hover:bg-surface-container'}`}>
-                            <span className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 ${selected ? 'border-primary bg-primary text-on-primary' : 'border-outline bg-surface'}`}>
-                              {selected && <Check className="h-3.5 w-3.5" aria-hidden="true" />}
-                            </span>
-                            <span className="min-w-0 flex-1">
-                              <span className="block text-body-md font-bold text-on-surface">{campus.title}</span>
-                              <span className="mt-1 block break-words text-body-sm leading-5 text-on-surface-variant">{campus.address}</span>
-                            </span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <div className="flex h-48 flex-col items-center justify-center text-center">
-                      <AlertCircle className="h-7 w-7 text-secondary" aria-hidden="true" />
-                      <p className="mt-3 text-body-sm text-on-surface-variant">No matching locations found. Search by campus or address instead.</p>
-                    </div>
-                  )}
-                </div>
-                <footer className="border-t border-outline-variant/40 bg-surface-container-lowest px-5 py-4 sm:px-6">
-                  <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-between">
-                    <button type="button" onClick={startSchoolAddressSearch} className="min-h-12 rounded-full px-5 text-label-md font-semibold text-primary hover:bg-primary/10">Search another address</button>
-                    <button type="button" onClick={commitDiscoveredCampus} disabled={!selectedCampusId} className="flex min-h-12 items-center justify-center rounded-full bg-primary px-6 text-label-md font-bold text-on-primary hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50">Use this location</button>
-                  </div>
-                </footer>
-              </>
-            ) : (
-              <div className="flex flex-col items-center px-6 py-10 text-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary-container/20 text-secondary">
-                  <AlertCircle className="h-6 w-6" aria-hidden="true" />
-                </div>
-                <h3 className="mt-4 text-headline-md font-bold text-on-surface">
-                  No university in your profile
-                </h3>
-                <p className="mt-2 max-w-md text-body-sm leading-6 text-on-surface-variant">
-                  Add your university in your profile, or continue by searching for an address.
-                </p>
-                <div className="mt-6 w-full max-w-sm">
-                  <button
-                    type="button"
-                    onClick={startSchoolAddressSearch}
-                    className="min-h-12 w-full rounded-full bg-primary px-5 text-label-md font-bold text-on-primary hover:bg-primary/90"
-                  >
-                    Search an address
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>,
-        document.body,
-      )}
     </div>
   );
 }
