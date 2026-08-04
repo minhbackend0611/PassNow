@@ -1,6 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 import type { Listing, ListingFilter } from '../../../types';
 import ListingCard from './ListingCard';
+import Pagination from '../../../components/ui/Pagination';
 
 interface SearchResultsViewProps {
   listings: Listing[];
@@ -23,7 +24,22 @@ export default function SearchResultsView({
   userLat,
   userLng,
 }: SearchResultsViewProps) {
-  const [, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const page = parseInt(searchParams.get('page') || '1', 10);
+  const itemsPerPage = 12;
+  const totalPages = Math.ceil(listings.length / itemsPerPage);
+  
+  const displayListings = listings.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+
+  const handlePageChange = (newPage: number) => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev);
+      next.set('page', newPage.toString());
+      return next;
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <div className="flex-1 flex flex-col min-h-0">
@@ -73,11 +89,18 @@ export default function SearchResultsView({
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
       ) : listings.length > 0 ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-stack-md md:gap-gutter pb-8">
-          {listings.map(listing => (
-            <ListingCard key={listing.id} listing={listing} userLat={userLat} userLng={userLng} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-stack-md md:gap-gutter pb-8">
+            {displayListings.map(listing => (
+              <ListingCard key={listing.id} listing={listing} userLat={userLat} userLng={userLng} />
+            ))}
+          </div>
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </>
       ) : (
         <div className="mt-stack-md py-16 flex flex-col items-center justify-center text-center bg-gradient-to-br from-surface-container-low to-primary/5 rounded-2xl border border-dashed border-outline-variant px-4 shadow-sm">
           <span className="material-symbols-outlined text-[48px] text-outline mb-3" style={{ fontVariationSettings: "'wght' 200" }}>search_off</span>

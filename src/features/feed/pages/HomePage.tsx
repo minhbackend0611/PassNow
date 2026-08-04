@@ -103,6 +103,7 @@ export default function HomePage() {
       next.delete('radiusKm');
       next.delete('userLat');
       next.delete('userLng');
+      next.delete('page');
 
       if (newFilters.category) next.set('category', newFilters.category);
       if (newFilters.condition) next.set('condition', newFilters.condition);
@@ -122,6 +123,7 @@ export default function HomePage() {
       const next = new URLSearchParams(prev);
       if (tab === 'free') next.set('free', 'true');
       else next.delete('free');
+      next.delete('page');
       return next;
     });
   };
