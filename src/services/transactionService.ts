@@ -70,6 +70,7 @@ export const requestTransaction = async (
       const newTransaction: Omit<Transaction, 'id'> = {
         listingId,
         listingTitle: listing.title || listingTitle,
+        listingImage: listing.images?.[0] || null,
         sellerId: listing.sellerId,
         buyerId,
         sellerConfirmed: false,

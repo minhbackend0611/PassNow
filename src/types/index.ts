@@ -64,6 +64,7 @@ export interface Transaction {
   id: string;
   listingId: string;
   listingTitle: string;
+  listingImage?: string | null;
   sellerId: string;
   buyerId: string;
   sellerConfirmed: boolean;

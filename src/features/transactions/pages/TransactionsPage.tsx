@@ -111,6 +111,10 @@ function TransactionItem({
                 <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 shadow-sm border border-outline-variant/30">
                   <img src={listing.images[0]} alt={listing.title} className="w-full h-full object-cover group-hover/listing:scale-110 transition-transform duration-500" />
                 </div>
+              ) : tx.listingImage ? (
+                <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 shadow-sm border border-outline-variant/30">
+                  <img src={tx.listingImage} alt={tx.listingTitle} className="w-full h-full object-cover group-hover/listing:scale-110 transition-transform duration-500" />
+                </div>
               ) : (
                 <div className="w-16 h-16 rounded-xl shrink-0 shadow-sm bg-surface-variant/50 flex items-center justify-center text-on-surface-variant border border-outline-variant/30">
                   <span className="material-symbols-outlined text-2xl">image</span>
