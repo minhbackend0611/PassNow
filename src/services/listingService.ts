@@ -215,18 +215,24 @@ export const deleteListing = async (listingId: string): Promise<boolean> => {
     // 1. Delete the listing itself
     batch.delete(listingRef);
 
-    // 2. Find any pending transactions for this listing and update their status to 'cancelled'
-    const q = query(collection(db, 'transactions'), where('listingId', '==', listingId), where('status', '==', 'pending'));
+    // 2. Find any transactions for this listing and update pending ones to 'cancelled'
+    const q = query(
+      collection(db, 'transactions'), 
+      where('listingId', '==', listingId), 
+      where('sellerId', '==', listingData.sellerId)
+    );
     const querySnapshot = await getDocs(q);
     
     const sysPromises: Promise<void>[] = [];
     
     querySnapshot.forEach((docSnap) => {
-      batch.update(docSnap.ref, { status: 'cancelled' });
       const txData = docSnap.data();
-      sysPromises.push(
-        sendSystemMessage(listingId, txData.sellerId, txData.buyerId, 'The listing has been deleted by the seller. This transaction is canceled.')
-      );
+      if (txData.status === 'pending') {
+        batch.update(docSnap.ref, { status: 'cancelled' });
+        sysPromises.push(
+          sendSystemMessage(listingId, txData.sellerId, txData.buyerId, 'The listing has been deleted by the seller. This transaction is canceled.')
+        );
+      }
     });
 
     await batch.commit();
