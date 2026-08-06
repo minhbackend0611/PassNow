@@ -55,3 +55,10 @@
 body {
   @apply bg-surface text-on-surface font-body-md min-h-screen;
 }
+
+/* Hide default edge/IE password reveal button */
+input[type='password']::-ms-reveal,
+input[type='password']::-ms-clear {
+  display: none;
+}
+
